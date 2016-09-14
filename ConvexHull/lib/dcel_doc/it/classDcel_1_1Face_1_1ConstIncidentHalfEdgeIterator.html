@@ -1,0 +1,531 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>Dcel Data Structure: Riferimenti per la classe Dcel::Face::ConstIncidentHalfEdgeIterator</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Dcel Data Structure
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="namespaces.html"><span>Namespace</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classi</span></a></li>
+      <li><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Elenco&#160;dei&#160;tipi&#160;composti</span></a></li>
+      <li><a href="classes.html"><span>Indice&#160;dei&#160;tipi&#160;composti</span></a></li>
+      <li><a href="hierarchy.html"><span>Gerarchia&#160;delle&#160;classi</span></a></li>
+      <li><a href="functions.html"><span>Membri&#160;dei&#160;composti</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Membri pubblici</a> &#124;
+<a href="#pro-methods">Membri protetti</a> &#124;
+<a href="#pro-attribs">Attributi protetti</a> &#124;
+<a href="#friends">Friend</a> &#124;
+<a href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator-members.html">Elenco di tutti i membri</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per la classe Dcel::Face::ConstIncidentHalfEdgeIterator</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l'immutabilità.  
+ <a href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#details">Continua...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dcel__face__iterators_8h_source.html">dcel_face_iterators.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Membri pubblici</h2></td></tr>
+<tr class="memitem:abee37cf4a9e54df47e09056dac204d25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#abee37cf4a9e54df47e09056dac204d25">ConstIncidentHalfEdgeIterator</a> ()</td></tr>
+<tr class="memdesc:abee37cf4a9e54df47e09056dac204d25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Costruttore vuoto.  <a href="#abee37cf4a9e54df47e09056dac204d25">Continua...</a><br /></td></tr>
+<tr class="separator:abee37cf4a9e54df47e09056dac204d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40f8ac0cddc7083b2582f440a2723785"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a40f8ac0cddc7083b2582f440a2723785">ConstIncidentHalfEdgeIterator</a> (const <a class="el" href="classDcel_1_1Face_1_1IncidentHalfEdgeIterator.html">Dcel::Face::IncidentHalfEdgeIterator</a> &amp;it)</td></tr>
+<tr class="memdesc:a40f8ac0cddc7083b2582f440a2723785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Costruttore di copia da un <a class="el" href="classDcel_1_1Face_1_1IncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia. ">IncidentHalfEdgeIterator</a>.  <a href="#a40f8ac0cddc7083b2582f440a2723785">Continua...</a><br /></td></tr>
+<tr class="separator:a40f8ac0cddc7083b2582f440a2723785"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab083045706484eab7b644c491afa63f6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#ab083045706484eab7b644c491afa63f6">operator*</a> () const </td></tr>
+<tr class="memdesc:ab083045706484eab7b644c491afa63f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di dereferenziazione del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#ab083045706484eab7b644c491afa63f6">Continua...</a><br /></td></tr>
+<tr class="separator:ab083045706484eab7b644c491afa63f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82a9eff87b9a4fd9c45408f325b1245a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a82a9eff87b9a4fd9c45408f325b1245a">operator==</a> (const <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a> &amp;otherIterator) const </td></tr>
+<tr class="memdesc:a82a9eff87b9a4fd9c45408f325b1245a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di uguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#a82a9eff87b9a4fd9c45408f325b1245a">Continua...</a><br /></td></tr>
+<tr class="separator:a82a9eff87b9a4fd9c45408f325b1245a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80ffc91d4f155f5fd755acb7b7e1cc23"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a80ffc91d4f155f5fd755acb7b7e1cc23">operator!=</a> (const <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a> &amp;otherIterator) const </td></tr>
+<tr class="memdesc:a80ffc91d4f155f5fd755acb7b7e1cc23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di disuguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#a80ffc91d4f155f5fd755acb7b7e1cc23">Continua...</a><br /></td></tr>
+<tr class="separator:a80ffc91d4f155f5fd755acb7b7e1cc23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8afb2be8b90d62061be5672f4b1942b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#aa8afb2be8b90d62061be5672f4b1942b">operator++</a> ()</td></tr>
+<tr class="memdesc:aa8afb2be8b90d62061be5672f4b1942b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di incremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#aa8afb2be8b90d62061be5672f4b1942b">Continua...</a><br /></td></tr>
+<tr class="separator:aa8afb2be8b90d62061be5672f4b1942b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f5eb7dd5dafea9add10dc16c9317a4b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a0f5eb7dd5dafea9add10dc16c9317a4b">operator++</a> (int)</td></tr>
+<tr class="memdesc:a0f5eb7dd5dafea9add10dc16c9317a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di incremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#a0f5eb7dd5dafea9add10dc16c9317a4b">Continua...</a><br /></td></tr>
+<tr class="separator:a0f5eb7dd5dafea9add10dc16c9317a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e043fe41233ca84205ba980c9865b60"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a7e043fe41233ca84205ba980c9865b60">operator--</a> ()</td></tr>
+<tr class="memdesc:a7e043fe41233ca84205ba980c9865b60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di decremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#a7e043fe41233ca84205ba980c9865b60">Continua...</a><br /></td></tr>
+<tr class="separator:a7e043fe41233ca84205ba980c9865b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53791a4a44a4a402a4035326455e5279"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a53791a4a44a4a402a4035326455e5279">operator--</a> (int)</td></tr>
+<tr class="memdesc:a53791a4a44a4a402a4035326455e5279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di decremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#a53791a4a44a4a402a4035326455e5279">Continua...</a><br /></td></tr>
+<tr class="separator:a53791a4a44a4a402a4035326455e5279"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Membri protetti</h2></td></tr>
+<tr class="memitem:a29037953d4e2a0e7e0038057bdde60f6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a29037953d4e2a0e7e0038057bdde60f6">ConstIncidentHalfEdgeIterator</a> (const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *<a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a8c845d213769179aef8ec8bc2f78adf8">start</a>, const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *<a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a670feb010673a408a04e0175db9bb50e">end</a>, const <a class="el" href="classDcel_1_1Face.html">Dcel::Face</a> *<a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#aebda5692dbb2db4f7201635b04e479f9">f</a>)</td></tr>
+<tr class="memdesc:a29037953d4e2a0e7e0038057bdde60f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Costruttore di un <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>.  <a href="#a29037953d4e2a0e7e0038057bdde60f6">Continua...</a><br /></td></tr>
+<tr class="separator:a29037953d4e2a0e7e0038057bdde60f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Attributi protetti</h2></td></tr>
+<tr class="memitem:aebda5692dbb2db4f7201635b04e479f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aebda5692dbb2db4f7201635b04e479f9"></a>
+const <a class="el" href="classDcel_1_1Face.html">Dcel::Face</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#aebda5692dbb2db4f7201635b04e479f9">f</a></td></tr>
+<tr class="memdesc:aebda5692dbb2db4f7201635b04e479f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Faccia su cui vengono iterati gli half edge incidenti. <br /></td></tr>
+<tr class="separator:aebda5692dbb2db4f7201635b04e479f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c845d213769179aef8ec8bc2f78adf8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c845d213769179aef8ec8bc2f78adf8"></a>
+const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a8c845d213769179aef8ec8bc2f78adf8">start</a></td></tr>
+<tr class="memdesc:a8c845d213769179aef8ec8bc2f78adf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Half edge dal quale è partito l'iteratore. <br /></td></tr>
+<tr class="separator:a8c845d213769179aef8ec8bc2f78adf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0a153138f2327a1619d77c202835205"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0a153138f2327a1619d77c202835205"></a>
+const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#af0a153138f2327a1619d77c202835205">pos</a></td></tr>
+<tr class="memdesc:af0a153138f2327a1619d77c202835205"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posizione attuale dell'iteratore. <br /></td></tr>
+<tr class="separator:af0a153138f2327a1619d77c202835205"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a670feb010673a408a04e0175db9bb50e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a670feb010673a408a04e0175db9bb50e"></a>
+const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a670feb010673a408a04e0175db9bb50e">end</a></td></tr>
+<tr class="memdesc:a670feb010673a408a04e0175db9bb50e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Half edge sul quale termina l'iteratore. <br /></td></tr>
+<tr class="separator:a670feb010673a408a04e0175db9bb50e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friend</h2></td></tr>
+<tr class="memitem:a8e6c077136bfeeb80d4d90e273cda55a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e6c077136bfeeb80d4d90e273cda55a"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Dcel::Face</b></td></tr>
+<tr class="separator:a8e6c077136bfeeb80d4d90e273cda55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
+<div class="textblock"><p>Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l'immutabilità. </p>
+<p>Partendo da un half edge di start e un half edge di end (non compreso), entrambi incidenti alla faccia su cui è inizializzato l'iteratore, permette di ciclare su tutti gli half edge compresi tra start e end. <br />
+ Le operazioni di incremento eseguono un'operazione <code>next()</code> sull'half edge, mentre le operazioni di decremento eseguono un'operazione di <code>prev()</code>.</p>
+<p>Per questi motivi, utilizzare questo iteratore solamente quando tutti gli half edge incidenti hanno settato correttamente le seguenti relazioni:</p><ul>
+<li>next (per le operazioni di incremento)</li>
+<li>prev (per le operazioni di decremento)</li>
+</ul>
+<p>Più precisamente, è necessario che una volta effettuate diverse operazioni di next (o prev), si arrivi di nuovo all'half edge di partenza (o a un eventuale halg edge finale settato all'inizializzazione).</p>
+<p>È possibile utilizzare l'iteratore in diversi modi. Il più semplice è ciclare in senso antiorario o orario (operatore &amp;ndash;) su tutti gli half edge incidenti ad una data faccia <code>f</code>. In questo caso, sarà sufficiente scrivere:</p>
+<div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">Dcel::Face::ConstIncidentHalfEdgeIterator</a> heit = <a class="code" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#aebda5692dbb2db4f7201635b04e479f9">f</a>-&gt;<a class="code" href="classDcel_1_1Face.html#af3efa41f8bcfc3262954984ba1d5d209">incidentHalfEdgeBegin</a>(); heit != <a class="code" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#aebda5692dbb2db4f7201635b04e479f9">f</a>-&gt;<a class="code" href="classDcel_1_1Face.html#ae373622fbda3817d534214dfb082f953">incidentHalfEdgeEnd</a>(); ++heit){</div><div class="line">    <span class="keyword">const</span> <a class="code" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a>* he = *heit;</div><div class="line">    <span class="comment">// operazioni const su he</span></div><div class="line">}</div></div><!-- fragment --><p>È però possibile anche visitare tutti gli half edge incidenti compresi tra due dati half edge. In questo caso sarà necessario passare gli half edge estremi dell'intervallo all'inizializzatore <a class="el" href="classDcel_1_1Face.html#a2e002b38ebdcf3afd7dbe1616392629a" title="Funzione di inizializzazione di Dcel::Face::IncidentHalfEdgeIterator. ">Dcel::Face::incidentHalfEdgeBegin()</a>. Per i dettagli su come funzionano queste inizializzazioni si rimanda alla descrizione dei metodi stessi.</p>
+<p>Questo iteratore garantisce l'immutabilità della faccia e quindi della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> a cui appartiene, e quindi si può utilizzare solo su const <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>. Per <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>, vedere <a class="el" href="classDcel_1_1Face_1_1IncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia. ">Dcel::Face::IncidentHalfEdgeIterator</a>.</p>
+<dl class="section author"><dt>Autore</dt><dd>Alessandro Muntoni (<a href="#" onclick="location.href='mai'+'lto:'+'mun'+'to'+'ni.'+'al'+'ess'+'an'+'dro'+'@g'+'mai'+'l.'+'com'; return false;">munto<span style="display: none;">.nosp@m.</span>ni.a<span style="display: none;">.nosp@m.</span>lessa<span style="display: none;">.nosp@m.</span>ndro<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a>) </dd></dl>
+</div><h2 class="groupheader">Documentazione dei costruttori e dei distruttori</h2>
+<a class="anchor" id="abee37cf4a9e54df47e09056dac204d25"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dcel::Face::ConstIncidentHalfEdgeIterator::ConstIncidentHalfEdgeIterator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Costruttore vuoto. </p>
+<p>Un iteratore inizializzato con questo costruttore non è utilizzabile. </p>
+
+</div>
+</div>
+<a class="anchor" id="a40f8ac0cddc7083b2582f440a2723785"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dcel::Face::ConstIncidentHalfEdgeIterator::ConstIncidentHalfEdgeIterator </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1Face_1_1IncidentHalfEdgeIterator.html">Dcel::Face::IncidentHalfEdgeIterator</a> &amp;&#160;</td>
+          <td class="paramname"><em>it</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Costruttore di copia da un <a class="el" href="classDcel_1_1Face_1_1IncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia. ">IncidentHalfEdgeIterator</a>. </p>
+<p>Inizializza un <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a> pari all'<a class="el" href="classDcel_1_1Face_1_1IncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia. ">IncidentHalfEdgeIterator</a> passato in input. </p><dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">it</td><td>iteratore di cui ne verrà fatta una copia </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a29037953d4e2a0e7e0038057bdde60f6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dcel::Face::ConstIncidentHalfEdgeIterator::ConstIncidentHalfEdgeIterator </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1Face.html">Dcel::Face</a> *&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Costruttore di un <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<p>Setta l'half edge di partenza, l'half edge di arrivo e la faccia su cui iterare. L'iteratore viene inizializzato all'half edge start. Per questioni di sicurezza e di robustezza del codice questo costruttore non è direttamente richiamabile dal programmatore. Tuttavia, questo costruttore viene richiamato dalla friend class <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a> nei vari metodi begin, che inizializzano correttamente l'iteratore e che possono essere utilizzati dal programmatore per l'inizializzazione dell'iteratore.</p>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">start</td><td>half edge di start </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">end</td><td>half edge di end </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>faccia su cui vengono iterati gli half edge incidenti </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle funzioni membro</h2>
+<a class="anchor" id="a80ffc91d4f155f5fd755acb7b7e1cc23"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Dcel::Face::ConstIncidentHalfEdgeIterator::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a> &amp;&#160;</td>
+          <td class="paramname"><em>otherIterator</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di disuguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">otherIterator</td><td>iteratore con cui è verificata la disuguaglianza con this </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd>True se gli iteratori sono diversi, false altrimenti </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab083045706484eab7b644c491afa63f6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> * Dcel::Face::ConstIncidentHalfEdgeIterator::operator* </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di dereferenziazione del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'half edge puntato dall'iteratore </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa8afb2be8b90d62061be5672f4b1942b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">Dcel::Face::ConstIncidentHalfEdgeIterator</a> Dcel::Face::ConstIncidentHalfEdgeIterator::operator++ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di incremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<p>Esegue un'operazione di <code>next()</code> sull'half edge. Se l'half edge ottenuto è uguale all'half edge end, allora l'iteratore diventa uguale all'iteratore <code><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a670feb010673a408a04e0175db9bb50e" title="Half edge sul quale termina l&#39;iteratore. ">end()</a></code>.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore appena incrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0f5eb7dd5dafea9add10dc16c9317a4b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">Dcel::Face::ConstIncidentHalfEdgeIterator</a> Dcel::Face::ConstIncidentHalfEdgeIterator::operator++ </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di incremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<p>Esegue un'operazione di <code>next()</code> sull'half edge. Se l'half edge ottenuto è uguale all'half edge end, allora l'iteratore diventa uguale all'iteratore <code><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a670feb010673a408a04e0175db9bb50e" title="Half edge sul quale termina l&#39;iteratore. ">end()</a></code>.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore prima di essere incrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7e043fe41233ca84205ba980c9865b60"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">Dcel::Face::ConstIncidentHalfEdgeIterator</a> Dcel::Face::ConstIncidentHalfEdgeIterator::operator-- </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di decremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<p>Esegue un'operazione di <code>prev()</code> sull'half edge. Se l'half edge ottenuto è uguale all'half edge end, allora l'iteratore diventa uguale all'iteratore <code><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a670feb010673a408a04e0175db9bb50e" title="Half edge sul quale termina l&#39;iteratore. ">end()</a></code>.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore appena decrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a53791a4a44a4a402a4035326455e5279"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">Dcel::Face::ConstIncidentHalfEdgeIterator</a> Dcel::Face::ConstIncidentHalfEdgeIterator::operator-- </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di decremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<p>Esegue un'operazione di <code>prev()</code> sull'half edge. Se l'half edge ottenuto è uguale all'half edge end, allora l'iteratore diventa uguale all'iteratore <code><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html#a670feb010673a408a04e0175db9bb50e" title="Half edge sul quale termina l&#39;iteratore. ">end()</a></code>.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore prima di essere decrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a82a9eff87b9a4fd9c45408f325b1245a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Dcel::Face::ConstIncidentHalfEdgeIterator::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a> &amp;&#160;</td>
+          <td class="paramname"><em>otherIterator</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di uguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a>. </p>
+<p>Due <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a> sono considerati uguali se:</p><ul>
+<li>puntano allo stesso half edge;</li>
+<li>iterano sulla stessa faccia.</li>
+</ul>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">otherIterator</td><td>iteratore con cui è verificata l'uguaglianza con this </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd>True se gli iteratori sono uguali, false altrimenti </dd></dl>
+
+</div>
+</div>
+<hr/>La documentazione per questa classe è stata generata a partire dal seguente file:<ul>
+<li><a class="el" href="dcel__face__iterators_8h_source.html">dcel_face_iterators.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="classDcel.html">Dcel</a></li><li class="navelem"><a class="el" href="classDcel_1_1Face.html">Face</a></li><li class="navelem"><a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html">ConstIncidentHalfEdgeIterator</a></li>
+    <li class="footer">Generato da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>
+  </ul>
+</div>
+</body>
+</html>

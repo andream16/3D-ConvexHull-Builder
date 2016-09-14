@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>Dcel Data Structure: Riferimenti per la classe Dcel::Face::ConstInnerHalfEdgeIterator</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Dcel Data Structure
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="namespaces.html"><span>Namespace</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classi</span></a></li>
+      <li><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Elenco&#160;dei&#160;tipi&#160;composti</span></a></li>
+      <li><a href="classes.html"><span>Indice&#160;dei&#160;tipi&#160;composti</span></a></li>
+      <li><a href="hierarchy.html"><span>Gerarchia&#160;delle&#160;classi</span></a></li>
+      <li><a href="functions.html"><span>Membri&#160;dei&#160;composti</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Membri pubblici</a> &#124;
+<a href="#pro-methods">Membri protetti</a> &#124;
+<a href="#pro-attribs">Attributi protetti</a> &#124;
+<a href="#friends">Friend</a> &#124;
+<a href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator-members.html">Elenco di tutti i membri</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per la classe Dcel::Face::ConstInnerHalfEdgeIterator</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia, garantendone l'immutabilità.  
+ <a href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#details">Continua...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dcel__face__iterators_8h_source.html">dcel_face_iterators.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Membri pubblici</h2></td></tr>
+<tr class="memitem:a5c3d4133cdd31d5b6001654369e47d55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a5c3d4133cdd31d5b6001654369e47d55">ConstInnerHalfEdgeIterator</a> ()</td></tr>
+<tr class="memdesc:a5c3d4133cdd31d5b6001654369e47d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Costruttore vuoto.  <a href="#a5c3d4133cdd31d5b6001654369e47d55">Continua...</a><br /></td></tr>
+<tr class="separator:a5c3d4133cdd31d5b6001654369e47d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee5127776f23884d706f3e640dc3b0f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#aee5127776f23884d706f3e640dc3b0f1">ConstInnerHalfEdgeIterator</a> (const Dcel::Face::InnerHalfEdgeIterator &amp;it)</td></tr>
+<tr class="memdesc:aee5127776f23884d706f3e640dc3b0f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Costruttore di copia da un <a class="el" href="classInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">InnerHalfEdgeIterator</a>.  <a href="#aee5127776f23884d706f3e640dc3b0f1">Continua...</a><br /></td></tr>
+<tr class="separator:aee5127776f23884d706f3e640dc3b0f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61a4f43c964471ee563441d4014a401b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a61a4f43c964471ee563441d4014a401b">operator*</a> () const </td></tr>
+<tr class="memdesc:a61a4f43c964471ee563441d4014a401b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di dereferenziazione del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#a61a4f43c964471ee563441d4014a401b">Continua...</a><br /></td></tr>
+<tr class="separator:a61a4f43c964471ee563441d4014a401b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2193af3040d2b5c7f527e02fd222e6b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a2193af3040d2b5c7f527e02fd222e6b1">operator==</a> (const <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a> &amp;otherIterator) const </td></tr>
+<tr class="memdesc:a2193af3040d2b5c7f527e02fd222e6b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di uguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#a2193af3040d2b5c7f527e02fd222e6b1">Continua...</a><br /></td></tr>
+<tr class="separator:a2193af3040d2b5c7f527e02fd222e6b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a331e5171ecc070ef7a08d91b169f54d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a331e5171ecc070ef7a08d91b169f54d8">operator!=</a> (const <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a> &amp;otherIterator) const </td></tr>
+<tr class="memdesc:a331e5171ecc070ef7a08d91b169f54d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di disuguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#a331e5171ecc070ef7a08d91b169f54d8">Continua...</a><br /></td></tr>
+<tr class="separator:a331e5171ecc070ef7a08d91b169f54d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa4ad8825d42ef22b368ad523483ce1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#aaa4ad8825d42ef22b368ad523483ce1d">operator++</a> ()</td></tr>
+<tr class="memdesc:aaa4ad8825d42ef22b368ad523483ce1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di incremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#aaa4ad8825d42ef22b368ad523483ce1d">Continua...</a><br /></td></tr>
+<tr class="separator:aaa4ad8825d42ef22b368ad523483ce1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac034da73e5bd9a5744d5d1b65a96b9c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#ac034da73e5bd9a5744d5d1b65a96b9c7">operator++</a> (int)</td></tr>
+<tr class="memdesc:ac034da73e5bd9a5744d5d1b65a96b9c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di incremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#ac034da73e5bd9a5744d5d1b65a96b9c7">Continua...</a><br /></td></tr>
+<tr class="separator:ac034da73e5bd9a5744d5d1b65a96b9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a991e7811e5e0a162343c312130e76cd8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a991e7811e5e0a162343c312130e76cd8">operator--</a> ()</td></tr>
+<tr class="memdesc:a991e7811e5e0a162343c312130e76cd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di decremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#a991e7811e5e0a162343c312130e76cd8">Continua...</a><br /></td></tr>
+<tr class="separator:a991e7811e5e0a162343c312130e76cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12b5f69648b76eb1807804cc6afc8934"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a12b5f69648b76eb1807804cc6afc8934">operator--</a> (int)</td></tr>
+<tr class="memdesc:a12b5f69648b76eb1807804cc6afc8934"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operatore di decremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#a12b5f69648b76eb1807804cc6afc8934">Continua...</a><br /></td></tr>
+<tr class="separator:a12b5f69648b76eb1807804cc6afc8934"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Membri protetti</h2></td></tr>
+<tr class="memitem:a4e02d540a9f3f0417a3e912ea3bbd4f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a4e02d540a9f3f0417a3e912ea3bbd4f0">ConstInnerHalfEdgeIterator</a> (const std::vector&lt; <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> * &gt;::const_iterator &amp;it)</td></tr>
+<tr class="memdesc:a4e02d540a9f3f0417a3e912ea3bbd4f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Costruttore di un <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>.  <a href="#a4e02d540a9f3f0417a3e912ea3bbd4f0">Continua...</a><br /></td></tr>
+<tr class="separator:a4e02d540a9f3f0417a3e912ea3bbd4f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Attributi protetti</h2></td></tr>
+<tr class="memitem:a6b44ccae4fd05e0b3399ed5eae55dcf1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> * &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html#a6b44ccae4fd05e0b3399ed5eae55dcf1">iterator</a></td></tr>
+<tr class="memdesc:a6b44ccae4fd05e0b3399ed5eae55dcf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iteratore vero e proprio sul vettore degli inner half edge della faccia.  <a href="#a6b44ccae4fd05e0b3399ed5eae55dcf1">Continua...</a><br /></td></tr>
+<tr class="separator:a6b44ccae4fd05e0b3399ed5eae55dcf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friend</h2></td></tr>
+<tr class="memitem:a8e6c077136bfeeb80d4d90e273cda55a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e6c077136bfeeb80d4d90e273cda55a"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Dcel::Face</b></td></tr>
+<tr class="separator:a8e6c077136bfeeb80d4d90e273cda55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
+<div class="textblock"><p>Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia, garantendone l'immutabilità. </p>
+<p>Ogni inner half edge è associato ad un buco presente all'interno della faccia. Una volta che si ha a disposizione un inner half edge, è possibile ciclare sul bordo del buco mediante delle semplici operazioni di next, oppure utilizzando un <a class="el" href="classDcel_1_1Face_1_1ConstIncidentHalfEdgeIterator.html" title="Iteratore che permette di ciclare sugli half edge incidenti ad una faccia, garantendone l&#39;immutabilit...">ConstIncidentHalfEdgeIterator</a> opportunamente inizializzato.</p>
+<p>È possibile utilizzare l'iteratore esattamente come si utilizza un iteratore su un std::vector. Per esempio, data una faccia <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>* f:</p>
+<div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">Dcel::Face::ConstInnerHalfEdgeIterator</a> heit = f-&gt;innerHalfEgeBegin(); heit != f-&gt;innerHalfEdgeEnd(); ++heit){</div><div class="line">    <span class="keyword">const</span> <a class="code" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a>* he = *heit;</div><div class="line">    <span class="comment">// operazioni const su he</span></div><div class="line">}</div></div><!-- fragment --><p>Questo iteratore garantisce l'immutabilità della faccia e quindi della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> a cui appartiene, e quindi è possibile utilizzarlo solamente su const <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>. Per poter effettuare modifiche, vedere Dcel::Face::InnerHalfEdgeIterator.</p>
+<dl class="section author"><dt>Autore</dt><dd>Alessandro Muntoni (<a href="#" onclick="location.href='mai'+'lto:'+'mun'+'to'+'ni.'+'al'+'ess'+'an'+'dro'+'@g'+'mai'+'l.'+'com'; return false;">munto<span style="display: none;">.nosp@m.</span>ni.a<span style="display: none;">.nosp@m.</span>lessa<span style="display: none;">.nosp@m.</span>ndro<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a>) </dd></dl>
+</div><h2 class="groupheader">Documentazione dei costruttori e dei distruttori</h2>
+<a class="anchor" id="a5c3d4133cdd31d5b6001654369e47d55"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dcel::Face::ConstInnerHalfEdgeIterator::ConstInnerHalfEdgeIterator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Costruttore vuoto. </p>
+<p>Un iteratore inizializzato con questo costruttore non è utilizzabile. </p>
+
+</div>
+</div>
+<a class="anchor" id="aee5127776f23884d706f3e640dc3b0f1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dcel::Face::ConstInnerHalfEdgeIterator::ConstInnerHalfEdgeIterator </td>
+          <td>(</td>
+          <td class="paramtype">const Dcel::Face::InnerHalfEdgeIterator &amp;&#160;</td>
+          <td class="paramname"><em>it</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Costruttore di copia da un <a class="el" href="classInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">InnerHalfEdgeIterator</a>. </p>
+<p>Inizializza un <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a> pari all'<a class="el" href="classInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">InnerHalfEdgeIterator</a> passato in input. </p><dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">it</td><td>iteratore di cui ne verrà fatta una copia </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4e02d540a9f3f0417a3e912ea3bbd4f0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dcel::Face::ConstInnerHalfEdgeIterator::ConstInnerHalfEdgeIterator </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> * &gt;::const_iterator &amp;&#160;</td>
+          <td class="paramname"><em>it</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Costruttore di un <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<p>Inizializza l'iteratore alla posizione di partenza del vettore di inner half edge della faccia. Per questioni di sicurezza e di robustezza del codice questo costruttore non è direttamente richiamabile dal programmatore. Tuttavia, questo costruttore viene richiamato dalla friend class <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a> nei vari metodi begin, che inizializzano correttamente l'iteratore e che possono essere utilizzati dal programmatore per l'inizializzazione dell'iteratore.</p>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">it</td><td>iteratore sul vettore di inner half edge della faccia </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle funzioni membro</h2>
+<a class="anchor" id="a331e5171ecc070ef7a08d91b169f54d8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Dcel::Face::ConstInnerHalfEdgeIterator::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a> &amp;&#160;</td>
+          <td class="paramname"><em>otherIterator</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di disuguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">otherIterator</td><td>iteratore con cui è verificata la disuguaglianza con this </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd>True se gli iteratori sono diversi, false altrimenti </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a61a4f43c964471ee563441d4014a401b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a> * Dcel::Face::ConstInnerHalfEdgeIterator::operator* </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di dereferenziazione del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'half edge puntato dall'iteratore </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aaa4ad8825d42ef22b368ad523483ce1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">Dcel::Face::ConstInnerHalfEdgeIterator</a> Dcel::Face::ConstInnerHalfEdgeIterator::operator++ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di incremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<p>Normale operatore di incremento prefisso di un std::vector::iterator.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore appena incrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac034da73e5bd9a5744d5d1b65a96b9c7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">Dcel::Face::ConstInnerHalfEdgeIterator</a> Dcel::Face::ConstInnerHalfEdgeIterator::operator++ </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di incremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<p>Normale operatore di incremento prefisso di un std::vector::iterator.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore prima di essere incrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a991e7811e5e0a162343c312130e76cd8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">Dcel::Face::ConstInnerHalfEdgeIterator</a> Dcel::Face::ConstInnerHalfEdgeIterator::operator-- </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di decremento prefisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<p>Normale operatore di decremento prefisso di un std::vector::iterator.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore appena decrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a12b5f69648b76eb1807804cc6afc8934"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">Dcel::Face::ConstInnerHalfEdgeIterator</a> Dcel::Face::ConstInnerHalfEdgeIterator::operator-- </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di decremento postfisso del <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<p>Normale operatore di decremento prefisso di un std::vector::iterator.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>L'iteratore prima di essere decrementato </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2193af3040d2b5c7f527e02fd222e6b1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Dcel::Face::ConstInnerHalfEdgeIterator::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a> &amp;&#160;</td>
+          <td class="paramname"><em>otherIterator</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operatore di uguaglianza tra <a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html" title="Iteratore che permette di ciclare sul vettore degli inner half edge associati alla faccia...">ConstInnerHalfEdgeIterator</a>. </p>
+<p>Normale operatore di uguaglianza tra std::vector::iterator.</p>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">otherIterator</td><td>iteratore con cui è verificata l'uguaglianza con this </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd>True se gli iteratori sono uguali, false altrimenti </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione dei membri dato</h2>
+<a class="anchor" id="a6b44ccae4fd05e0b3399ed5eae55dcf1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a>*&gt;::const_iterator Dcel::Face::ConstInnerHalfEdgeIterator::iterator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Iteratore vero e proprio sul vettore degli inner half edge della faccia. </p>
+
+</div>
+</div>
+<hr/>La documentazione per questa classe è stata generata a partire dal seguente file:<ul>
+<li><a class="el" href="dcel__face__iterators_8h_source.html">dcel_face_iterators.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="classDcel.html">Dcel</a></li><li class="navelem"><a class="el" href="classDcel_1_1Face.html">Face</a></li><li class="navelem"><a class="el" href="classDcel_1_1Face_1_1ConstInnerHalfEdgeIterator.html">ConstInnerHalfEdgeIterator</a></li>
+    <li class="footer">Generato da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>
+  </ul>
+</div>
+</body>
+</html>

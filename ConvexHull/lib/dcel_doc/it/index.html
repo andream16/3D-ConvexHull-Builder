@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>Dcel Data Structure: Dcel</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Dcel Data Structure
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li class="current"><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="namespaces.html"><span>Namespace</span></a></li>
+      <li><a href="annotated.html"><span>Classi</span></a></li>
+      <li><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('index.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title"><a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><h1>1 Introduzione</h1>
+<p>Questa libreria è stata progettata per poter sviluppare degli algoritmi su mesh tridimensionali utilizzando una struttura dati comoda e funzionale, avente tutti gli strumenti necessari per poter effettuare le operazioni di navigazione di base e anche avanzata.Rispetto alle strutture dati presenti nelle librerie più utilizzate (CGAL, OpenMesh), questra struttura dati permette di gestire mesh composte da poligoni generici che possono avere anche buchi. È organizzata per essere utilizzata mediante puntatori, in modo da avere i riferimenti diretti ad ogni oggetto si voglia manipolare, e fornisce una serie funzioni e metodi che sono sviluppati per lavorare su mesh manifold e chiuse. <br />
+Non mi assumo alcuna responsabilità riguardo la correttezza del codice; tuttavia, nel caso in cui fossero trovati dei bug, per favore segnalateli al mio indirizzo email (<a href="#" onclick="location.href='mai'+'lto:'+'mun'+'to'+'ni.'+'al'+'ess'+'an'+'dro'+'@g'+'mai'+'l.'+'com'; return false;">munto<span style="display: none;">.nosp@m.</span>ni.a<span style="display: none;">.nosp@m.</span>lessa<span style="display: none;">.nosp@m.</span>ndro<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a>) in modo tale che possano essere corretti. La libreria è rilasciata sotto licenza GNU GPL.<br />
+</p>
+<h1>2 Installazione</h1>
+<p>La <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> è stata sviluppata utilizzando un ambiente QT per gestirne la visualizzazione in un'applicazione semplice e intuitiva, tuttavia può essere anche utilizzata in modo standalone. Per compilare, la <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> richiede l'installazione di:</p><ul>
+<li>GCC (≥ 4.8) (flag C++11);</li>
+<li>QT (≥ 5.2);</li>
+<li>Boost (≥ 1.54).</li>
+</ul>
+<p>È inoltre possibile usufruire di alcune funzionalità aggiuntive nel caso in cui sia installata la libreria CGAL. Tali funzionalità sono molto utili soprattutto quando si ha intenzione di gestire una mesh composta da poligoni generici. In questo caso, è sufficiente aggiungere la definizione della costante letterale CGAL_DEFINED per abilitare tali funzionalità. Nel caso si voglia utilizzare anche il visualizzatore che permette di visualizzare e interagire con la <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> mediante le classi <a class="el" href="classDrawableDcel.html" title="Classe che eredita dalla classe Dcel e dall&#39;interfaccia DrawalbleObject. ">DrawableDcel</a> e PickableDcel, è necessario installare anche la libreria libQGLViewer.</p>
+<h1>3 Overview</h1>
+<p>La Double-Connected Edge-List (<a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>) è una struttura dati che si occupa di implementare e gestire gli elementi necessari a modellare una mesh tridimensionale, in modo tale che tutte le informazioni di adiacenza e incidenza tra le componenti siano accessibili in tempo costante. Una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> è composta da:</p><ul>
+<li>Vertici (<a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a>);</li>
+<li>Mezzi Spigoli (<a class="el" href="classDcel_1_1HalfEdge.html" title="Classe rappresentante un half edge della Dcel. ">Dcel::HalfEdge</a>);</li>
+<li>Facce (<a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>).</li>
+</ul>
+<p>I Vertici sono composti da:</p><ul>
+<li>Coordinate: punti definiti in uno spazio tridimensionale (vedi classe <a class="el" href="classPoint.html" title="La classe Point modella un punto o un vettore nell spazio. ">Point</a>);</li>
+<li>Vettore Normale: solitamente è definito come la media delle normali alle facce incidenti sul vertice;</li>
+<li>Incident Half Edge: puntatore ad uno degli half edge incidenti sul vertice;</li>
+<li>Cardinalità: numero degli spigoli (non degli half edge!) incidenti sul vertice.</li>
+<li>Flag: valore associato alla faccia assegnabile a piacimento dall'utente.</li>
+</ul>
+<p>Gli Half Edge sono composti da:</p><ul>
+<li>From Vertex: puntatore al vertice da cui l'half edge è uscente;</li>
+<li>To Vertex: puntatore al vertice su cui l'half edge è entrante;</li>
+<li>Twin Half Edge: puntatore all'half edge gemello;</li>
+<li>Previous Half Edge: puntatore all'half edge precedente;</li>
+<li>Next Half Edge: puntatore all'half edge successivo;</li>
+<li>Incident Face: puntatore alla faccia incidente all'half edge.</li>
+<li>Flag: valore associato alla faccia assegnabile a piacimento dall'utente.</li>
+</ul>
+<p>Le Facce sono composte da:</p><ul>
+<li>Half Edge Esterno: puntatore ad uno degli half edge sul bordo esterno della faccia;</li>
+<li>Lista di Half Edge Interni: per ogni buco presente nella faccia (se ce ne sono), vi è il puntatore ad uno degli half edge sul suo bordo interno.</li>
+<li>Vettore Normale: vettore normale alla faccia;</li>
+<li>Area: area della faccia;</li>
+<li>Colore: colore associato alla faccia;</li>
+<li>Flag: valore associato alla faccia assegnabile a piacimento dall'utente.</li>
+</ul>
+<p>Il compito della classe <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> è quello di mettere insieme tutti i componenti, modellarne le relazioni di adiacenza e topologia sulla base di quanto specificato dall'utente, rendere disponibili, quando necessario, le informazioni relative a un singolo componente (sia esso un vertice, un half-edge o una faccia) e consentirne la modifica ed eventualmente la rimozione. Il modello di ispirazione è quello classico, presentato anche in Computational Geometry: Algorithms and Applications; i vertici, gli half-edge e le facce sono inserite in tre array separati (non accessibili direttamente), e i collegamenti tra elementi appartenenti agli array (es: un vertice che funge da origine per l'half-edge) sono gestiti utilizzando puntatori. Le operazioni di inserimento, modifica e cancellazione di vertici, half edge e facce sono effettuate in tempo costante.</p>
+<h1>4 Come usare la <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a></h1>
+<p>In questa sezione viene data una piccola introduzione all'utilizzo della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>. Verranno fatti degli esempi di utilizzo sui vertici, ma questi potranno poi essere estesi anche a half edge e facce. <br />
+Una istanza di una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> può essere semplicemente creata come segue:<br />
+ </p><div class="fragment"><div class="line"><a class="code" href="classDcel.html">Dcel</a> d;</div></div><!-- fragment --><p>Una mesh può essere caricata da file:</p>
+<div class="fragment"><div class="line">d.<a class="code" href="classDcel.html#ad316c9bb201def5f716236516e50f13f">loadFromObjFile</a>(<span class="stringliteral">&quot;mesh.obj&quot;</span>);</div><div class="line">d.<a class="code" href="classDcel.html#a08bae77453be0c3a6a3aa5a8ae516250">loadFromPlyFile</a>(<span class="stringliteral">&quot;mesh.ply&quot;</span>);</div></div><!-- fragment --><p>e successivamente salvata su file:</p>
+<div class="fragment"><div class="line">d.<a class="code" href="classDcel.html#ab4d65ec2bafee7598994ebd6be46be91">saveOnObjFile</a>(<span class="stringliteral">&quot;mesh.obj&quot;</span>);</div><div class="line">d.<a class="code" href="classDcel.html#a8e14bffe085c3781a6ac018010afdabf">saveOnPlyFile</a>(<span class="stringliteral">&quot;mesh.ply&quot;</span>);</div></div><!-- fragment --><p>Questi formati sono supportati in modalità testuale. Vi è anche la possibilità di salvare e caricare una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> utilizzando un formato appositamente creato per la stessa.</p>
+<div class="fragment"><div class="line">d.<a class="code" href="classDcel.html#a66a393c1fbe684a34706a811065f443f">loadFromDcelFile</a>(<span class="stringliteral">&quot;mesh.dcel&quot;</span>);</div><div class="line"><span class="comment">//some operations</span></div><div class="line">d.<a class="code" href="classDcel.html#a8f22a529d0241e095c7f4eea911563b2">saveOnDcelFile</a>(<span class="stringliteral">&quot;newmesh.dcel&quot;</span>);</div></div><!-- fragment --><p>È anche possibile caricare manualmente tutte le componenti nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>:</p>
+<div class="fragment"><div class="line"><a class="code" href="classDcel_1_1Vertex.html">Dcel::Vertex</a>* v = d.<a class="code" href="classDcel.html#a7ebcda7c401187a2f602dc7798d03f49">addVertex</a>(); <span class="comment">// v è un puntatore al vertice appena inserito nella Dcel</span></div><div class="line">v-&gt;<a class="code" href="classDcel_1_1Vertex.html#a9711522bca5e434f38a4dd693472017c">setCoordinate</a>(<a class="code" href="classPoint.html">Pointd</a>(0.0, 0.1, 0.2)); <span class="comment">// setto le coordinate del vertice</span></div><div class="line"><a class="code" href="classDcel_1_1HalfEdge.html">Dcel::HalfEdge</a>* he = d.<a class="code" href="classDcel.html#a12ae4b9aa17278c577145628819f914d">addHalfEdge</a>(); <span class="comment">// he è un puntatore all&#39;half edge appena inserito nella Dcel</span></div><div class="line">he-&gt;<a class="code" href="classDcel_1_1HalfEdge.html#a63ff5e88f748e668df2c6c982b4d7295">setFromVertex</a>(v); <span class="comment">// v diventa il from vertex di he</span></div><div class="line"><a class="code" href="classDcel_1_1Face.html">Dcel::Face</a>* f = d.<a class="code" href="classDcel.html#a67725d1205380c7fedcb8db84aadcfca">addFace</a>(); <span class="comment">// f è un puntatore alla faccia appena inserita nella Dcel</span></div><div class="line">f-&gt;<a class="code" href="classDcel_1_1Face.html#af14047c54344631b42bf5a7758ade2a7">setOuterHalfEdge</a>(he); <span class="comment">// he diventa l&#39;half edge sul bordo esterno della faccia</span></div><div class="line">he-&gt;<a class="code" href="classDcel_1_1HalfEdge.html#aead7aa6b63f0773ae8d877e2f476e3f4">setFace</a>(f); <span class="comment">// f diventa la faccia incidente all&#39;half edge he</span></div></div><!-- fragment --><p>Nel momento in cui viene eseguito il metodo <code>add_vertex()</code> , viene inserito un vertice nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>. Viene restituito un <code><a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a>*</code> , ossia un puntatore al vertice presente nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>. Dal momento in cui viene inserito, per poter manipolare il vertice presente sulla <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> bisognerà usare il puntatore <code>v</code> . Ovviamente, il discorso è invariato anche per quanto riguarda gli half edge e le facce. Al momento dell'inserimento di un oggetto nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> viene assegnato ad esso anche un ID univoco e non modificabile che permette una facile identificazione delle componenti della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> da parte dell'utente. Tale ID è valido solamente nel periodo in cui il vertice si trova nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>. Ciò significa che, nel caso in cui il vertice venga eliminato dalla <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>, il suo ID potrà essere riutilizzato per altri vertici che verranno inseriti.</p>
+<p>Si noti come è necessario utilizzare il puntatore di un oggetto già inserito precedentemente nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> per settare i campi degli oggetti <a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a>, <a class="el" href="classDcel_1_1HalfEdge.html" title="Classe rappresentante un half edge della Dcel. ">Dcel::HalfEdge</a> e <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>. Quando viene creato un oggetto <code><a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a></code> , <code><a class="el" href="classDcel_1_1HalfEdge.html" title="Classe rappresentante un half edge della Dcel. ">Dcel::HalfEdge</a></code> o <code><a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a></code> , le sue componenti che dovrebbero fare riferimento ad altri oggetti presenti nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> (per esempio la componente <code>incidentHalfEdge</code> nella classe <code><a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a></code> ) vengono inizializzate a <code>nullptr</code> e dovrebbero essere modificate non appena si possiede il riferimento all'oggetto stesso nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>. Nel momento in cui si eseguono dei metodi che necessitano di queste componenti, nel caso in cui le componenti stesse siano ancora settate a <code>nullptr</code> o contengano degli elementi non disponibili (per esempio, elementi eliminati dalla <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> senza averne aggiornato anche i riferimenti), allora si genera un errore di <em>Segmentation</em> <em>Fault</em>, che non può essere gestito.<br />
+Per l'eliminazione di un elemento della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>, è disponibile il metodo:<br />
+ </p><div class="fragment"><div class="line">d.<a class="code" href="classDcel.html#ad65dfc787d67b0ab7e0d31d1144ca46b">deleteVertex</a>(v);</div></div><!-- fragment --><p>Nel metodo <code>deleteVertex(v)</code> viene eliminato il vertice puntato da <code>v</code> dalla <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> (viene gestita automaticamente l'allocazione dinamica dell'oggetto). Inoltre, il metodo va a sostituire i riferimenti a v con <code>nullptr</code> <em>dove</em> <em>è</em> <em>supposto</em> <em>che</em> <em>ci</em> <em>siano</em>. Per esempio, se stiamo eliminando <code>v</code>, il metodo controlla se è presente un riferimento a <code>v</code> in tutti i suoi half edge uscenti (campo <code>fromVertex</code> ) e in tutti i sui half edge entranti (campo <code>toVertex</code>). Se questi campi contengono <code>v</code>, allora vengono settati a nullptr. Effettuare una qualsiasi operazione su <code>v</code> dopo la <code>deleteVertex()</code> comporterà un errore di Segmentation Fault e di conseguenza un crash dell'applicazione.<br />
+ È possibile inoltre resettare una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>:</p>
+<div class="fragment"><div class="line">d.<a class="code" href="classDcel.html#a1eb2743524752742b972b5be76a0ae58">reset</a>();</div></div><!-- fragment --><p>Il metodo reset si occupa di eliminare tutte le componenti della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>. Alla fine di tale metodo, <code>d</code> conterrà 0 vertici, 0 half edge e 0 facce.</p>
+<h1>5 Iteratori</h1>
+<p>È possibile scorrere gli elementi della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> utilizzando gli iteratori (di cui vi sono anche i relativi iteratori <code>const</code>):<br />
+ </p><div class="fragment"><div class="line"><a class="code" href="classDcel_1_1VertexIterator.html">Dcel::VertexIterator</a> vit;</div><div class="line"><a class="code" href="classDcel_1_1HalfEdgeIterator.html">Dcel::HalfEdgeIterator</a> heit;</div><div class="line"><a class="code" href="classDcel_1_1FaceIterator.html">Dcel::FaceIterator</a> fit;</div><div class="line"><a class="code" href="classDcel_1_1ConstVertexIterator.html">Dcel::ConstVertexIterator</a> cvit;</div><div class="line"><a class="code" href="classDcel_1_1ConstHalfEdgeIterator.html">Dcel::ConstHalfEdgeIterator</a> cheit;</div><div class="line"><a class="code" href="classDcel_1_1ConstFaceIterator.html">Dcel::ConstFaceIterator</a> cfit;</div></div><!-- fragment --><p>Si possono, per esempio, scorrere e modificare tutte le coordinate dei vertici della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> nel seguente modo:<br />
+ </p><div class="fragment"><div class="line"><span class="keywordflow">for</span> (vit = d.<a class="code" href="classDcel.html#afb6c4b078f99946beb9d57c15c6ecebf">vertexBegin</a>(); vit != d.<a class="code" href="classDcel.html#ae7f10b2e0f1997dc535fac1563786f8d">vertexEnd</a>(); ++vit){</div><div class="line">    <a class="code" href="classDcel_1_1Vertex.html">Dcel::Vertex</a>* v = *vit;</div><div class="line">    v-&gt;<a class="code" href="classDcel_1_1Vertex.html#a9711522bca5e434f38a4dd693472017c">setCoordinate</a>(<a class="code" href="classPoint.html">Pointd</a>(0.1, 0.2, 0.3));</div><div class="line">}</div></div><!-- fragment --><p>L'insieme di vertici (come anche quello degli half edge e delle facce) è gestito mediante un array. L'id di ogni vertice rappresenta la posizione stessa del vertice all'interno dell'array. Non è possibile tuttavia ciclare direttamente su questo array per via della gestione dell'eliminazione degli elementi. Nel momento in cui in vertice viene eliminato, la sua posizione verrà settata nullptr. Gli iteratori permettono di saltare automaticamente queste posizioni.</p>
+<p>Vi sono inoltre degli iteratori che permettono di navigare la mesh utilizzando le relazioni di adiacenza/incidenza degli elementi. Per esempio, per scorrere e modificare tutti i vertici adiacenti a <code>vid</code> :<br />
+ </p><div class="fragment"><div class="line"><a class="code" href="classDcel_1_1Vertex_1_1AdjacentVertexIterator.html">Dcel::Vertex::AdjacentVertexIterator</a> avid;</div><div class="line"><span class="keywordflow">for</span> (avid = vid-&gt;adjacentVertexBegin(); avid != vid-&gt;adjacentVertexEnd(); ++avid)</div><div class="line">    (*avid)-&gt;setCoordinate(<a class="code" href="classPoint.html">Pointd</a>(0.1, 0.2, 0.3));</div></div><!-- fragment --><p>I vertici verranno visitati ordinatamente, in base al senso degli half edge sulle facce (senso antiorario). Nel caso si voglia scorrere i vertici in senso opposto, è possibile scrivere la seguente porzione di codice:<br />
+ </p><div class="fragment"><div class="line"><a class="code" href="classDcel_1_1Vertex_1_1AdjacentVertexIterator.html">Dcel::Vertex::AdjacentVertexIterator</a> avid;\n</div><div class="line"><span class="keywordflow">for</span> (avid = vid-&gt;adjacentVertexBegin(); avid != vid-&gt;adjacentVertexEnd(); --avid)</div><div class="line">    (*avid)-&gt;setCoordinate(<a class="code" href="classPoint.html">Pointd</a>(0.1, 0.2, 0.3));</div></div><!-- fragment --><p>Questi iteratori necessitano di lavorare su una mesh manifold e chiusa. Infatti, gli iteratori non fanno altro che utilizzare i riferimenti contenuti in <a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a>, <a class="el" href="classDcel_1_1HalfEdge.html" title="Classe rappresentante un half edge della Dcel. ">Dcel::HalfEdge</a> e <a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a>. In caso di mesh non-manifold o non chiusa, è possibile che molti riferimenti rimangano settati a nullptr. Nel momento in cui vi sono degli errori sui riferimenti (soprattutto nelle relazioni di prev, next e twin degli half edge), o la <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> non è utilizzata correttamente, è possibile che gli iteratori causino Segmentation Fault o anche loop infiniti. Se, per esempio, si deve lavorare con mesh non chiuse, è consigliabile navigare manualmente la <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> senza utilizzare gli iteratori (che non sono in grado di gestire tutti i possibili casi che possono verificarsi in mesh di questo tipo).<br />
+Talvolta questi iteratori sono usati anche all'interno di alcuni metodi presenti nella <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>, in quanto sono dei metodi pensati per lavorare su mesh chiuse e manifold. <br />
+Per <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> chiusa e manifold, si intende una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> che rispetta le seguenti caratteristiche:</p><ul>
+<li>Ogni half edge <code>e</code> ha un twin <code>t</code>, e il suo twin <code>t</code> ha come twin l'half edge <code>e</code>.</li>
+<li>Ogni half edge ha from vertex uguale al to vertex del suo twin, e viceversa.</li>
+<li>Partendo da un half edge <code>e</code>, una serie di operazioni di next (3 se si ha una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> di triangoli) riporta all'half edge <code>e</code>, tutti questi half edge hanno la stessa faccia incidente.</li>
+<li>Partendo da un half edge <code>e</code>, una serie di operazioni di prev (3 se si ha una <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> di triangoli) riporta all'half edge <code>e</code>, tutti questi half edge hanno la stessa faccia incidente.</li>
+<li>Il to vertex di un half edge corrisponde al from vertex del suo next;</li>
+<li>Il from vertex fi un half edge corrisponde al to vertex del suo prev.</li>
+<li>Partendo da un half edge <code>e</code>, una serie di operazioni di twin e next riporta all'half edge <code>e</code>.</li>
+<li>Partendo da un half edge <code>e</code>, una serie di operazioni di prev e twin riporta all'half edge <code>e</code>.</li>
+<li>Non esistono due vertici che hanno le stesse coordinate. <br />
+</li>
+<li>Ogni vertice <code>v</code> ha come half edge uscente un half edge che ha come from vertex <code>v</code>.</li>
+<li>Ogni faccia <code>f</code> ha come outer half edge e inner half edges degli edge che hanno <code>f</code> come faccia incidente.</li>
+</ul>
+<p>Per le funzioni avanzate della <a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a>, vedere la documentazione relativa alle classi: <br />
+</p><ul>
+<li><a class="el" href="classDcel.html" title="Struttura dati Double Conntected Edge List. ">Dcel</a> <br />
+</li>
+<li><a class="el" href="classDcel_1_1Vertex.html" title="Classe rappresentante un vertice della DCEL. ">Dcel::Vertex</a> <br />
+</li>
+<li><a class="el" href="classDcel_1_1HalfEdge.html" title="Classe rappresentante un half edge della Dcel. ">Dcel::HalfEdge</a> <br />
+</li>
+<li><a class="el" href="classDcel_1_1Face.html" title="Classe rappresentante una faccia della Dcel. ">Dcel::Face</a> <br />
+ <dl class="section author"><dt>Autore</dt><dd>Alessandro Muntoni (<a href="#" onclick="location.href='mai'+'lto:'+'mun'+'to'+'ni.'+'al'+'ess'+'an'+'dro'+'@g'+'mai'+'l.'+'com'; return false;">munto<span style="display: none;">.nosp@m.</span>ni.a<span style="display: none;">.nosp@m.</span>lessa<span style="display: none;">.nosp@m.</span>ndro<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a>) </dd>
+<dd>
+Andreas Scalas (<a href="#" onclick="location.href='mai'+'lto:'+'and'+'re'+'ass'+'ca'+'las'+'@t'+'isc'+'al'+'i.i'+'t'; return false;">andre<span style="display: none;">.nosp@m.</span>assc<span style="display: none;">.nosp@m.</span>alas@<span style="display: none;">.nosp@m.</span>tisc<span style="display: none;">.nosp@m.</span>ali.i<span style="display: none;">.nosp@m.</span>t</a>) </dd></dl>
+<dl class="section version"><dt>Versione</dt><dd>1.0 </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>Alessandro Muntoni 2016. </dd></dl>
+</li>
+</ul>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generato da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>
+  </ul>
+</div>
+</body>
+</html>
