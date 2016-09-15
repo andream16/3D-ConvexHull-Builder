@@ -21,12 +21,13 @@ public:
 private:
     DrawableDcel *dcel;
     typedef std::vector<Dcel::Vertex*> VertexPointersList;
+    typedef std::vector <Pointd> PointsVector;
 
     VERTEX_POINTERS_ARRAY(addVertices);
     VERTEX_POINTERS_ARRAY(verticesShuffler);
-    std::vector <Pointd> getFirstFourVertices(VertexPointersList);
+    PointsVector getFirstFourVertices(VertexPointersList);
     void buildTetrahedron(VertexPointersList);
-    bool coplanarityChecker(VertexPointersList);
+    bool coplanarityChecker(PointsVector);
 };
 
 #undef MY_PREFIX_DECL_FN
