@@ -11,6 +11,9 @@
 #include <lib/dcel/dcel_vertex_iterators.h>
 #include <vector>
 #include <string>
+
+#include <conflictgraph.h>
+
 class ConvexHullBuilder{
 
 public:
@@ -31,6 +34,8 @@ private:
     int coplanarityChecker(PointsVector);
     void tetrahedronMaker(PointsVector, int);
     void addFaceTotetrahedron(Vertex, HalfEdge);
+    VertexPointersList getVertices(VertexPointersList);
+
 };
 
 #undef VERTEX_POINTERS_ARRAY
