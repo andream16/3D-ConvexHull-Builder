@@ -85,9 +85,6 @@ void ConvexHullBuilder::tetrahedronMaker(POINTS_VECTOR vertices, int determinant
     Dcel::HalfEdge* h1 = this->dcel->addHalfEdge();
     Dcel::HalfEdge* h2 = this->dcel->addHalfEdge();
     Dcel::HalfEdge* h3 = this->dcel->addHalfEdge();
-    Dcel::HalfEdge* h4 = this->dcel->addHalfEdge();
-    Dcel::HalfEdge* h5 = this->dcel->addHalfEdge();
-    Dcel::HalfEdge* h6 = this->dcel->addHalfEdge();
 
     /** In order to ensure that we are always working in counter-clockwise way
      *  we need to change settings based on the determinant calculated before **/
@@ -124,24 +121,6 @@ void ConvexHullBuilder::tetrahedronMaker(POINTS_VECTOR vertices, int determinant
         h3->setToVertex(v3);
         h3->setNext(h2);
         h3->setPrev(h1);
-
-        //h1 twin
-        h4->setFromVertex(v1);
-        h4->setToVertex(v2);
-        h4->setNext(h6);
-        h4->setPrev(h5);
-
-        //h2 twin
-        h5->setFromVertex(v3);
-        h5->setToVertex(v1);
-        h5->setNext(h4);
-        h5->setPrev(h6);
-
-        //h3 twin
-        h6->setFromVertex(v2);
-        h6->setToVertex(v3);
-        h6->setNext(h5);
-        h6->setPrev(h4);
      }
 
     //Setting the cardinality of vertices
