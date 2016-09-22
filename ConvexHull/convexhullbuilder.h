@@ -23,6 +23,7 @@ public:
 
 private:
     DrawableDcel *dcel;
+
     typedef std::vector<Dcel::Vertex*> VertexPointersList;
     typedef std::vector <Pointd> PointsVector;
     typedef Dcel::Vertex* Vertex;
@@ -36,6 +37,7 @@ private:
     void tetrahedronMaker(PointsVector, int);
     void addFaceTotetrahedron(Vertex, HalfEdge);
     VertexPointersList getVertices(VertexPointersList);
+    void finalizeConvexHull(VertexPointersList);
 
 };
 

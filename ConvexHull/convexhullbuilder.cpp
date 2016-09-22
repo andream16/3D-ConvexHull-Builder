@@ -54,6 +54,16 @@ void ConvexHullBuilder::computeConvexHull(){
     ConflictGraph conflictGraph = ConflictGraph(this->dcel, verticesForCG);
     conflictGraph.initializeConflictGraph();
 
+    //Initializing faces visible by a vertex
+     std::set<FACE>* facesVisible;
+
+    //Loop through remaining vertices
+    for(unsigned int i=4; i<allVertices.size(); i++){
+      //Check Which faces sees i-Vertex and assigning them
+      facesVisible = conflictGraph.lookForVisibleFaces(allVertices[i]);
+
+    }
+
 }
 
 /**

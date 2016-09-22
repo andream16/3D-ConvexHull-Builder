@@ -15,6 +15,7 @@ public:
     ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> tetrahedronVertices); // Class COnstructor
     ~ConflictGraph(); //Destructor Declaration
     void initializeConflictGraph();
+    std::set<Dcel::Face*>* lookForVisibleFaces(Dcel::Vertex*);
 
     std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> VertexConflictList;
     std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> FaceConflictList;
@@ -33,6 +34,7 @@ private:
     void crossProduct(Eigen::Matrix4d, Face, Vertex);
     void addFace(Face, Vertex);
     void addVertex(Face, Vertex);
+
 
 };
 
