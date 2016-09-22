@@ -11,12 +11,17 @@
 
 
 /**
- * @brief ConvexHullBuilder::ConvexHullBuilder()
+ * @brief ConvexHullBuilder::ConvexHullBuilder() Conmstructor
  * @params takes dcel as input
  */
 ConvexHullBuilder::ConvexHullBuilder(DrawableDcel* dcel){
    this->dcel = dcel;
 }
+
+/**
+ * @brief ConvexHullBuilder Class Destructor
+ **/
+ConvexHullBuilder::~ConvexHullBuilder(){}
 
 /**
  * @brief ConvexHullBuilder::computeConvexHull() takes dcel as input.
@@ -27,6 +32,10 @@ void ConvexHullBuilder::computeConvexHull(){
 
     //Array of vertices
     VERTEX_POINTERS_LIST allVertices;
+    //Vertices To Get passed to Conflict Graph
+    VERTEX_POINTERS_LIST verticesForCG;
+    //Four non coplanar vertices
+    POINTS_VECTOR fourVertices;
 
     //Adds all Dcel vertices pointers to allVertices
     allVertices = addVertices(allVertices);
@@ -37,6 +46,13 @@ void ConvexHullBuilder::computeConvexHull(){
     /** Checks Coplanarity of 4 vertices,
      *  if coplanar -> pick other 4 vertices, if not -> build a tetrahedron with them**/
     buildTetrahedron(allVertices);
+
+    //Array of Pointers to Vertices needed for Conflict Graph Initialization
+    verticesForCG = getVertices(allVertices);
+
+    //Initializes Conflict Graph with Dcel And First 4 Vertices
+    ConflictGraph conflictGraph = ConflictGraph(this->dcel, verticesForCG);
+    conflictGraph.initializeConflictGraph();
 
 }
 
@@ -66,6 +82,7 @@ void ConvexHullBuilder::buildTetrahedron(VERTEX_POINTERS_LIST allVertices){
     /** Takes the four non complanar points and inserts them into the dcel to
      *  build the tetrahedron, orientation based on determinant value (coplanarity)*/
     tetrahedronMaker(fourPoints, coplanarity);
+
 }
 
 /**
@@ -227,8 +244,8 @@ void ConvexHullBuilder::addFaceTotetrahedron(VERTEX lastVertex, HALF_EDGE passed
  */
 VERTEX_POINTERS_LIST ConvexHullBuilder::addVertices(VERTEX_POINTERS_LIST allVertices){
     //Adds all vertices to an array
-    for (Dcel::VertexIterator vit = dcel->vertexBegin(); vit != dcel->vertexEnd(); ++vit){
-        Dcel::Vertex* v = *vit;
+    for (Dcel::VertexIterator vertex = dcel->vertexBegin(); vertex != dcel->vertexEnd(); vertex++){
+        Dcel::Vertex* v = *vertex;
         allVertices.push_back(v);
     }
     //returns array of pointers to vertices
@@ -268,11 +285,12 @@ int ConvexHullBuilder::coplanarityChecker(POINTS_VECTOR fourPoints){
 
     //builds 4*4 matrix using eigen from @https://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html
     Eigen::Matrix4d m;
-            for(int i=0; i<4; i++){
-                m(i, 0) = fourPoints[i].x();
-                m(i, 1) = fourPoints[i].y();
-                m(i, 2) = fourPoints[i].z();
-                m(i, 3) = 1; //last column made of ones
+
+    for(int i=0; i<4; i++){
+      m(i, 0) = fourPoints[i].x();
+      m(i, 1) = fourPoints[i].y();
+      m(i, 2) = fourPoints[i].z();
+      m(i, 3) = 1; //last column made of ones
     }
 
     //checks matrix determinant from @https://eigen.tuxfamily.org/dox/group__TutorialLinearAlgebra.html
@@ -299,7 +317,7 @@ int ConvexHullBuilder::coplanarityChecker(POINTS_VECTOR fourPoints){
 
 /**
  * @brief  ConvexHullBuilder::getFirstFourVertices gets first 4 vertices
- * @param  VERTEX_POINTERS_LIST allEVrtices contains all remaining vertices
+ * @param  VERTEX_POINTERS_LIST allVertices contains all remaining vertices
  * @return array of vertices first 4 vertices pointers
  */
 POINTS_VECTOR ConvexHullBuilder::getFirstFourVertices(VERTEX_POINTERS_LIST allVertices){
@@ -312,6 +330,23 @@ POINTS_VECTOR ConvexHullBuilder::getFirstFourVertices(VERTEX_POINTERS_LIST allVe
     firstFourVertices.push_back(allVertices[3]->getCoordinate());
 
     return firstFourVertices;
+}
+
+/**
+ * @brief  ConvexHullBuilder::getVertices gets first 4 vertices*
+ * @param  VERTEX_POINTERS_LIST sendVertices
+ * @return array of vertices first 4 vertices pointers
+ */
+VERTEX_POINTERS_LIST ConvexHullBuilder::getVertices(VERTEX_POINTERS_LIST allVertices){
+    //Init returning array
+    VERTEX_POINTERS_LIST sendVertices;
+
+    sendVertices.push_back(allVertices[0]);
+    sendVertices.push_back(allVertices[1]);
+    sendVertices.push_back(allVertices[2]);
+    sendVertices.push_back(allVertices[3]);
+
+    return sendVertices;
 }
 
 #undef FACE
