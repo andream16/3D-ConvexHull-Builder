@@ -12,7 +12,8 @@
 class ConflictGraph{
 
 public:
-    ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> tetrahedronVertices);
+    ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> tetrahedronVertices); // Class COnstructor
+    ~ConflictGraph(); //Destructor Declaration
     void initializeConflictGraph();
 
     std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> VertexConflictList;

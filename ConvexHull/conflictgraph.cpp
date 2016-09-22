@@ -8,13 +8,18 @@
 #define FACE Dcel::Face*
 
 /**
- * @brief ConflictGraph::ConflictGraph()
+ * @brief ConflictGraph::ConflictGraph() Constructor
  * @params takes dcel and tetrahedron vertices as input
  */
 ConflictGraph::ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> tetrahedronVertices){
     this->dcel = dcel;
     this->tetrahedronVertices = tetrahedronVertices;
 }
+
+/**
+ * @brief ConflictGraph Class Destructor
+ **/
+ConflictGraph::~ConflictGraph(){}
 
 /**
  * @brief ConflictGraph::initializeConflictGraph() initializes the conflict graph
@@ -107,12 +112,12 @@ void ConflictGraph::addVertex(FACE face, VERTEX vertex){
         //If the list already exists
         if(iter != VertexConflictList.end()){
             //Insert current face into it
-            std::set<Dcel::Vertex*>* vertexList = VertexConflictList[face];
+            std::set<VERTEX>* vertexList = VertexConflictList[face];
             vertexList->insert(vertex);
 
         } else {
             //else a new one gets created and face gets inserted
-            std::set<Dcel::Vertex*>* vertexList = new std::set<Dcel::Vertex*>();
+            std::set<VERTEX>* vertexList = new std::set<VERTEX>();
             vertexList->insert(vertex);
             VertexConflictList[face]=vertexList;
     }
@@ -128,18 +133,19 @@ void ConflictGraph::addFace(FACE face, VERTEX vertex){
         //If the list already exists
         if(iter!=FaceConflictList.end()){
             //Insert current Vertex into it
-            std::set<Dcel::Face*>* faceList = FaceConflictList[vertex];
+            std::set<FACE>* faceList = FaceConflictList[vertex];
             faceList->insert(face);
         }else{
             //else a new one gets created and face gets inserted
-            std::set<Dcel::Face*>* faceList = new std::set<Dcel::Face*>();
+            std::set<FACE>* faceList = new std::set<FACE>();
             faceList->insert(face);
             FaceConflictList[vertex]=faceList;
     }
+
 }
 
-
+#undef FACE
 #undef FACE_ARRAY
 #undef VERTEX
-#undef VERTEX_POINTERS_LIST
 #undef POINTS_VECTOR
+#undef VERTEX_POINTERS_LIST

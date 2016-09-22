@@ -17,7 +17,8 @@
 class ConvexHullBuilder{
 
 public:
-    ConvexHullBuilder(DrawableDcel* dcel);
+    ConvexHullBuilder(DrawableDcel* dcel); //Constructor Declaration
+    ~ConvexHullBuilder(); //Destructor Declaration
     void computeConvexHull();
 
 private:

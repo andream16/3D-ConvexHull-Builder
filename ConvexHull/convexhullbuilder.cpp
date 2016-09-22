@@ -11,12 +11,17 @@
 
 
 /**
- * @brief ConvexHullBuilder::ConvexHullBuilder()
+ * @brief ConvexHullBuilder::ConvexHullBuilder() Conmstructor
  * @params takes dcel as input
  */
 ConvexHullBuilder::ConvexHullBuilder(DrawableDcel* dcel){
    this->dcel = dcel;
 }
+
+/**
+ * @brief ConvexHullBuilder Class Destructor
+ **/
+ConvexHullBuilder::~ConvexHullBuilder(){}
 
 /**
  * @brief ConvexHullBuilder::computeConvexHull() takes dcel as input.
@@ -42,9 +47,10 @@ void ConvexHullBuilder::computeConvexHull(){
      *  if coplanar -> pick other 4 vertices, if not -> build a tetrahedron with them**/
     buildTetrahedron(allVertices);
 
+    //Array of Pointers to Vertices needed for Conflict Graph Initialization
     verticesForCG = getVertices(allVertices);
 
-    //Initializes Conflict Graph
+    //Initializes Conflict Graph with Dcel And First 4 Vertices
     ConflictGraph conflictGraph = ConflictGraph(this->dcel, verticesForCG);
     conflictGraph.initializeConflictGraph();
 
