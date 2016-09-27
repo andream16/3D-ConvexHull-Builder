@@ -30,6 +30,7 @@ private:
     typedef std::vector<Dcel::Vertex*> VertexPointersList;
     typedef Dcel::HalfEdge* HalfEdge;
 
+
     void checkVisibility();
     void fillCrossProductMatrix(Vertex);
     void crossProduct(Eigen::Matrix4d, Face, Vertex);
