@@ -36,3 +36,6 @@ Makefile*
 dcel_doc/
 
 ConvexHull/lib/dcel_doc
+
+ConvexHull/lib/dcel_doc/
+
