@@ -78,6 +78,9 @@ void ConvexHullBuilder::finalizeConvexHull(VertexPointersList remainingVertices)
           //checking the horizon to see which are the faces visible by the vertex
           horizon = bringMeTheHorizon(facesVisible); //proper name
 
+
+
+
           std::cout << "hello";
       }
 
