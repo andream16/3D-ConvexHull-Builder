@@ -5,9 +5,9 @@
  * @brief ConflictGraph::ConflictGraph() Constructor
  * @params takes dcel and tetrahedron vertices as input
  */
-ConflictGraph::ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> tetrahedronVertices){
+ConflictGraph::ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> remainingVertices){
     this->dcel = dcel;
-    this->tetrahedronVertices = tetrahedronVertices;
+    this->remainingVertices = remainingVertices;
 }
 
 /**
@@ -29,34 +29,23 @@ void ConflictGraph::initializeConflictGraph(){
  * @param POINTS_VECTOR tetrahedronVertices, FACE_ARRAY tetrahedronFaces
  */
 void ConflictGraph::checkVisibility(){
-    //for each vertex
-    for(unsigned int i=0; i<tetrahedronVertices.size(); i ++){
-        //Compute the cross product for i-vertex coordinates
-        fillCrossProductMatrix(tetrahedronVertices[i]);
-    }
-}
-
-/**
- * @brief fillCrossProductMatrix(VERTEX currentVertex) fills Eigen Matrix with current coordinates
- *        and calls crossProduct to check whether ord not a vertex sees a face
- * @param VERTEX currVertex
- */
-void ConflictGraph::fillCrossProductMatrix(Vertex currVertex){
 
     //Initialize 4*4 Matrix
     Eigen::Matrix4d matrix;
 
-    //For each face present in the dcel
-    for(Dcel::FaceIterator face = dcel->faceBegin(); face != dcel->faceEnd(); face++){
+    //for each face
+    for(Dcel::FaceIterator faceIterator = dcel->faceBegin(); faceIterator != dcel->faceEnd(); ++faceIterator){
 
-        //Pointing to current Face
-        Dcel::Face* currentFace= *face;
+        Face currentFace = *faceIterator;
+
+        unsigned int k=0;
 
         //Get current Outer Half Edge
-        Dcel::HalfEdge* he = currentFace->getOuterHalfEdge();
+        HalfEdge he = currentFace->getOuterHalfEdge();
 
         //For each Vertex of the face
-        for(unsigned int k=0; k<3; k++){
+        for( unsigned int i=0; k<3; i++, k++ ){
+
           //Get Current Vertex Coordinates
           Pointd currVertexCoordinates = he->getFromVertex()->getCoordinate();
 
@@ -67,19 +56,25 @@ void ConflictGraph::fillCrossProductMatrix(Vertex currVertex){
           matrix(k, 3) = 1; //last column made of ones
 
           //Take Next Edge
-          he= he->getNext();
+          he = he->getNext();
 
         }
 
-        //Add current vertex coordinates to last row of the matrix
-        matrix(3,0) = currVertex->getCoordinate().x();
-        matrix(3,1) = currVertex->getCoordinate().y();
-        matrix(3,2) = currVertex->getCoordinate().z();
-        matrix(3,3) = 1;
+        for(unsigned j=4; j<remainingVertices.size(); j++){
 
-        //compute cross product
-        crossProduct(matrix, currentFace, currVertex);
-    }
+          //Add current vertex coordinates to last row of the matrix
+          matrix(3,0) = remainingVertices[j]->getCoordinate().x();
+          matrix(3,1) = remainingVertices[j]->getCoordinate().y();
+          matrix(3,2) = remainingVertices[j]->getCoordinate().z();
+          matrix(3,3) = 1;
+
+          //compute cross product
+          crossProduct(matrix, currentFace, remainingVertices[j]);
+        }
+
+
+     }
+
 }
 
 /**
@@ -102,18 +97,18 @@ void ConflictGraph::crossProduct(Eigen::Matrix4d matrix, Face face, Vertex verte
  */
 void ConflictGraph::addVertex(Face face, Vertex vertex){
     //dinamically typed iterator
-    auto vertexIterator = this->VertexConflictList.find(face);
+    auto vertexIterator = this->vertexConflictList.find(face);
         //If the list already exists
-        if(vertexIterator != VertexConflictList.end()){
+        if(vertexIterator != vertexConflictList.end()){
             //Insert current face into it
-            std::set<Vertex>* vertexList = VertexConflictList[face];
+            std::set<Vertex>* vertexList = vertexConflictList[face];
             vertexList->insert(vertex);
 
         } else {
             //else a new one gets created and face gets inserted
             std::set<Vertex>* vertexList = new std::set<Vertex>();
             vertexList->insert(vertex);
-            VertexConflictList[face]=vertexList;
+            vertexConflictList[face] = vertexList;
     }
 }
 
@@ -123,32 +118,32 @@ void ConflictGraph::addVertex(Face face, Vertex vertex){
  */
 void ConflictGraph::addFace(Face face, Vertex vertex){
     //dynamically typed iterator, looks for face that contains vertex
-    auto faceIterator =this->FaceConflictList.find(vertex);
-        //If the list already exists
-        if(faceIterator!=FaceConflictList.end()){
+    auto faceIterator =this->faceConflictList.find(vertex);
+        //If the set already exists
+        if(faceIterator != faceConflictList.end()){
             //Insert current Vertex into it
-            std::set<Face>* faceList = FaceConflictList[vertex];
+            std::set<Face>* faceList = faceConflictList[vertex];
             faceList->insert(face);
         } else {
             //else a new one gets created and face gets inserted
             std::set<Face>* faceList = new std::set<Face>();
             faceList->insert(face);
-            FaceConflictList[vertex]=faceList;
+            faceConflictList[vertex] = faceList;
         }
 }
 
 /**
  * @brief lookForVisibleFaces(VERTEX vertex) finds which faces are visible from a given vertex
  * @param VERTEX vertex given vertex
- * @retuns map of visible faces and passed Vertex
+ * @retuns set of Faces seen by the vertex
  */
 std::set<Dcel::Face*>* ConflictGraph::lookForVisibleFaces(Vertex vertex){
     //dynamically typed iterator, looks for face that contains vertex
-    auto faceFinderIterator = this->FaceConflictList.find(vertex);
-    //If it is not present in FaceConflictList
-    if(faceFinderIterator != FaceConflictList.end()){
+    auto faceFinderIterator = this->faceConflictList.find(vertex);
+    //If it is not present in faceConflictList
+    if(faceFinderIterator != faceConflictList.end()){
        //Add that face
-       return new std::set<Face>(*FaceConflictList.at(vertex));
+       return new std::set<Face>(*faceConflictList.at(vertex));
     } else {
        //return void
        return new std::set<Face>();

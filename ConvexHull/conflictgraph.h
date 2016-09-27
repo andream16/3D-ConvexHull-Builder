@@ -16,12 +16,12 @@ public:
     void initializeConflictGraph();
     std::set<Dcel::Face*>* lookForVisibleFaces(Dcel::Vertex*);
 
-    std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> VertexConflictList;
-    std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> FaceConflictList;
+    std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> vertexConflictList;
+    std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> faceConflictList;
 
 private:
     DrawableDcel *dcel;
-    std::vector<Dcel::Vertex*> tetrahedronVertices;
+    std::vector<Dcel::Vertex*> remainingVertices;
 
     typedef std::vector <Pointd> PointsVector;
     typedef std::vector <Dcel::Face*> FaceArray;
