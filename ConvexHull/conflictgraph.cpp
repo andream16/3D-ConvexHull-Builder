@@ -1,12 +1,6 @@
 #include "conflictgraph.h"
 #include <stdlib.h>
 
-#define VERTEX_POINTERS_LIST std::vector<Dcel::Vertex*>
-#define POINTS_VECTOR std::vector <Pointd>
-#define VERTEX Dcel::Vertex*
-#define FACE_ARRAY std::vector <Dcel::Face*>
-#define FACE Dcel::Face*
-
 /**
  * @brief ConflictGraph::ConflictGraph() Constructor
  * @params takes dcel and tetrahedron vertices as input
@@ -47,7 +41,7 @@ void ConflictGraph::checkVisibility(){
  *        and calls crossProduct to check whether ord not a vertex sees a face
  * @param VERTEX currVertex
  */
-void ConflictGraph::fillCrossProductMatrix(VERTEX currVertex){
+void ConflictGraph::fillCrossProductMatrix(Vertex currVertex){
 
     //Initialize 4*4 Matrix
     Eigen::Matrix4d matrix;
@@ -93,7 +87,7 @@ void ConflictGraph::fillCrossProductMatrix(VERTEX currVertex){
  *        if it's <0, then the vertex sees the face, else if >0 it does not, if = 0 they are coplanar
  * @param Eigen::Matrix4d matrix current matrix
  */
-void ConflictGraph::crossProduct(Eigen::Matrix4d matrix, FACE face, VERTEX vertex){
+void ConflictGraph::crossProduct(Eigen::Matrix4d matrix, Face face, Vertex vertex){
     //if true -> 0, if false -> 1
     if(matrix.determinant() < -std::numeric_limits<double>::epsilon()){
         //if true, add passed vertex and face to the dcel
@@ -106,18 +100,18 @@ void ConflictGraph::crossProduct(Eigen::Matrix4d matrix, FACE face, VERTEX verte
  * @brief addVertex(FACE face, VERTEX vertex) adds a vertex to conflict list
  * @param FACE face, VERTEX vertex
  */
-void ConflictGraph::addVertex(FACE face, VERTEX vertex){
-
-    auto iter = this->VertexConflictList.find(face);
+void ConflictGraph::addVertex(Face face, Vertex vertex){
+    //dinamically typed iterator
+    auto vertexIterator = this->VertexConflictList.find(face);
         //If the list already exists
-        if(iter != VertexConflictList.end()){
+        if(vertexIterator != VertexConflictList.end()){
             //Insert current face into it
-            std::set<VERTEX>* vertexList = VertexConflictList[face];
+            std::set<Vertex>* vertexList = VertexConflictList[face];
             vertexList->insert(vertex);
 
         } else {
             //else a new one gets created and face gets inserted
-            std::set<VERTEX>* vertexList = new std::set<VERTEX>();
+            std::set<Vertex>* vertexList = new std::set<Vertex>();
             vertexList->insert(vertex);
             VertexConflictList[face]=vertexList;
     }
@@ -127,25 +121,37 @@ void ConflictGraph::addVertex(FACE face, VERTEX vertex){
  * @brief addFace(FACE face, VERTEX vertex) adds a face to conflict list
  * @param FACE face, VERTEX vertex
  */
-void ConflictGraph::addFace(FACE face, VERTEX vertex){
-
-    auto iter =this->FaceConflictList.find(vertex);
+void ConflictGraph::addFace(Face face, Vertex vertex){
+    //dynamically typed iterator, looks for face that contains vertex
+    auto faceIterator =this->FaceConflictList.find(vertex);
         //If the list already exists
-        if(iter!=FaceConflictList.end()){
+        if(faceIterator!=FaceConflictList.end()){
             //Insert current Vertex into it
-            std::set<FACE>* faceList = FaceConflictList[vertex];
+            std::set<Face>* faceList = FaceConflictList[vertex];
             faceList->insert(face);
-        }else{
+        } else {
             //else a new one gets created and face gets inserted
-            std::set<FACE>* faceList = new std::set<FACE>();
+            std::set<Face>* faceList = new std::set<Face>();
             faceList->insert(face);
             FaceConflictList[vertex]=faceList;
+        }
+}
+
+/**
+ * @brief lookForVisibleFaces(VERTEX vertex) finds which faces are visible from a given vertex
+ * @param VERTEX vertex given vertex
+ * @retuns map of visible faces and passed Vertex
+ */
+std::set<Dcel::Face*>* ConflictGraph::lookForVisibleFaces(Vertex vertex){
+    //dynamically typed iterator, looks for face that contains vertex
+    auto faceFinderIterator = this->FaceConflictList.find(vertex);
+    //If it is not present in FaceConflictList
+    if(faceFinderIterator != FaceConflictList.end()){
+       //Add that face
+       return new std::set<Face>(*FaceConflictList.at(vertex));
+    } else {
+       //return void
+       return new std::set<Face>();
     }
 
 }
-
-#undef FACE
-#undef FACE_ARRAY
-#undef VERTEX
-#undef POINTS_VECTOR
-#undef VERTEX_POINTERS_LIST

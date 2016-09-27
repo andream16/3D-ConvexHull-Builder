@@ -3,16 +3,14 @@
 #define VERTEX_POINTERS_ARRAY(name) \
     std::vector<Dcel::Vertex*> name(std::vector<Dcel::Vertex*>)
 
-
-/**Importing Eigen for matrix operations**/
-#include <eigen3/Eigen/Dense>
-#include <eigen3/Eigen/LU>
-#include <GUI/managers/dcelmanager.h>
-#include <lib/dcel/dcel_vertex_iterators.h>
 #include <vector>
 #include <string>
+#include <GUI/managers/dcelmanager.h>
+#include <lib/dcel/dcel_vertex_iterators.h>
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/LU>
 
-#include <conflictgraph.h>
+#include "conflictgraph.h"
 
 class ConvexHullBuilder{
 
@@ -23,10 +21,13 @@ public:
 
 private:
     DrawableDcel *dcel;
+    ConflictGraph *conflictGraph;
+
     typedef std::vector<Dcel::Vertex*> VertexPointersList;
     typedef std::vector <Pointd> PointsVector;
     typedef Dcel::Vertex* Vertex;
     typedef Dcel::HalfEdge* HalfEdge;
+    typedef Dcel::Face* Face;
 
     VERTEX_POINTERS_ARRAY(addVertices);
     VERTEX_POINTERS_ARRAY(verticesShuffler);
@@ -36,6 +37,8 @@ private:
     void tetrahedronMaker(PointsVector, int);
     void addFaceTotetrahedron(Vertex, HalfEdge);
     VertexPointersList getVertices(VertexPointersList);
+    void finalizeConvexHull(VertexPointersList);
+    std::vector<HalfEdge> bringMeTheHorizon(std::set<Dcel::Face*>*);
 
 };
 
