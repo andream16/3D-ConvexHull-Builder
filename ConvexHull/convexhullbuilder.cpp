@@ -1,14 +1,6 @@
 #include "convexhullbuilder.h"
 #include <iostream>
 #include <stdlib.h>
-#include <time.h>
-
-#define VERTEX_POINTERS_LIST std::vector<Dcel::Vertex*>
-#define POINTS_VECTOR std::vector <Pointd>
-#define VERTEX Dcel::Vertex*
-#define HALF_EDGE Dcel::HalfEdge*
-#define FACE Dcel::Face*
-
 
 /**
  * @brief ConvexHullBuilder::ConvexHullBuilder() Conmstructor
@@ -31,11 +23,11 @@ ConvexHullBuilder::~ConvexHullBuilder(){}
 void ConvexHullBuilder::computeConvexHull(){
 
     //Array of vertices
-    VERTEX_POINTERS_LIST allVertices;
+    VertexPointersList allVertices;
     //Vertices To Get passed to Conflict Graph
-    VERTEX_POINTERS_LIST verticesForCG;
+    VertexPointersList verticesForCG;
     //Four non coplanar vertices
-    POINTS_VECTOR fourVertices;
+    PointsVector fourVertices;
 
     //Adds all Dcel vertices pointers to allVertices
     allVertices = addVertices(allVertices);
@@ -51,30 +43,125 @@ void ConvexHullBuilder::computeConvexHull(){
     verticesForCG = getVertices(allVertices);
 
     //Initializes Conflict Graph with Dcel And First 4 Vertices
-    ConflictGraph conflictGraph = ConflictGraph(this->dcel, verticesForCG);
-    conflictGraph.initializeConflictGraph();
+    conflictGraph = new ConflictGraph(dcel, verticesForCG);
+    conflictGraph->initializeConflictGraph();
 
-    //Initializing faces visible by a vertex
-     std::set<FACE>* facesVisible;
-
-    //Loop through remaining vertices
-    for(unsigned int i=4; i<allVertices.size(); i++){
-      //Check Which faces sees i-Vertex and assigning them
-      facesVisible = conflictGraph.lookForVisibleFaces(allVertices[i]);
-
-    }
+    //Loop through remaining vertices finishing the convex hull
+    finalizeConvexHull(allVertices);
 
 }
+
+/**
+ * @brief ConvexHullBuilder::finalizeConvexHull starts last phase to build the convex hull
+ * @param VERTEX_POINTERS_LIST remainingVertices i=4 -> n vertices
+ */
+void ConvexHullBuilder::finalizeConvexHull(VertexPointersList remainingVertices){
+
+    //Loop through remaining vertices
+    for(unsigned int i=4; i<remainingVertices.size(); i++){
+
+      //Check Which faces sees i-Vertex and assigning them
+      std::set<Face>* facesVisible = conflictGraph->lookForVisibleFaces(remainingVertices[i]);
+
+      //Initializing Horizon, vector of half edges
+      std::vector<HalfEdge> horizon;
+
+      /** If current vertex sees some faces it means it lies outside the
+       *  current polyhedron and we need to add it to our dcel and adding/removing
+       * proper faces **/
+      if( facesVisible->size() > 0 ){
+          //Initializing outsider vertex, proper name of course
+          Vertex theOutSiderVertix = remainingVertices[i];
+          //add current vertex to dcel
+          dcel->addVertex(theOutSiderVertix->getCoordinate());
+
+          //checking the horizon to see which are the faces visible by the vertex
+          horizon = bringMeTheHorizon(facesVisible); //proper name
+
+          std::cout << "hello";
+      }
+
+    }
+}
+
+/**
+ * @brief ConvexHullBuilder::bringMeTheHorizon adds visible faces correct half edge that lies
+ *        on the horizon to a vector of half edges
+ *        Loops through visible faces, finds an half edges whose twin lies in an unseen face,
+ *        adds the latter to the horizon, then, iterates until we get back to it, then, if
+ *        the incident face of the twin is visible, then its edge belongs to the horizon
+ *
+ * @param std::set<FACE>* visibleFaces
+ */
+std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Face>* visibleFaces){
+
+    bool found = false;
+
+    //Initializing Horizon, vector of half edges
+    std::vector<HalfEdge> horizon;
+
+    HalfEdge first;
+
+    std::set<Face>::iterator face;
+    //For each Visible Face
+    for(face = visibleFaces->begin(); face != visibleFaces->end(); face++){
+
+        Face visibleFace = *face;
+        //Initialize a new Incident Half Edge Iterator
+        Dcel::Face::IncidentHalfEdgeIterator currentEdge;
+
+        //iterate trough visible faces and stop when finding first horizon edge
+        for(currentEdge = visibleFace->incidentHalfEdgeBegin(); currentEdge != visibleFace->incidentHalfEdgeEnd(); currentEdge++){
+
+           HalfEdge visibleHE = *currentEdge;
+
+           if(visibleHE->getTwin() != nullptr){
+             if(visibleFaces->count(visibleHE->getTwin()->getFace()) == 0){
+                 first = visibleHE->getTwin();
+                 found = true;
+             }
+           }
+        }
+    }
+
+    if(found){
+        HalfEdge current, next, twinOfNext;
+        Face incidentFace;
+
+        current = first;
+        horizon.push_back(first);
+
+        while(first != current && first != current->getNext()){
+
+            next = current->getNext();
+            twinOfNext = next->getTwin();
+            incidentFace = twinOfNext->getFace();
+
+            if( visibleFaces->count(incidentFace) == 1 ){
+              horizon.push_back(next);
+              current = next;
+            } else {
+                current = twinOfNext;
+            }
+
+        }
+    }
+
+    return horizon;
+}
+
+
+
 
 /**
  * @brief ConvexHullBuilder::buildTetrahedron builds a tetrahedron with different steps
  * @param VERTEX_POINTERS_LIST allVertices array of all vertices
  */
-void ConvexHullBuilder::buildTetrahedron(VERTEX_POINTERS_LIST allVertices){
+void ConvexHullBuilder::buildTetrahedron(VertexPointersList allVertices){
     //Initialize Array of Shuffled Vertices
-    VERTEX_POINTERS_LIST shuffledVertices;
+    VertexPointersList shuffledVertices;
     //Initialize vector that will contain picked 4 points to get checked
-    POINTS_VECTOR fourPoints;
+    PointsVector fourPoints;
     /** Initialize int var coplanarity, tells if the given vertices are coplanar (0) or not (1 or -1)
      * if matrix's determinat < 0 coplanarity will contain -1 else if determinant > 0 will contain 1 */
     int coplanarity = 0;
@@ -100,7 +187,7 @@ void ConvexHullBuilder::buildTetrahedron(VERTEX_POINTERS_LIST allVertices){
  *         to build the tetrahedron itself basing orientation on determinant result
  * @param  POINTS_VECTOR vertices 4 non-coplanar vertices
  */
-void ConvexHullBuilder::tetrahedronMaker(POINTS_VECTOR vertices, int determinant){
+void ConvexHullBuilder::tetrahedronMaker(PointsVector vertices, int determinant){
 
     //Adding passed vertices to the Dcel and assigning each one of them to a Dcel::Vertex* v
     Dcel::Vertex* v1 = this->dcel->addVertex(vertices[0]);
@@ -156,7 +243,7 @@ void ConvexHullBuilder::tetrahedronMaker(POINTS_VECTOR vertices, int determinant
     v3->setCardinality(2);
 
     //Create and adding a new face based on previous edges
-    FACE initialFace = this->dcel->addFace();
+    Face initialFace = this->dcel->addFace();
 
     //Setting Outher Edge to access external face
     initialFace->setOuterHalfEdge(h1);
@@ -175,22 +262,22 @@ void ConvexHullBuilder::tetrahedronMaker(POINTS_VECTOR vertices, int determinant
  * @brief  ConvexHullBuilder::addFaceTotetrahedron adds 3 new faces from the last vertix and a given half edge
  * @param  VERTEX lastVertex, HALF_EDGE lastVertex given half edge
  */
-void ConvexHullBuilder::addFaceTotetrahedron(VERTEX lastVertex, HALF_EDGE passedEdge){
+void ConvexHullBuilder::addFaceTotetrahedron(Vertex lastVertex, HalfEdge passedEdge){
 
     //Initializing Vertices for passedEdge
-    VERTEX fromVertex = passedEdge->getFromVertex();
-    VERTEX toVertex   = passedEdge->getToVertex();
+    Vertex fromVertex = passedEdge->getFromVertex();
+    Vertex toVertex   = passedEdge->getToVertex();
 
     //Initializing new half edges
-    HALF_EDGE he1 = this->dcel->addHalfEdge();
+    HalfEdge he1 = this->dcel->addHalfEdge();
     he1->setFromVertex(toVertex);
     he1->setToVertex(fromVertex);
 
-    HALF_EDGE he2 = this->dcel->addHalfEdge();
+    HalfEdge he2 = this->dcel->addHalfEdge();
     he2->setFromVertex(fromVertex);
     he2->setToVertex(lastVertex);
 
-    HALF_EDGE he3 = this->dcel->addHalfEdge();
+    HalfEdge he3 = this->dcel->addHalfEdge();
     he3->setFromVertex(lastVertex);
     he3->setToVertex(toVertex);
 
@@ -215,14 +302,14 @@ void ConvexHullBuilder::addFaceTotetrahedron(VERTEX lastVertex, HALF_EDGE passed
 
     //Empty at the first steps but filled in next steps
     if(passedEdge->getPrev()->getTwin() != nullptr){
-       HALF_EDGE he2_twin = passedEdge->getPrev()->getTwin()->getPrev();
+       HalfEdge he2_twin = passedEdge->getPrev()->getTwin()->getPrev();
        he2->setTwin(he2_twin);
        he2_twin->setTwin(he2);
     }
 
     //Empty at the first steps but filled in next steps
     if(passedEdge->getNext()->getTwin() != nullptr){
-            HALF_EDGE he3_twin = passedEdge->getNext()->getTwin()->getNext();
+            HalfEdge he3_twin = passedEdge->getNext()->getTwin()->getNext();
             he3->setTwin(he3_twin);
             he3_twin->setTwin(he3);
     }
@@ -238,7 +325,7 @@ void ConvexHullBuilder::addFaceTotetrahedron(VERTEX lastVertex, HALF_EDGE passed
     lastVertex->incrementCardinality();
 
     //Creating a new face from newly created edges
-    FACE newFace = this->dcel->addFace();
+    Face newFace = this->dcel->addFace();
     //NewFace will access external faces by he1
     newFace->setOuterHalfEdge(he1);
     //setting each edge to newFace
@@ -252,7 +339,7 @@ void ConvexHullBuilder::addFaceTotetrahedron(VERTEX lastVertex, HALF_EDGE passed
  * @brief  VERTEX_POINTERS_LIST ConvexHullBuilder::addVertices takes dcel
  * @return returns array of all vertices
  */
-VERTEX_POINTERS_LIST ConvexHullBuilder::addVertices(VERTEX_POINTERS_LIST allVertices){
+std::vector<Dcel::Vertex*>  ConvexHullBuilder::addVertices(VertexPointersList allVertices){
     //Adds all vertices to an array
     for (Dcel::VertexIterator vertex = dcel->vertexBegin(); vertex != dcel->vertexEnd(); vertex++){
         Dcel::Vertex* v = *vertex;
@@ -267,7 +354,7 @@ VERTEX_POINTERS_LIST ConvexHullBuilder::addVertices(VERTEX_POINTERS_LIST allVert
  * @param  VERTEX_POINTERS_LIST allVertx contains all the vertices
  * @return returns shuffled array of vertices
  */
-VERTEX_POINTERS_LIST ConvexHullBuilder::verticesShuffler(VERTEX_POINTERS_LIST allVertx){
+std::vector<Dcel::Vertex*>  ConvexHullBuilder::verticesShuffler(VertexPointersList allVertx){
 
     //From http://en.cppreference.com/w/cpp/algorithm/random_shuffle
     std::random_device rd;
@@ -286,7 +373,7 @@ VERTEX_POINTERS_LIST ConvexHullBuilder::verticesShuffler(VERTEX_POINTERS_LIST al
  * @param  VERTEX_POINTERS_LIST vertices contains passed vertices to get checked
  * @return 1 if coplanar, 0 else
  */
-int ConvexHullBuilder::coplanarityChecker(POINTS_VECTOR fourPoints){
+int ConvexHullBuilder::coplanarityChecker(PointsVector fourPoints){
 
     //Initializing Coplanarity
     bool coplanarity = true;
@@ -330,9 +417,9 @@ int ConvexHullBuilder::coplanarityChecker(POINTS_VECTOR fourPoints){
  * @param  VERTEX_POINTERS_LIST allVertices contains all remaining vertices
  * @return array of vertices first 4 vertices pointers
  */
-POINTS_VECTOR ConvexHullBuilder::getFirstFourVertices(VERTEX_POINTERS_LIST allVertices){
+std::vector <Pointd> ConvexHullBuilder::getFirstFourVertices(VertexPointersList allVertices){
     //Initializing firstFourVertices Array
-    POINTS_VECTOR firstFourVertices;
+    PointsVector firstFourVertices;
 
     firstFourVertices.push_back(allVertices[0]->getCoordinate());
     firstFourVertices.push_back(allVertices[1]->getCoordinate());
@@ -347,9 +434,9 @@ POINTS_VECTOR ConvexHullBuilder::getFirstFourVertices(VERTEX_POINTERS_LIST allVe
  * @param  VERTEX_POINTERS_LIST sendVertices
  * @return array of vertices first 4 vertices pointers
  */
-VERTEX_POINTERS_LIST ConvexHullBuilder::getVertices(VERTEX_POINTERS_LIST allVertices){
+ std::vector<Dcel::Vertex*> ConvexHullBuilder::getVertices(VertexPointersList allVertices){
     //Init returning array
-    VERTEX_POINTERS_LIST sendVertices;
+    VertexPointersList sendVertices;
 
     sendVertices.push_back(allVertices[0]);
     sendVertices.push_back(allVertices[1]);
@@ -358,9 +445,3 @@ VERTEX_POINTERS_LIST ConvexHullBuilder::getVertices(VERTEX_POINTERS_LIST allVert
 
     return sendVertices;
 }
-
-#undef FACE
-#undef VERTEX
-#undef HALF_EDGE
-#undef VERTEX_POINTERS_LIST
-#undef POINTS_VECTOR

@@ -2,12 +2,11 @@
 #define CONFLICTGRAPH_H
 
 #include "lib/dcel/drawable_dcel.h"
+#include <string>
+
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>
-#include <GUI/managers/dcelmanager.h>
-#include <lib/dcel/dcel_vertex_iterators.h>
-#include <vector>
-#include <string>
+
 
 class ConflictGraph{
 
@@ -28,6 +27,8 @@ private:
     typedef std::vector <Dcel::Face*> FaceArray;
     typedef Dcel::Vertex* Vertex;
     typedef Dcel::Face* Face;
+    typedef std::vector<Dcel::Vertex*> VertexPointersList;
+    typedef Dcel::HalfEdge* HalfEdge;
 
     void checkVisibility();
     void fillCrossProductMatrix(Vertex);
