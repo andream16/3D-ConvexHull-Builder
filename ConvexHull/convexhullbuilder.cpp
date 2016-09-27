@@ -43,7 +43,7 @@ void ConvexHullBuilder::computeConvexHull(){
     verticesForCG = getVertices(allVertices);
 
     //Initializes Conflict Graph with Dcel And First 4 Vertices
-    conflictGraph = new ConflictGraph(dcel, verticesForCG);
+    conflictGraph = new ConflictGraph(dcel, allVertices);
     conflictGraph->initializeConflictGraph();
 
     //Loop through remaining vertices finishing the convex hull
@@ -60,7 +60,7 @@ void ConvexHullBuilder::finalizeConvexHull(VertexPointersList remainingVertices)
     //Loop through remaining vertices
     for(unsigned int i=4; i<remainingVertices.size(); i++){
 
-      //Check Which faces sees i-Vertex and assigning them
+      //Check Which faces sees i-Vertex and assigning them to a set
       std::set<Face>* facesVisible = conflictGraph->lookForVisibleFaces(remainingVertices[i]);
 
       //Initializing Horizon, vector of half edges
@@ -68,17 +68,18 @@ void ConvexHullBuilder::finalizeConvexHull(VertexPointersList remainingVertices)
 
       /** If current vertex sees some faces it means it lies outside the
        *  current polyhedron and we need to add it to our dcel and adding/removing
-       * proper faces **/
+       *  proper faces **/
       if( facesVisible->size() > 0 ){
+
           //Initializing outsider vertex, proper name of course
-          Vertex theOutSiderVertix = remainingVertices[i];
+          Vertex theOutsiderVertex = remainingVertices[i];
           //add current vertex to dcel
-          dcel->addVertex(theOutSiderVertix->getCoordinate());
+          dcel->addVertex(theOutsiderVertex->getCoordinate());
 
           //checking the horizon to see which are the faces visible by the vertex
           horizon = bringMeTheHorizon(facesVisible); //proper name
+          horizon.size();
 
-          std::cout << "hello";
       }
 
     }
@@ -104,14 +105,14 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Face>
 
     std::set<Face>::iterator face;
     //For each Visible Face
-    for(face = visibleFaces->begin(); face != visibleFaces->end(); face++){
+    for(face = visibleFaces->begin(); face != visibleFaces->end() && !found; face++){
 
         Face visibleFace = *face;
         //Initialize a new Incident Half Edge Iterator
         Dcel::Face::IncidentHalfEdgeIterator currentEdge;
 
         //iterate trough visible faces and stop when finding first horizon edge
-        for(currentEdge = visibleFace->incidentHalfEdgeBegin(); currentEdge != visibleFace->incidentHalfEdgeEnd(); currentEdge++){
+        for(currentEdge = visibleFace->incidentHalfEdgeBegin(); currentEdge != visibleFace->incidentHalfEdgeEnd() && !found; currentEdge++){
 
            HalfEdge visibleHE = *currentEdge;
 
@@ -131,20 +132,19 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Face>
         current = first;
         horizon.push_back(first);
 
-        while(first != current && first != current->getNext()){
+        do{
+           next = current->getNext();
+           twinOfNext = next->getTwin();
+           incidentFace = twinOfNext->getFace();
 
-            next = current->getNext();
-            twinOfNext = next->getTwin();
-            incidentFace = twinOfNext->getFace();
-
-            if( visibleFaces->count(incidentFace) == 1 ){
-              horizon.push_back(next);
-              current = next;
-            } else {
-                current = twinOfNext;
-            }
-
-        }
+           //if the incident face of the twin is visible, we have an horizon half edge
+          if(visibleFaces->count(incidentFace) == 1){
+             horizon.push_back(next);
+             current = next;
+          } else {
+            current = twinOfNext;
+          }
+        } while (first != current && first != current->getNext());
     }
 
     return horizon;
