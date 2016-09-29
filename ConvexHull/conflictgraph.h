@@ -11,13 +11,23 @@
 class ConflictGraph{
 
 public:
-    ConflictGraph(DrawableDcel* dcel, std::vector<Dcel::Vertex*> tetrahedronVertices); // Class COnstructor
+    ConflictGraph(DrawableDcel* dcel, const std::vector<Dcel::Vertex*> &remainingVertices); // Class Constructor
     ~ConflictGraph(); //Destructor Declaration
     void initializeConflictGraph();
+
     std::set<Dcel::Face*>* lookForVisibleFaces(Dcel::Vertex*);
+    std::set<Dcel::Vertex*> getVisibleFaces(Dcel::Face*);
+    std::set<Dcel::Vertex*>* getVisibleVertices(Dcel::Face*);
+
+    void updateConflictGraph(Dcel::Face*, std::set<Dcel::Vertex*>*);
+    void deleteFaces(std::set<Dcel::Face*>*);
+
+    void deletePoint(Dcel::Vertex*);
+
 
     std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> vertexConflictList;
     std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> faceConflictList;
+
 
 private:
     DrawableDcel *dcel;
@@ -37,6 +47,8 @@ private:
     void addFace(Face, Vertex);
     void addVertex(Face, Vertex);
 
+    bool checkV(Face, Vertex);
+    Pointd getFaceNormalDirection(Dcel::Face*);
 
 };
 
