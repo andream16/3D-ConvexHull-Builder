@@ -23,9 +23,9 @@ ConvexHullBuilder::~ConvexHullBuilder(){}
 void ConvexHullBuilder::computeConvexHull(){
 
     //Array of vertices
-    VertexPointersList allVertices;
+    std::vector<Dcel::Vertex*> allVertices;
     //Vertices To Get passed to Conflict Graph
-    VertexPointersList verticesForCG;
+    std::vector<Dcel::Vertex*> verticesForCG;
     //Four non coplanar vertices
     PointsVector fourVertices;
 
@@ -37,7 +37,7 @@ void ConvexHullBuilder::computeConvexHull(){
 
     /** Checks Coplanarity of 4 vertices,
      *  if coplanar -> pick other 4 vertices, if not -> build a tetrahedron with them**/
-    buildTetrahedron(allVertices);
+    buildTetrahedron(&allVertices);
 
     //Array of Pointers to Vertices needed for Conflict Graph Initialization
     verticesForCG = getVertices(allVertices);
@@ -47,43 +47,177 @@ void ConvexHullBuilder::computeConvexHull(){
     conflictGraph->initializeConflictGraph();
 
     //Loop through remaining vertices finishing the convex hull
-    finalizeConvexHull(allVertices);
-
-}
-
-/**
- * @brief ConvexHullBuilder::finalizeConvexHull starts last phase to build the convex hull
- * @param VERTEX_POINTERS_LIST remainingVertices i=4 -> n vertices
- */
-void ConvexHullBuilder::finalizeConvexHull(VertexPointersList remainingVertices){
+    //finalizeConvexHull(allVertices);
 
     //Loop through remaining vertices
-    for(unsigned int i=4; i<remainingVertices.size(); i++){
+    for(unsigned int i=4; i<allVertices.size(); i++){
 
       //Check Which faces sees i-Vertex and assigning them to a set
-      std::set<Face>* facesVisible = conflictGraph->lookForVisibleFaces(remainingVertices[i]);
+      std::set<Face>* facesVisible = conflictGraph->lookForVisibleFaces(allVertices[i]);
 
       //Initializing Horizon, vector of half edges
       std::vector<HalfEdge> horizon;
 
-      /** If current vertex sees some faces it means it lies outside the
-       *  current polyhedron and we need to add it to our dcel and adding/removing
-       *  proper faces **/
       if( facesVisible->size() > 0 ){
 
-          //Initializing outsider vertex, proper name of course
-          Vertex theOutsiderVertex = remainingVertices[i];
-          //add current vertex to dcel
-          dcel->addVertex(theOutsiderVertex->getCoordinate());
+          Dcel::Vertex* currVertx = allVertices[i];
 
-          //checking the horizon to see which are the faces visible by the vertex
+          //add current vertex to dcel
+          dcel->addVertex(currVertx->getCoordinate());
+
           horizon = bringMeTheHorizon(facesVisible); //proper name
-          horizon.size();
+
+          std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> candidateVertexMap = getCandidateVerticesMap(horizon);
+
+            conflictGraph->deleteFaces(facesVisible);
+            removeVisibleFaces(facesVisible);
+
+            std::vector<Dcel::Face*> newFaces;
+
+            for(std::vector<HalfEdge>::iterator horizonIterator = horizon.begin(); horizonIterator != horizon.end(); horizonIterator++){
+               HalfEdge halfEdge = *horizonIterator;
+
+               //create a new face and push it in the vector of new faces
+               Dcel::Face* newFace = addFace(currVertx, halfEdge);
+               newFaces.push_back(newFace);
+
+               conflictGraph->updateConflictGraph(newFace, candidateVertexMap[halfEdge]);
+            }
+
+            setTwins(newFaces);
 
       }
 
+      conflictGraph->deletePoint(allVertices[i]);
     }
 }
+
+
+Dcel::Face* ConvexHullBuilder::addFace(Dcel::Vertex* otherVertex, Dcel::HalfEdge* existingHe){
+    Dcel::HalfEdge* he1 = this->dcel->addHalfEdge();
+    Dcel::HalfEdge* he2 = this->dcel->addHalfEdge();
+    Dcel::HalfEdge* he3 = this->dcel->addHalfEdge();
+
+    Dcel::Vertex* startVertex = existingHe->getFromVertex();
+    Dcel::Vertex* endVertex = existingHe->getToVertex();
+
+    he1->setFromVertex(endVertex);
+    endVertex->setIncidentHalfEdge(he1);
+    he1->setToVertex(startVertex);
+    he1->setNext(he2);
+    he1->setPrev(he3);
+    he1->setTwin(existingHe);
+    existingHe->setTwin(he1);
+    endVertex->incrementCardinality();
+    startVertex->incrementCardinality();
+
+    he2->setFromVertex(startVertex);
+    startVertex->setIncidentHalfEdge(he2);
+    he2->setToVertex(otherVertex);
+    he2->setNext(he3);
+    he2->setPrev(he1);
+    startVertex->incrementCardinality();
+    otherVertex->incrementCardinality();
+
+    he3->setFromVertex(otherVertex);
+    otherVertex->setIncidentHalfEdge(he3);
+    he3->setToVertex(endVertex);
+    he3->setNext(he1);
+    he3->setPrev(he2);
+    endVertex->incrementCardinality();
+    otherVertex->incrementCardinality();
+
+    Dcel::Face* face = this->dcel->addFace();
+    face->setOuterHalfEdge(he1);
+    he1->setFace(face);
+    he2->setFace(face);
+    he3->setFace(face);
+
+    return face;
+}
+
+void ConvexHullBuilder::removeVisibleFaces(std::set<Dcel::Face*> *faceList){
+
+    for(std::set<Face>::iterator it = faceList->begin(); it != faceList->end(); it++){
+
+        Dcel::Face* face = *it;
+
+        for(Dcel::Face::IncidentHalfEdgeIterator vit = face->incidentHalfEdgeBegin(); vit != face->incidentHalfEdgeEnd(); ++vit){
+
+            Dcel::HalfEdge* he = *vit;
+
+            Dcel::Vertex* start = he->getFromVertex();
+            Dcel::Vertex* end = he->getToVertex();
+
+            this->dcel->deleteHalfEdge(he);
+
+            //decrement the cardinality of each vertex every time we remove an half edge
+            start->decrementCardinality();
+            end->decrementCardinality();
+
+            //if the cardinality is 0, the vertex is disconnected and must be removed
+            if(start->getCardinality() == 0){
+                this->dcel->deleteVertex(start);
+            }
+            if(end->getCardinality() == 0){
+                this->dcel->deleteVertex(end);
+            }
+        }
+
+
+        this->dcel->deleteFace(face);
+    }
+}
+
+
+void ConvexHullBuilder::setTwins(std::vector<Dcel::Face*> faceList){
+
+    std::vector<Dcel::HalfEdge*> he1Vector(faceList.size());
+    std::vector<Dcel::HalfEdge*> he2Vector(faceList.size());
+    std::vector<Dcel::HalfEdge*> he3Vector(faceList.size());
+
+    for(unsigned int i=0; i<faceList.size(); i++){
+        he1Vector[i] = faceList[i]->getOuterHalfEdge();
+        he2Vector[i] = faceList[i]->getOuterHalfEdge()->getNext();
+        he3Vector[i] = faceList[i]->getOuterHalfEdge()->getNext()->getNext();
+    }
+
+    for(unsigned int i=1; i<=faceList.size(); i++){
+        he2Vector[i%faceList.size()]->setTwin(he3Vector[i-1]);
+        he3Vector[i-1]->setTwin(he2Vector[i%faceList.size()]);
+    }
+}
+
+
+
+std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConvexHullBuilder::getCandidateVerticesMap(std::vector<HalfEdge> horizon){
+
+    std::map<HalfEdge, std::set<Vertex>*> result;
+
+    //for each half edge in the horizon
+    for(std::vector<Dcel::HalfEdge*>::iterator it = horizon.begin(); it != horizon.end(); ++it){
+        Dcel::HalfEdge *halfEdge = *it;
+
+        //get its and its twin incident faces
+        Dcel::Face *face1 = halfEdge->getFace();
+        Dcel::Face *face2 = halfEdge->getTwin()->getFace();
+
+        //get the set of the vertices visible from the former faces
+        std::set<Vertex> *conflict1, *conflict2;
+        conflict1 = conflictGraph->getVisibleVertices(face1);
+        conflict2 = conflictGraph->getVisibleVertices(face2);
+
+        //merge the sets
+        conflict1->insert(conflict2->begin(), conflict2->end());
+
+        //associate the merged set to the horizon half edge
+        result[halfEdge] = conflict1;
+    }
+
+    return result;
+
+}
+
 
 /**
  * @brief ConvexHullBuilder::bringMeTheHorizon adds visible faces correct half edge that lies
@@ -99,13 +233,12 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Face>
     bool found = false;
 
     //Initializing Horizon, vector of half edges
-    std::vector<HalfEdge> horizon;
+    std::vector<Dcel::HalfEdge*> horizon;
 
-    HalfEdge first;
+    Dcel::HalfEdge* first;
 
-    std::set<Face>::iterator face;
     //For each Visible Face
-    for(face = visibleFaces->begin(); face != visibleFaces->end() && !found; face++){
+    for(auto face = visibleFaces->begin(); face != visibleFaces->end() && !found; face++){
 
         Face visibleFace = *face;
         //Initialize a new Incident Half Edge Iterator
@@ -126,8 +259,11 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Face>
     }
 
     if(found){
-        HalfEdge current, next, twinOfNext;
-        Face incidentFace;
+        Dcel::HalfEdge* current;
+        Dcel::HalfEdge* next;
+        Dcel::HalfEdge*  twinOfNext;
+
+        Dcel::Face* incidentFace;
 
         current = first;
         horizon.push_back(first);
@@ -157,7 +293,7 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Face>
  * @brief ConvexHullBuilder::buildTetrahedron builds a tetrahedron with different steps
  * @param VERTEX_POINTERS_LIST allVertices array of all vertices
  */
-void ConvexHullBuilder::buildTetrahedron(VertexPointersList allVertices){
+void ConvexHullBuilder::buildTetrahedron(std::vector<Dcel::Vertex*>* allVertices){
     //Initialize Array of Shuffled Vertices
     VertexPointersList shuffledVertices;
     //Initialize vector that will contain picked 4 points to get checked
@@ -342,7 +478,8 @@ void ConvexHullBuilder::addFaceTotetrahedron(Vertex lastVertex, HalfEdge passedE
 std::vector<Dcel::Vertex*>  ConvexHullBuilder::addVertices(VertexPointersList allVertices){
     //Adds all vertices to an array
     for (Dcel::VertexIterator vertex = dcel->vertexBegin(); vertex != dcel->vertexEnd(); vertex++){
-        Dcel::Vertex* v = *vertex;
+        Dcel::Vertex* v = new Dcel::Vertex();
+        v = *vertex;
         allVertices.push_back(v);
     }
     //returns array of pointers to vertices
@@ -354,17 +491,17 @@ std::vector<Dcel::Vertex*>  ConvexHullBuilder::addVertices(VertexPointersList al
  * @param  VERTEX_POINTERS_LIST allVertx contains all the vertices
  * @return returns shuffled array of vertices
  */
-std::vector<Dcel::Vertex*>  ConvexHullBuilder::verticesShuffler(VertexPointersList allVertx){
+std::vector<Dcel::Vertex*> ConvexHullBuilder::verticesShuffler(std::vector<Dcel::Vertex*> *allVertx){
 
     //From http://en.cppreference.com/w/cpp/algorithm/random_shuffle
     std::random_device rd;
     std::mt19937 g(rd());
 
     //compute a random permutation of the vertices vector
-    std::shuffle(allVertx.begin(), allVertx.end(), g);
+    std::shuffle(allVertx->begin(), allVertx->end(), g);
 
     //returns shuffled array
-    return allVertx;
+    return *allVertx;
 
 }
 

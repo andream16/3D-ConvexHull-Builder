@@ -30,15 +30,22 @@ private:
     typedef Dcel::Face* Face;
 
     VERTEX_POINTERS_ARRAY(addVertices);
-    VERTEX_POINTERS_ARRAY(verticesShuffler);
+
+    std::vector<Dcel::Vertex*> verticesShuffler(std::vector<Dcel::Vertex*>*);
+
     PointsVector getFirstFourVertices(VertexPointersList);
-    void buildTetrahedron(VertexPointersList);
+    void buildTetrahedron(VertexPointersList*);
     int coplanarityChecker(PointsVector);
     void tetrahedronMaker(PointsVector, int);
     void addFaceTotetrahedron(Vertex, HalfEdge);
     VertexPointersList getVertices(VertexPointersList);
     void finalizeConvexHull(VertexPointersList);
     std::vector<HalfEdge> bringMeTheHorizon(std::set<Dcel::Face*>*);
+
+    std::map<HalfEdge, std::set<Vertex>*> getCandidateVerticesMap(std::vector<HalfEdge>);
+    void setTwins(std::vector<Dcel::Face*>);
+    void removeVisibleFaces(std::set<Dcel::Face*>*);
+    Dcel::Face* addFace(Dcel::Vertex* otherVertex, Dcel::HalfEdge* existingHe);
 
 };
 
