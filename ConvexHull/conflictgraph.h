@@ -25,29 +25,21 @@ public:
     void deletePoint(Dcel::Vertex*);
 
 
-    std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> vertexConflictList;
-    std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> faceConflictList;
+    std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> vertexConflictMap;
+    std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> faceConflictMap;
 
 
 private:
     DrawableDcel *dcel;
-    std::vector<Dcel::Vertex*> remainingVertices;
-
-    typedef std::vector <Pointd> PointsVector;
-    typedef std::vector <Dcel::Face*> FaceArray;
-    typedef Dcel::Vertex* Vertex;
-    typedef Dcel::Face* Face;
-    typedef std::vector<Dcel::Vertex*> VertexPointersList;
-    typedef Dcel::HalfEdge* HalfEdge;
-
+    const std::vector<Dcel::Vertex*> remainingVertices;
 
     void checkVisibility();
-    void fillCrossProductMatrix(Vertex);
-    void crossProduct(Eigen::Matrix4d, Face, Vertex);
-    void addFace(Face, Vertex);
-    void addVertex(Face, Vertex);
+    void fillCrossProductMatrix(Dcel::Vertex*);
+    bool crossProduct(Eigen::Matrix4d);
+    void addToFaceConflictMap(Dcel::Face*, Dcel::Vertex*);
+    void addToVertexConflictMap(Dcel::Face*, Dcel::Vertex*);
 
-    bool checkV(Face, Vertex);
+    bool checkV(Dcel::Face*, Dcel::Vertex*);
     Pointd getFaceNormalDirection(Dcel::Face*);
 
 };

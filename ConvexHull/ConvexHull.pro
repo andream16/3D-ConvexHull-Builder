@@ -50,7 +50,8 @@ HEADERS += \
     common.h \
     lib/common/serialize.h \
     convexhullbuilder.h \
-    conflictgraph.h
+    conflictgraph.h \
+    tetrahedronbuilder.h
 
 SOURCES += \
     GUI/managers/dcelmanager.cpp \
@@ -66,7 +67,8 @@ SOURCES += \
     common.cpp \
     main.cpp \
     convexhullbuilder.cpp \
-    conflictgraph.cpp
+    conflictgraph.cpp \
+    tetrahedronbuilder.cpp
 
 FORMS += \
     GUI/managers/dcelmanager.ui \

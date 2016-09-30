@@ -10,6 +10,7 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>
 
+#include "tetrahedronbuilder.h"
 #include "conflictgraph.h"
 
 class ConvexHullBuilder{
@@ -22,27 +23,20 @@ public:
 private:
     DrawableDcel *dcel;
     ConflictGraph *conflictGraph;
+    TetrahedronBuilder *tetrahedronBuilder;
 
-    typedef std::vector<Dcel::Vertex*> VertexPointersList;
-    typedef std::vector <Pointd> PointsVector;
-    typedef Dcel::Vertex* Vertex;
-    typedef Dcel::HalfEdge* HalfEdge;
-    typedef Dcel::Face* Face;
+    std::vector<Dcel::Vertex*> getAllVertices();
+    /**std::vector<Dcel::Vertex*> verticesShuffler(std::vector<Dcel::Vertex*>);
 
-    VERTEX_POINTERS_ARRAY(addVertices);
+    std::vector <Pointd> getFirstFourVertices(std::vector<Dcel::Vertex*>);
+    void buildTetrahedron(std::vector<Dcel::Vertex*>);
+    int coplanarityChecker(std::vector <Pointd>);
+    void tetrahedronMaker(std::vector <Pointd>, int);
+    void addFaceTotetrahedron(Dcel::Vertex*, Dcel::HalfEdge*);**/
+    void finalizeConvexHull(std::vector<Dcel::Vertex*>);
+    std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
 
-    std::vector<Dcel::Vertex*> verticesShuffler(std::vector<Dcel::Vertex*>*);
-
-    PointsVector getFirstFourVertices(VertexPointersList);
-    void buildTetrahedron(VertexPointersList*);
-    int coplanarityChecker(PointsVector);
-    void tetrahedronMaker(PointsVector, int);
-    void addFaceTotetrahedron(Vertex, HalfEdge);
-    VertexPointersList getVertices(VertexPointersList);
-    void finalizeConvexHull(VertexPointersList);
-    std::vector<HalfEdge> bringMeTheHorizon(std::set<Dcel::Face*>*);
-
-    std::map<HalfEdge, std::set<Vertex>*> getCandidateVerticesMap(std::vector<HalfEdge>);
+    std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> getCandidateVerticesMap(std::vector<Dcel::HalfEdge*>);
     void setTwins(std::vector<Dcel::Face*>);
     void removeVisibleFaces(std::set<Dcel::Face*>*);
     Dcel::Face* addFace(Dcel::Vertex* otherVertex, Dcel::HalfEdge* existingHe);

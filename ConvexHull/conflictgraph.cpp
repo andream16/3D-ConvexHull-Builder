@@ -7,7 +7,6 @@
  */
 ConflictGraph::ConflictGraph(DrawableDcel* dcel, const std::vector<Dcel::Vertex*> &remainingVertices){
     this->dcel = dcel;
-    this->remainingVertices = remainingVertices;
 }
 
 /**
@@ -19,47 +18,54 @@ ConflictGraph::~ConflictGraph(){}
  * @brief ConflictGraph::initializeConflictGraph() initializes the conflict graph
  */
 void ConflictGraph::initializeConflictGraph(){
-    //Check which faces see which vertices and viceversa
+    //Checks which faces can be seen by a vertex
     checkVisibility();
 }
 
 /**
- * @brief checkVisibility(POINTS_VECTOR tetrahedronVertices, FACE_ARRAY tetrahedronFaces)
- *        checks which faces can be seen by a vector and viceversa
- * @param POINTS_VECTOR tetrahedronVertices, FACE_ARRAY tetrahedronFaces
+ * @brief ConflictGraph::checkVisibility loops through all the faces in the dcel, picks
+ *        the outer half edge of each face, gets its from vertex, builds a matrix with
+ *        the coordinates of each halfedge in a face and current vertex from dcel coordinates,
+ *        checks if a vertex sees a face. If it does, both face and vertex are inserted into 2 maps.
+ * @param takes the dcel
  */
 void ConflictGraph::checkVisibility(){
 
     //Initialize 4*4 Matrix
     Eigen::Matrix4d matrix;
 
-    //for each face
+    //for each face in the dcel
     for(auto faceIterator = dcel->faceBegin(); faceIterator != dcel->faceEnd(); ++faceIterator){
 
-        Face currentFace = *faceIterator;
+        //used to fill the matrix
+        int externalIterator = 0;
 
-        int k=0;
+        //Pick current face
+        Dcel::Face* currFace = *faceIterator;
 
         //Get current Outer Half Edge
-        Dcel::HalfEdge* he = currentFace->getOuterHalfEdge();
+        Dcel::HalfEdge* he = currFace->getOuterHalfEdge();
 
         //For each Vertex of the face
-        for( int i=0; i<3; i++, k++ ){
+        for(unsigned int i = 0; i<3; i++){
 
-          //Get Current Vertex Coordinates
+          //Get Current From Vertex Coordinates
           Pointd currVertexCoordinates = he->getFromVertex()->getCoordinate();
 
-          //Fill Matrix with currVertexCoordinates
-          matrix(k, 0) = currVertexCoordinates.x();
-          matrix(k, 1) = currVertexCoordinates.y();
-          matrix(k, 2) = currVertexCoordinates.z();
-          matrix(k, 3) = 1; //last column made of ones
+          //Fill first 3 rows of the Matrix with currVertexCoordinates
+          matrix(externalIterator, 0) = currVertexCoordinates.x();
+          matrix(externalIterator, 1) = currVertexCoordinates.y();
+          matrix(externalIterator, 2) = currVertexCoordinates.z();
+          matrix(externalIterator, 3) = 1; //last column made of ones
 
           //Take Next Edge
           he = he->getNext();
+          //Increment externalIterator
+          externalIterator++;
 
         }
 
+        //For each vertex in the dcel, check if vertex[j] sees current passed face
         for(unsigned int j=4; j<remainingVertices.size(); j++){
 
           //Add current vertex coordinates to last row of the matrix
@@ -68,8 +74,13 @@ void ConflictGraph::checkVisibility(){
           matrix(3,2) = remainingVertices[j]->getCoordinate().z();
           matrix(3,3) = 1;
 
-          //compute cross product
-          crossProduct(matrix, currentFace, remainingVertices[j]);
+          //Compute Cross Product, if returns true -> addVertex and addFace
+          if(crossProduct(matrix)){
+            //if true, add passed vertex and face to the dcel
+            addToVertexConflictMap(currFace, remainingVertices[j]);
+            addToFaceConflictMap(currFace, remainingVertices[j]);
+          }
+
         }
 
 
@@ -78,47 +89,47 @@ void ConflictGraph::checkVisibility(){
 }
 
 /**
- * @brief crossProduct(Eigen::Matrix4d matrix) calculates determinant od the passed matrix and
- *        if it's <0, then the vertex sees the face, else if >0 it does not, if = 0 they are coplanar
+ * @brief crossProduct (Eigen::Matrix4d matrix)
+ *        calculates determinant of the passed matrix and if it's <0, then the vertex sees the face, else if >0 it does not
  * @param Eigen::Matrix4d matrix current matrix
  */
-void ConflictGraph::crossProduct(Eigen::Matrix4d matrix, Face face, Vertex vertex){
-    //if true -> 0, if false -> 1
-    if(matrix.determinant() < -std::numeric_limits<double>::epsilon()){
-        //if true, add passed vertex and face to the dcel
-        addVertex(face, vertex);
-        addFace(face, vertex);
-    }
+bool ConflictGraph::crossProduct(Eigen::Matrix4d matrix){
+    //if true -> <0, else false
+    return (matrix.determinant() < -std::numeric_limits<double>::epsilon());
 }
 
 /**
- * @brief addVertex(FACE face, VERTEX vertex) adds a vertex to conflict list
- * @param FACE face, VERTEX vertex
+ * @brief addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
+ *        checks if the map already exists for the current face, if not, it creates it,
+ *        then, in any case, passed vertex is inserted into the set of vertices associated
+ *        to it
+ * @param Dcel::Face* face, Dcel::Vertex* vertex
  */
-void ConflictGraph::addVertex(Face face, Vertex vertex){
-
-        //If the list already exists
-        if(this->vertexConflictList[face] == nullptr){
-            //Insert current face into it
-            this->vertexConflictList[face] = new std::set<Dcel::Vertex*>;
+void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
+        //If the map for the current face does not exist
+        if(this->vertexConflictMap[face] == nullptr){
+            //create a new one for the passed face
+            this->vertexConflictMap[face] = new std::set<Dcel::Vertex*>;
         }
-          //else a new one gets created and face gets inserted
-          this->vertexConflictList.at(face)->insert(vertex);
+          //insert the current vertex in it
+          this->vertexConflictMap.at(face)->insert(vertex);
 }
 
 /**
- * @brief addFace(FACE face, VERTEX vertex) adds a face to conflict list
- * @param FACE face, VERTEX vertex
+ * @brief addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
+ *        checks if the map already exists for the current vertex, if not, it creates it,
+ *        then, in any case, passed face is inserted into the set of faces associated
+ *        to it
+ * @param Dcel::Face* face, Dcel::Vertex* vertex
  */
-void ConflictGraph::addFace(Face face, Vertex vertex){
-
-    //If the set already exists
-    if(this->faceConflictList[vertex] == nullptr){
-        //Insert current face into it
-        this->faceConflictList[vertex] = new std::set<Dcel::Face*>;
+void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
+    //If the map for the current vertex does not exist
+    if(this->faceConflictMap[vertex] == nullptr){
+        //create a new one for the passed vertex
+        this->faceConflictMap[vertex] = new std::set<Dcel::Face*>;
     }
-      //else a new one gets created and face gets inserted
-      this->faceConflictList.at(vertex)->insert(face);
+      //insert the current face in it
+      this->faceConflictMap.at(vertex)->insert(face);
 }
 
 /**
@@ -128,12 +139,12 @@ void ConflictGraph::addFace(Face face, Vertex vertex){
  */
 std::set<Dcel::Face*>* ConflictGraph::lookForVisibleFaces(Dcel::Vertex* vertex){
     //dynamically typed iterator, looks for face that contains vertex
-    auto facesSet = this->faceConflictList[vertex];
-    //If it is not present in faceConflictList
+    auto facesSet = this->faceConflictMap[vertex];
+    //If it is not present in faceConflictMap
     if(facesSet == nullptr){
         facesSet = new std::set<Dcel::Face*>;
        //Add that face
-       this->faceConflictList[vertex] = facesSet;
+       this->faceConflictMap[vertex] = facesSet;
     }
        //return void
        return new std::set<Dcel::Face*>(*facesSet);
@@ -141,16 +152,16 @@ std::set<Dcel::Face*>* ConflictGraph::lookForVisibleFaces(Dcel::Vertex* vertex){
 }
 
 std::set<Dcel::Vertex*>* ConflictGraph::getVisibleVertices(Dcel::Face* face){
-    std::set<Vertex> *vertices = this->vertexConflictList[face];
+    std::set<Dcel::Vertex*> *vertices = this->vertexConflictMap[face];
 
     //if the vertices set associated to the vertex is null, construct an empty and add it to the map
     if(vertices == nullptr){
-        vertices = new std::set<Vertex>;
-        this->vertexConflictList[face] = vertices;
+        vertices = new std::set<Dcel::Vertex*>;
+        this->vertexConflictMap[face] = vertices;
     }
 
     //return a clone of the set for further manipulations
-    return new std::set<Vertex>;
+    return new std::set<Dcel::Vertex*>;
 }
 
 
@@ -158,13 +169,13 @@ void ConflictGraph::updateConflictGraph(Dcel::Face* face, std::set<Dcel::Vertex*
 {
     for(auto pit = candidateVertices->begin(); pit != candidateVertices->end(); ++pit){
         if(checkV(face, *pit)){
-            addFace(face, *pit);
-            addVertex(face, *pit);
+            addToFaceConflictMap(face, *pit);
+            addToVertexConflictMap(face, *pit);
         }
     }
 }
 
-bool ConflictGraph::checkV(Face face, Vertex vert){
+bool ConflictGraph::checkV(Dcel::Face* face, Dcel::Vertex* vert){
 
     //get a vertex from the face
     Dcel::Vertex *v = *(face->incidentVertexBegin());
@@ -197,7 +208,7 @@ Pointd ConflictGraph::getFaceNormalDirection(Dcel::Face* face){
 }
 
 
-void ConflictGraph::deleteFaces(std::set<Face>* faces)
+void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* faces)
 {
     //iterate over the faces
     for(auto fit = faces->begin(); fit != faces->end(); ++fit){
@@ -207,13 +218,13 @@ void ConflictGraph::deleteFaces(std::set<Face>* faces)
         std::set<Dcel::Vertex*>* vertices = getVisibleVertices(currface);
         for(auto it = vertices->begin(); it != vertices->end(); it++){
             Dcel::Vertex* newVertex = * it;
-            faceConflictList.at(newVertex)->erase(currface);
+            faceConflictMap.at(newVertex)->erase(currface);
         }
-        vertexConflictList.erase(currface);
+        vertexConflictMap.erase(currface);
     }
 }
 
-void ConflictGraph::deletePoint(Vertex vertex){
+void ConflictGraph::deletePoint(Dcel::Vertex* vertex){
 
     std::set<Dcel::Face*>* faces = lookForVisibleFaces(vertex);
 
@@ -221,8 +232,8 @@ void ConflictGraph::deletePoint(Vertex vertex){
 
         Dcel::Face* currface = *fit;
 
-        vertexConflictList.at(currface)->erase(vertex);
+        vertexConflictMap.at(currface)->erase(vertex);
     }
 
-    faceConflictList.erase(vertex);
+    faceConflictMap.erase(vertex);
 }
