@@ -1,7 +1,7 @@
 #include "tetrahedronbuilder.h"
 #include <stdlib.h>
 
-/** @brief Class used to build the starting tetrahedron, inserts first items in the dcel
+/** @brief Class used to build the starting Tetrahedron, inserts first items in the dcel
  *  @param Dcel dcel**/
 TetrahedronBuilder::TetrahedronBuilder(DrawableDcel* dcel, std::vector<Dcel::Vertex*> allVertices){
     this->dcel = dcel;
@@ -15,6 +15,12 @@ TetrahedronBuilder::~TetrahedronBuilder(){}
 
 /**
  * @brief TetrahedronBuilder::buildTetrahedron builds a tetrahedron with different steps
+ *        - Until getting 4 non-coplanar vertices
+ *          - Shuffles all vertices
+ *          - Gets first four vertices
+ *          - Checks Coplanarity
+ *        - Builds Tetrahedron using the latter 4 non-coplanar vertices
+ *
  */
 void TetrahedronBuilder::buildTetrahedron(){
     //Initialize Array of Shuffled Vertices
@@ -23,7 +29,7 @@ void TetrahedronBuilder::buildTetrahedron(){
     std::vector<Pointd> fourPoints;
 
     /** Initialize int var coplanarity, tells if the given vertices are coplanar (0) or not (1 or -1)
-     * if matrix's determinat < 0 coplanarity will contain -1 else if determinant > 0 will contain 1 */
+     *  if matrix's determinant < 0 coplanarity will return -1 else, it'll return 1 */
     int coplanarity = 0;
 
     //while we get 4 not coplanar vertices
@@ -63,8 +69,8 @@ std::vector<Dcel::Vertex*> TetrahedronBuilder::verticesShuffler(){
 /**
  * @brief  std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::Vertex*> allVertices)
  *         gets first four vertices from all vertices passed
- * @param  std::vector<Dcel::Vertex*> allVertices contains all remaining vertices
- * @return array of vertices first 4 vertices pointers
+ * @param  std::vector<Dcel::Vertex*> allVertices contains all shuffled vertices
+ * @return array of first 4 pointers to vertices
  */
 std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::Vertex*> allVertices){
     //Initializing firstFourVertices Array
@@ -81,11 +87,11 @@ std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::
 /**
  * @brief  int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints)
  * @param  std::vector<Pointd> fourPoints
- * @return 1 if coplanar, 0 else
+ * @return 0 if coplanar, 1 or -1 else
  */
 int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
 
-    //Initializing Coplanarity
+    //Initialize Coplanarity
     bool coplanarity = true;
     //Tells it the determinant is greater (1) or lesser than 0 (0) for next steps
     int determinantRes = 0;
@@ -93,6 +99,7 @@ int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
     //builds 4*4 matrix using eigen from @https://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html
     Eigen::Matrix4d m;
 
+    //Add all the points to the Matrix by their x, y and z coordinates
     for(int i=0; i<4; i++){
       m(i, 0) = fourPoints[i].x();
       m(i, 1) = fourPoints[i].y();
@@ -100,10 +107,10 @@ int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
       m(i, 3) = 1; //last column made of ones
     }
 
-    //checks matrix determinant from @https://eigen.tuxfamily.org/dox/group__TutorialLinearAlgebra.html
+    //Check Matrix determinant
     double det = m.determinant();
 
-    //check if the determinant is 0 +- epsilon
+    //Check if the determinant is 0 +- epsilon
     coplanarity = det > -std::numeric_limits<double>::epsilon() && det < std::numeric_limits<double>::epsilon();
 
     /** If it is not coplanar (==0) then, if det < 0 we return -1 else 1
@@ -201,16 +208,16 @@ void TetrahedronBuilder::tetrahedronMaker(std::vector<Pointd> vertices, int dete
 
 /**
  * @brief  void TetrahedronBuilder::addFaceTotetrahedron(Dcel::Vertex* lastVertex, Dcel::HalfEdge* passedEdge)
- *         adds 3 new faces from the last vertix and a given half edge
+ *         adds 3 new faces from the last vertex and a given half edge
  * @param  VERTEX lastVertex, HALF_EDGE lastVertex given half edge
  */
 void TetrahedronBuilder::addFaceTotetrahedron(Dcel::Vertex* lastVertex, Dcel::HalfEdge* passedEdge){
 
-    //Initializing Vertices for passedEdge
+    //Initialize Vertices for passedEdge
     Dcel::Vertex* fromVertex = passedEdge->getFromVertex();
     Dcel::Vertex* toVertex   = passedEdge->getToVertex();
 
-    //Initializing new half edges
+    //Initialize new half edges
     Dcel::HalfEdge* he1 = this->dcel->addHalfEdge();
     he1->setFromVertex(toVertex);
     he1->setToVertex(fromVertex);
@@ -223,7 +230,7 @@ void TetrahedronBuilder::addFaceTotetrahedron(Dcel::Vertex* lastVertex, Dcel::Ha
     he3->setFromVertex(lastVertex);
     he3->setToVertex(toVertex);
 
-    //Next and prevs
+    //Set Next and prevs
     he1->setNext(he2);
     he1->setPrev(he3);
 
@@ -238,7 +245,7 @@ void TetrahedronBuilder::addFaceTotetrahedron(Dcel::Vertex* lastVertex, Dcel::Ha
     fromVertex->setIncidentHalfEdge(he2);
     lastVertex->setIncidentHalfEdge(he3);
 
-    //Setting Twins
+    //Set Twins
     he1->setTwin(passedEdge);
     passedEdge->setTwin(he1);
 
@@ -266,11 +273,11 @@ void TetrahedronBuilder::addFaceTotetrahedron(Dcel::Vertex* lastVertex, Dcel::Ha
     lastVertex->incrementCardinality();
     lastVertex->incrementCardinality();
 
-    //Creating a new face from newly created edges
+    //Create a new face from newly created edges
     Dcel::Face* newFace = this->dcel->addFace();
     //NewFace will access external faces by he1
     newFace->setOuterHalfEdge(he1);
-    //setting each edge to newFace
+    //Set each edge to newFace
     he1->setFace(newFace);
     he2->setFace(newFace);
     he3->setFace(newFace);
