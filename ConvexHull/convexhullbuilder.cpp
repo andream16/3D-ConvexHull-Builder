@@ -121,28 +121,31 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Dcel:
 
     //While an edge belonging to the horizon is not found
     while(firstHalfEdgeFound == false){
-      //For Each Face in Visible Face
+      //For Each Face in Visible Faces
       for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
+          //If the interested edge is found exit from the current For
+          if(firstHalfEdgeFound == true){
+            break;
+          }
           //Initialize current face
           Dcel::Face* currentFace = *faceIterator;
           //For each edge in the face
           for(auto halfEdgeIterator = currentFace->incidentHalfEdgeBegin(); halfEdgeIterator != currentFace->incidentHalfEdgeEnd(); halfEdgeIterator++){
               //Initialize current HalfEdge
-              Dcel::HalfEdge* currHalfEdge = * halfEdgeIterator;
+              Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
               //Initialize current HalfEdge Twin
               Dcel::HalfEdge* twin = currHalfEdge->getTwin();
-
               //If the twin exists
-              if(twin != nullptr){
+              if( checkIfHalfEdgeExist(twin) ){
                   //Get its face
                   Dcel::Face* twinsFace = twin->getFace();
                   //If the face is not visible by the Vertex
                   if(facesVisibleByVertex->count(twinsFace) == 0){
-                      //First HalfEdge is the twin, break
-                      firstHorizonHalfEdge = twin;
                       //Add the very first horizon's halfedge to it
-                      horizon.push_back(firstHorizonHalfEdge);
+                      horizon.push_back(twin);
                       firstHalfEdgeFound = true;
+                      //Exit from the current For
+                      break;
                   }
               }
           }
@@ -150,12 +153,18 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Dcel:
     }
 
     //If firstHalfEdge is found
-    if(firstHorizonHalfEdge != nullptr){
+    if(firstHalfEdgeFound){
+      //Initialize current halfedge's next's twin and next
+      Dcel::HalfEdge *nextTwin;
+      Dcel::HalfEdge *next;
       //While we reach again the same halfedge (e.g. circular tail)
-      while(firstHorizonHalfEdge->getNext() == firstHorizonHalfEdge){
-        //Initialize current halfedge's next's twin
-        Dcel::HalfEdge* nextTwin;
-        nextTwin = firstHorizonHalfEdge->getTwin()->getTwin();
+      while(next != firstHorizonHalfEdge){
+        if( next == nullptr ){ // or checkIfHalfEdgeExist(next)
+         next = firstHorizonHalfEdge->getNext();
+        } else {
+         next = next->getNext();
+        }
+        nextTwin = next->getTwin();
         //Check if its face is visible
         if(facesVisibleByVertex->count(nextTwin->getFace()) == 0){
           //If it is not visible then it belongs to the horizon
@@ -169,3 +178,17 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Dcel:
 
 }
 
+/**
+ * @brief Checks if a given halfedge exists. It gets its from vertex's x coordinate and divides it for itselfs
+ *        if the halfedge exists then the reult would be 1 and return true, esle false.
+ * @param Dcel::HalfEdge *he
+ * @return true if exists, false else
+ */
+bool ConvexHullBuilder::checkIfHalfEdgeExist(Dcel::HalfEdge *he){
+    int checker = he->getFromVertex()->getCoordinate().x() / he->getFromVertex()->getCoordinate().x();
+    if(checker == 1){
+        return true;
+    } else {
+        return false;
+    }
+}
