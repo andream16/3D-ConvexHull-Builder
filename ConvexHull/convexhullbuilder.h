@@ -28,6 +28,7 @@ private:
     std::vector<Dcel::Vertex*> getAllVertices();
     std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
     bool checkIfHalfEdgeExist(Dcel::HalfEdge*);
+    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>);
 
 };
 
