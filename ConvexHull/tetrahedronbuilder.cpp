@@ -263,7 +263,7 @@ void TetrahedronBuilder::addFaceTotetrahedron(Dcel::Vertex* lastVertex, Dcel::Ha
             he3_twin->setTwin(he3);
     }
 
-    //Cardinality, increments each time a new half edge 'starts' or 'ends' in a certain vertix
+    //Cardinality, increments each time a new half edge 'starts' or 'ends' in a certain vertex
     fromVertex->incrementCardinality();
     fromVertex->incrementCardinality();
 

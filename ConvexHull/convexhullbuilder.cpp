@@ -66,7 +66,7 @@ void ConvexHullBuilder::computeConvexHull(){
 
           //Get the Horizon for the current Visible Faces
           std::vector<Dcel::HalfEdge*> horizon = bringMeTheHorizon(facesVisibleByVertex);
-
+bool fasullo = true;
       }
 
     }
@@ -96,18 +96,15 @@ std::vector<Dcel::Vertex*>  ConvexHullBuilder::getAllVertices(){
 
 /**
  * @brief  std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon
- *         Takes current set of visible faces and returns a vector of halfedges which form the
+ *         Takes current set of visible faces and returns a vector of ordered halfedges which form the
  *         horizon.
  *         - Loop through faces
  *           - For each HalfEdge in the face
- *             - If given halfedge's twin is not null
+ *             - If current given halfedge's twin is not null
  *               - Check if twin's face is visible by the current vertex
- *               - If it is not visible then the twin belongs to the horizon and exit from the loop,
- *                 else skip
- *         - Starting from the first horizon's halfedge
- *           While we reach again the latter halfedge
- *            - Pick its next and, if it is visible from the vertex, add it to the horizon
- *              else skip
+ *               - If it is not visible then the twin belongs to the horizon
+ *               - Add it to the horizon and set its to and from vertex in a map
+ *         - Order the horizon using the map and the horizon itself
  *
  * @param  std::set<Dcel::Face*>facesVisibleByVertex
  * @return returns array of pointers to halfedges belonging to the horizon
@@ -177,26 +174,31 @@ bool ConvexHullBuilder::checkIfHalfEdgeExist(Dcel::HalfEdge *he){
 std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::HalfEdge*> unHorizon, std::map<Dcel::Vertex*, Dcel::Vertex*> map){
     //Initialize Ordered Horizon
     std::vector<Dcel::HalfEdge*> orderedHorizon;
-    //For each half edge in the horizon
-    for(auto horizonIterator = unHorizon.begin(); horizonIterator != unHorizon.end(); horizonIterator++){
-       //Initialize current HalfEdge
-       Dcel::HalfEdge* currentHalfEdge = *horizonIterator;
-       //Get From Vertex
-       Dcel::Vertex* fromVertex = currentHalfEdge->getFromVertex();
-       //Getting To Vertex
-       Dcel::Vertex* toVertex = map[fromVertex];
-       //Add a new halfedge to the horizon
-       Dcel::HalfEdge* orderedHalfEdge = new Dcel::HalfEdge;
-       //Set its From Vertex
-       orderedHalfEdge->setFromVertex(fromVertex);
-       //Set its To Vertex
-       orderedHalfEdge->setToVertex(toVertex);
-       //Pushing it into the ordered Horizon
-       orderedHorizon.push_back(orderedHalfEdge);
-       //If last halfedge then free the memory
-       if(horizonIterator == unHorizon.end()){
-         delete orderedHalfEdge;
-       }
+    //Initialize unordered horizon size
+    int unHorizonSize = unHorizon.size();
+    //Initialize from and to Vertex
+    Dcel::Vertex* fromVertex;
+    Dcel::Vertex* toVertex;
+
+    //While all the halfedges haven't been ordered
+    while(unHorizonSize != orderedHorizon.size()){
+      //Initializing a new halfedge
+      Dcel::HalfEdge* currentHalfEdge = new Dcel::HalfEdge;
+      //The very first time
+      if(orderedHorizon.size() == 0){
+        //Take from vertex of first's halfedge in the horizon
+        fromVertex = unHorizon.front()->getFromVertex();
+      } else {
+        //The next fromVertex is the old toVertex
+        fromVertex = toVertex;
+      }
+      //Get to vertex using the map. For [fromVertex] will contain only the next toVertex
+      toVertex = map[fromVertex];
+      //Set the new halfedge
+      currentHalfEdge->setFromVertex(fromVertex);
+      currentHalfEdge->setToVertex(toVertex);
+      //Add it to the ordered horizon
+      orderedHorizon.push_back(currentHalfEdge);
     }
 
     return orderedHorizon;
