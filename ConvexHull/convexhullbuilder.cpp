@@ -199,7 +199,6 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::H
       currentHalfEdge->setToVertex(toVertex);
       //Add it to the ordered horizon
       orderedHorizon.push_back(currentHalfEdge);
-
     }
 
     return orderedHorizon;
