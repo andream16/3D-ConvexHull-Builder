@@ -157,5 +157,69 @@ std::set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* curr
 
     //Return a set of visible faces by a vertex
     return visibleFaces;
+}
+
+/**
+ * @brief  getVerticesVisibleByFace(Dcel::Face* currentFace)
+ *         Check if passed face is in conflict with dcel's vertices and if it is, then,
+ *         return set of vertices visible by it
+ * @param  Dcel::Face* currentFace
+ * @return std::set<Dcel::Vertex*>* set of vertices visible by the face
+ */
+std::set<Dcel::Vertex*>* ConflictGraph::getVerticesVisibleByFace(Dcel::Face* currentFace){
+    //Initialize set of Faces
+    std::set<Dcel::Vertex*>* visibleVertices;
+    //Check if the vertex is in conflict. If it is indeed, visible faces will not be empty
+    visibleVertices = this->vertexConflictMap[currentFace];
+
+    //If the Vertex is not in conflict
+    if(visibleVertices->size() == 0){
+        //Build and Empty set and associate it to the vertex in the map
+        this->vertexConflictMap[currentFace] = new std::set<Dcel::Vertex*>;
+    }
+
+    //Return a set of visible faces by a vertex
+    return visibleVertices;
+
+}
+
+/**
+ * @brief  joinVertices(std::vector<Dcel::HalfEdge*>* horizon)
+ *         Merges the vertices that are in conflict with a given horizon halfedge face and twin's face
+ *         in order to speed up the process of understanding which vertices are in conflict with the new faces
+ *         to be added
+ * @param  std::vector<Dcel::HalfEdge*>* horizon
+ * @return std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>> map that for each HalfEdge has the latter merged vertices
+ */
+std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConflictGraph::joinVertices(std::vector<Dcel::HalfEdge*> horizon){
+
+    //Initialize joined vertices map
+    std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> joinedVerticesMap;
+
+        //For each HalfEdge in the horizon
+        for(auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++){
+            //Get current HalfEdge
+            Dcel::HalfEdge *currHorizonHalfEdge = *halfEdgeIterator;
+            //Get current HalfEdge's twin
+            Dcel::HalfEdge *currTwin            =  currHorizonHalfEdge->getTwin();
+
+            //Get its face
+            Dcel::Face *currentFace = currHorizonHalfEdge->getFace();
+            //Get twin's face
+            Dcel::Face *twinsFace   = currTwin->getFace();
+
+            //Get Vertices visible by the latter faces
+            std::set<Dcel::Vertex*> *verticesInConflictWithCurrFace  = getVerticesVisibleByFace(currentFace);
+            std::set<Dcel::Vertex*> *verticesInConflictWithTwinsFace = getVerticesVisibleByFace(twinsFace);
+
+            //Join the two sets of vertices
+            verticesInConflictWithCurrFace->insert(verticesInConflictWithTwinsFace->begin(), verticesInConflictWithTwinsFace->end());
+
+            //Build the map with new vertices
+            joinedVerticesMap[currHorizonHalfEdge] = verticesInConflictWithCurrFace;
+        }
+
+    //Return populated Map
+    return joinedVerticesMap;
 
 }

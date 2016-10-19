@@ -49,8 +49,11 @@ void ConvexHullBuilder::computeConvexHull(){
     conflictGraph = new ConflictGraph(dcel, dcelVertices);
     conflictGraph->initializeConflictGraph();
 
+    //Get all vertices size
+    int verticesSize = dcelVertices.size();
+
     //Loop through remaining vertices
-    for(unsigned int i=4; i<dcelVertices.size(); i++){
+    for(unsigned int i=4; i<verticesSize; i++){
 
       //Get Current Vertex
       Dcel::Vertex* currVert = dcelVertices[i];
@@ -66,7 +69,11 @@ void ConvexHullBuilder::computeConvexHull(){
 
           //Get the Horizon for the current Visible Faces
           std::vector<Dcel::HalfEdge*> horizon = bringMeTheHorizon(facesVisibleByVertex);
-bool fasullo = true;
+
+          //Get the probable visible vertices for each face of each horizon's halfedge
+          conflictGraph->joinVertices(horizon);
+
+          bool fasullo = true;
       }
 
     }
@@ -184,6 +191,8 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::H
     while(unHorizonSize != orderedHorizon.size()){
       //Initializing a new halfedge
       Dcel::HalfEdge* currentHalfEdge = new Dcel::HalfEdge;
+      //Initializing a new twinhalfedge
+      Dcel::HalfEdge* twinHalfEdge = new Dcel::HalfEdge;
       //The very first time
       if(orderedHorizon.size() == 0){
         //Take from vertex of first's halfedge in the horizon
@@ -197,6 +206,15 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::H
       //Set the new halfedge
       currentHalfEdge->setFromVertex(fromVertex);
       currentHalfEdge->setToVertex(toVertex);
+
+      //Setting current HalfEdge's twins from and to vertex
+      twinHalfEdge->setFromVertex(toVertex);
+      twinHalfEdge->setToVertex(fromVertex);
+
+      //Set current HalfEdge Twin
+      currentHalfEdge->setTwin(twinHalfEdge);
+      twinHalfEdge->setTwin(currentHalfEdge);
+
       //Add it to the ordered horizon
       orderedHorizon.push_back(currentHalfEdge);
     }
