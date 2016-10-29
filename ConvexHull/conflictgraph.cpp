@@ -80,7 +80,7 @@ void ConflictGraph::checkVisibility(){
 
           //Compute Cross Product, if returns true -> addVertex and addFace
           if(crossProduct(matrix)){
-            //if true, add passed vertex and face to the dcel
+            //if true, add passed vertex and face to the conflict maps
             addToVertexConflictMap(currFace, remainingVertices[j]);
             addToFaceConflictMap(currFace, remainingVertices[j]);
           }
@@ -204,7 +204,7 @@ std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConflictGraph::joinVertices(
             Dcel::HalfEdge *currTwin            =  currHorizonHalfEdge->getTwin();
 
             //Get its face
-            Dcel::Face *currentFace = currHorizonHalfEdge->getFace();
+            Dcel::Face *currentFace = (*halfEdgeIterator)->getFace();
             //Get twin's face
             Dcel::Face *twinsFace   = currTwin->getFace();
 
@@ -222,4 +222,63 @@ std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConflictGraph::joinVertices(
     //Return populated Map
     return joinedVerticesMap;
 
+}
+
+/**
+ * @brief  deleteFaces(std::set<Dcel::Face*>* visibleFaces)
+ *         Deletes all the visible faces by the current vertex from the Conflict Graph,
+ *         Removes their Halfedges from the dcel and their vertices if there are no more
+ *         Connecting Halfedges between a From and a To Vertex
+ * @param  std::set<Dcel::Face*>* visibleFaces set of visible faces by current vertex
+ */
+void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
+    //Loop through all the faces
+    for( auto faceIterator = visibleFaces->begin(); faceIterator != visibleFaces->end(); faceIterator++ ){
+        //Get Current Face
+        Dcel::Face* currentFace = *faceIterator;
+        /** Delete from Conflict Graph Begin **/
+        //Get All the Vertices visible by the current face
+        std::set<Dcel::Vertex*> *verticesVisibleByFace = this->vertexConflictMap[currentFace];
+        //If there are visible vertices indeed
+        if( verticesVisibleByFace->size() > 0 ){
+            //Delete current Face From the Conflict Graph
+            this->vertexConflictMap.erase(currentFace);
+            //For each visible vertex
+            for( auto currVisibleVertex = verticesVisibleByFace->begin(); currVisibleVertex != verticesVisibleByFace->end(); currVisibleVertex++ ){
+                //Get current Visible Vertex
+                Dcel::Vertex* cVisibleVertex = *currVisibleVertex;
+                //Delete Current Face from all the Maps of the current Vertex
+                auto currentSet = this->faceConflictMap[cVisibleVertex];
+                //If it is not empty
+                if( currentSet->size() > 0 ){
+                    //Delete it
+                    currentSet->erase(currentFace);
+                }
+            }
+        }
+        /** Delete from Conflict Graph End **/
+
+        /** Delete from Dcel Begin **/
+        //For each halfedge in the face
+        for( auto halfEdgeIterator = currentFace->incidentHalfEdgeBegin(); halfEdgeIterator != currentFace->incidentHalfEdgeEnd(); halfEdgeIterator++ ){
+            //Get Current HalfEdge
+            Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
+            //Get its From and To Vertex
+            Dcel::Vertex* fromVertex = currHalfEdge->getFromVertex();
+            Dcel::Vertex* toVertex   = currHalfEdge->getToVertex();
+            //Remove The HalfEdge from The Dcel
+            this->dcel->deleteHalfEdge(currHalfEdge);
+            //Decrement its From and To Vertices Cardinalities since we have removed an HalfEdge
+            fromVertex->decrementCardinality();
+            toVertex  ->decrementCardinality();
+            //When Cardinality is 0, it means that the Vertex Has no connections, so, we can remove it
+            if( fromVertex->getCardinality() == 0 ){
+                this->dcel->deleteVertex(fromVertex);
+            }
+            if( toVertex->getCardinality() == 0 ){
+                this->dcel->deleteVertex(toVertex);
+            }
+        }
+        /** Delete from Dcel End   **/
+    }
 }

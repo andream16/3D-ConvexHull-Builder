@@ -73,6 +73,9 @@ void ConvexHullBuilder::computeConvexHull(){
           //Get the probable visible vertices for each face of each horizon's halfedge
           conflictGraph->joinVertices(horizon);
 
+          //Delete Visible Faces Faces from the Conflict Graph and Dcel
+          conflictGraph->deleteFaces(facesVisibleByVertex);
+
           bool fasullo = true;
       }
 
@@ -128,25 +131,21 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Dcel:
      for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
        //Initialize current face
        Dcel::Face* currentFace = *faceIterator;
+       Dcel::HalfEdge* outerHalfEdge     = (*faceIterator)->getOuterHalfEdge();
+       Dcel::HalfEdge* outerHalfEdgeTwin = outerHalfEdge->getTwin();
 
-       //For each edge in the face
-       for(auto halfEdgeIterator = currentFace->incidentHalfEdgeBegin(); halfEdgeIterator != currentFace->incidentHalfEdgeEnd(); halfEdgeIterator++){
-          //Initialize current HalfEdge
-          Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
-          //Initialize current HalfEdge Twin
-          Dcel::HalfEdge* twin = currHalfEdge->getTwin();
-          //If the twin exists
-          if( checkIfHalfEdgeExist(twin) ){
-             //Get its face
-             Dcel::Face* twinsFace = twin->getFace();
-             //If the face is not visible by the Vertex
-             if(facesVisibleByVertex->count(twinsFace) == 0){
-               //Add current halfedge from and to vertex to a map
-               mapOfVertices[twin->getFromVertex()] = twin->getToVertex();
-               //Add current twin to unordered horizon
-               horizon.push_back(twin);
-             }
-          }
+       for(int i = 0; i<3; i++){
+         //Get its face
+         Dcel::Face* twinsFace = outerHalfEdgeTwin->getFace();
+        //If the face is not visible by the Vertex
+        if(facesVisibleByVertex->count(twinsFace) == 0){
+           //Add current halfedge from and to vertex to a map
+           mapOfVertices[outerHalfEdgeTwin->getFromVertex()] = outerHalfEdgeTwin->getToVertex();
+           //Add current twin to unordered horizon
+           horizon.push_back(outerHalfEdgeTwin);
+         }
+         outerHalfEdge     = outerHalfEdge->getNext();
+         outerHalfEdgeTwin = outerHalfEdge->getTwin();
        }
     }
 
@@ -155,21 +154,6 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(std::set<Dcel:
 
     //Return populated Horizon
     return horizon;
-}
-
-/**
- * @brief Checks if a given halfedge exists. It gets its from vertex's x coordinate and divides it for itselfs
- *        if the halfedge exists then the reult would be 1 and return true, esle false.
- * @param Dcel::HalfEdge *he
- * @return true if exists, false else
- */
-bool ConvexHullBuilder::checkIfHalfEdgeExist(Dcel::HalfEdge *he){
-    int checker = he->getFromVertex()->getCoordinate().x() / he->getFromVertex()->getCoordinate().x();
-    if(checker == 1){
-        return true;
-    } else {
-        return false;
-    }
 }
 
 /**
@@ -189,10 +173,6 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::H
 
     //While all the halfedges haven't been ordered
     while(unHorizonSize != orderedHorizon.size()){
-      //Initializing a new halfedge
-      Dcel::HalfEdge* currentHalfEdge = new Dcel::HalfEdge;
-      //Initializing a new twinhalfedge
-      Dcel::HalfEdge* twinHalfEdge = new Dcel::HalfEdge;
       //The very first time
       if(orderedHorizon.size() == 0){
         //Take from vertex of first's halfedge in the horizon
@@ -203,20 +183,17 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::H
       }
       //Get to vertex using the map. For [fromVertex] will contain only the next toVertex
       toVertex = map[fromVertex];
-      //Set the new halfedge
-      currentHalfEdge->setFromVertex(fromVertex);
-      currentHalfEdge->setToVertex(toVertex);
 
-      //Setting current HalfEdge's twins from and to vertex
-      twinHalfEdge->setFromVertex(toVertex);
-      twinHalfEdge->setToVertex(fromVertex);
-
-      //Set current HalfEdge Twin
-      currentHalfEdge->setTwin(twinHalfEdge);
-      twinHalfEdge->setTwin(currentHalfEdge);
-
-      //Add it to the ordered horizon
-      orderedHorizon.push_back(currentHalfEdge);
+      //For All the Halfedges
+      for(auto unHorizonIterator = unHorizon.begin(); unHorizonIterator != unHorizon.end(); unHorizonIterator ++ ){
+          //Get Current HalfEdge
+          Dcel::HalfEdge* currHalfEdge = *unHorizonIterator;
+          //If that halfedge has exact same from and to vertex of the ordered ones
+          if( currHalfEdge->getFromVertex() == fromVertex && currHalfEdge->getToVertex() == toVertex ){
+              //Add it to the ordered horizon
+              orderedHorizon.push_back(currHalfEdge);
+          }
+      }
     }
 
     return orderedHorizon;
