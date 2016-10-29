@@ -1,7 +1,5 @@
 #ifndef CONVEXHULL_H
 #define CONVEXHULL_H
-#define VERTEX_POINTERS_ARRAY(name) \
-    std::vector<Dcel::Vertex*> name(std::vector<Dcel::Vertex*>)
 
 #include <vector>
 #include <string>
@@ -28,8 +26,9 @@ private:
     std::vector<Dcel::Vertex*> getAllVertices();
     std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
     std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>);
-
+    void buildNewFace(std::vector<Dcel::HalfEdge*>, Dcel::Vertex*, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*>);
+    Dcel::Face* craftNewFace(Dcel::HalfEdge*, Dcel::Vertex*);
+    void setTwins(std::vector<Dcel::Face*> &faceArray);
 };
 
-#undef VERTEX_POINTERS_ARRAY
 #endif // CONVEXHULL_H

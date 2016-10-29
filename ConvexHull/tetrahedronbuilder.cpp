@@ -143,7 +143,7 @@ void TetrahedronBuilder::tetrahedronMaker(std::vector<Pointd> vertices, int dete
     Dcel::Vertex* v3 = this->dcel->addVertex(vertices[2]);
     Dcel::Vertex* v4 = this->dcel->addVertex(vertices[3]);
 
-    //Initializing first 3 Half Edges
+    //Initializing and Adding first 3 Half Edges
     Dcel::HalfEdge* h1 = this->dcel->addHalfEdge();
     Dcel::HalfEdge* h2 = this->dcel->addHalfEdge();
     Dcel::HalfEdge* h3 = this->dcel->addHalfEdge();

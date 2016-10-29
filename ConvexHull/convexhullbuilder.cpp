@@ -71,13 +71,17 @@ void ConvexHullBuilder::computeConvexHull(){
           std::vector<Dcel::HalfEdge*> horizon = bringMeTheHorizon(facesVisibleByVertex);
 
           //Get the probable visible vertices for each face of each horizon's halfedge
-          conflictGraph->joinVertices(horizon);
+          std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> probableVertices = conflictGraph->joinVertices(horizon);
 
           //Delete Visible Faces Faces from the Conflict Graph and Dcel
           conflictGraph->deleteFaces(facesVisibleByVertex);
 
-          bool fasullo = true;
+          //Build a new Face for each HalfEdge in the Horizon and for the Current vertex
+          buildNewFace(horizon, currVert, probableVertices);
       }
+
+      bool fasulllooooo = true;
+      conflictGraph->deletePoint(currVert);
 
     }
 }
@@ -197,4 +201,110 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon(std::vector<Dcel::H
     }
 
     return orderedHorizon;
+}
+
+/**
+ * @brief buildNewFace(std::vector<Dcel::HalfEdge*> horizon, Dcel::Vertex* vertex, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> probableVertices)
+ *        Builds a New face frp, Given vertex and Each HalfEdge in the Horizon, updates the conflict Graph with new Face and possible vertices visible by it
+ * @param std::vector<Dcel::HalfEdge*> horizon, Dcel::Vertex* vertex, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> probableVertices
+ */
+void ConvexHullBuilder::buildNewFace(std::vector<Dcel::HalfEdge*> horizon, Dcel::Vertex* vertex, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> probableVertices){
+    //Array Of New Faces That will be used to set twins
+    std::vector<Dcel::Face*> faceArray;
+    //For each HalfEdge in the Horizon
+    for( auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++ ){
+        Dcel::HalfEdge *currHalfEdge = *halfEdgeIterator;
+        //Setting Up a New Faced using current HalfEdge and Given Vertex
+        Dcel::Face* newFace = craftNewFace(currHalfEdge, vertex);
+        //Add new Created Face to Face Array
+        faceArray.push_back(newFace);
+        std::set<Dcel::Vertex*>* verticesForGivenHalfEdge = probableVertices[currHalfEdge];
+        //Update The Conflict Graph with current New Face and probable vertices for Given HalfEdge
+        conflictGraph->updateConflictGraph(newFace, verticesForGivenHalfEdge);
+        setTwins(faceArray);
+    }
+}
+
+void ConvexHullBuilder::setTwins(std::vector<Dcel::Face*> &faceArray){
+
+    std::vector<Dcel::HalfEdge*> he1Vector(faceArray.size());
+    std::vector<Dcel::HalfEdge*> he2Vector(faceArray.size());
+    std::vector<Dcel::HalfEdge*> he3Vector(faceArray.size());
+
+    for(unsigned int i=0; i<faceArray.size(); i++){
+        he1Vector[i] = faceArray[i]->getOuterHalfEdge();
+        he2Vector[i] = faceArray[i]->getOuterHalfEdge()->getNext();
+        he3Vector[i] = faceArray[i]->getOuterHalfEdge()->getNext()->getNext();
+    }
+
+    for(unsigned int i=1; i<=faceArray.size(); i++){
+        he2Vector[i%faceArray.size()]->setTwin(he3Vector[i-1]);
+        he3Vector[i-1]->setTwin(he2Vector[i%faceArray.size()]);
+    }
+}
+
+/**
+ * @brief craftNewFace(Dcel::HalfEdge* halfedge, Dcel::Vertex* vertex)
+ *        Builds a New face connecting counter-clockwise given vertices (like for the tetrahedron)
+ * @param Dcel::HalfEdge* halfedge, Dcel::Vertex* vertex
+ * @return new built face
+ */
+Dcel::Face* ConvexHullBuilder::craftNewFace(Dcel::HalfEdge* halfedge, Dcel::Vertex* vertex){
+    //Add 3 New HalfEdges to the Dcel
+    //Initializing and Adding first 3 Half Edges
+    Dcel::HalfEdge* h1 = this->dcel->addHalfEdge();
+    Dcel::HalfEdge* h2 = this->dcel->addHalfEdge();
+    Dcel::HalfEdge* h3 = this->dcel->addHalfEdge();
+
+    //Initializing new Vertices
+    Dcel::Vertex* v1 = halfedge->getFromVertex();
+    Dcel::Vertex* v2 = halfedge->getToVertex();
+    Dcel::Vertex* v3 = vertex;
+
+    //Connecting the halfedges counter-clockwise
+    h1->setFromVertex(v2);
+    h1->setToVertex(v1);
+    h2->setFromVertex(v1);
+    h2->setToVertex(v3);
+    h3->setFromVertex(v3);
+    h3->setToVertex(v2);
+
+    //Set Next and Prev
+    h1->setNext(h2);
+    h2->setNext(h3);
+    h3->setNext(h1);
+
+    h1->setPrev(h3);
+    h2->setPrev(h1);
+    h3->setPrev(h2);
+
+    //Set current HalfEdge Twin
+    h1->setTwin(halfedge);
+
+    //Set Incidental HalfEdges
+    v1->setIncidentHalfEdge(h2);
+    v2->setIncidentHalfEdge(h1);
+    v3->setIncidentHalfEdge(h3);
+
+    //Increment Cardinality Each time a new edge enters/exits from a Vertex
+    v1->incrementCardinality();
+    v1->incrementCardinality();
+    v2->incrementCardinality();
+    v2->incrementCardinality();
+    v3->incrementCardinality();
+    v3->incrementCardinality();
+
+    //Set a New Face
+    Dcel::Face* newFace = this->dcel->addFace();
+
+    //Set new Face Half Edges
+    h1->setFace(newFace);
+    h2->setFace(newFace);
+    h3->setFace(newFace);
+
+    //Set new Face Outer HalfEdge
+    newFace->setOuterHalfEdge(h1);
+
+    //Return new Face
+    return newFace;
 }

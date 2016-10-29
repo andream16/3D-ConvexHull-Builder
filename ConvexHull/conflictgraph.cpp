@@ -282,3 +282,53 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
         /** Delete from Dcel End   **/
     }
 }
+
+
+void ConflictGraph::updateConflictGraph(Dcel::Face* currFace, std::set<Dcel::Vertex*>* possibleVertices){
+    //For each possible vertex in the set
+    for( auto vertexIterator = possibleVertices->begin(); vertexIterator != possibleVertices->end(); vertexIterator++ ){
+
+        //Get Current Vertex
+        Dcel::Vertex* currVertex = *vertexIterator;
+
+        //Initialize 4*4 Matrix
+        Eigen::Matrix4d matrix;
+        int i = 0;
+        //For each halfedge in the face
+        for( auto vertexIterator = currFace->incidentVertexBegin(); vertexIterator != currFace->incidentVertexEnd(); vertexIterator++){
+            Dcel::Vertex* currVert = *vertexIterator;
+
+            matrix(i, 0) = currVert->getCoordinate().x();
+            matrix(i, 1) = currVert->getCoordinate().y();
+            matrix(i, 2) = currVert->getCoordinate().z();
+            matrix(i, 3) = 1; //last column made of ones
+        }
+        matrix(3, 0) = currVertex->getCoordinate().x();
+        matrix(3, 1) = currVertex->getCoordinate().y();
+        matrix(3, 2) = currVertex->getCoordinate().z();
+        matrix(3, 3) = 1; //last column made of ones
+
+       double det = matrix.determinant();
+       if( det < -std::numeric_limits<double>::epsilon() ){
+           addToVertexConflictMap(currFace, currVertex);
+           addToFaceConflictMap(currFace, currVertex);
+       }
+    }
+}
+
+void ConflictGraph::deletePoint(Dcel::Vertex* currVert){
+    if(this->faceConflictMap[currVert] != nullptr){
+        std::set<Dcel::Face*> *visibleFaces = this->faceConflictMap[currVert];
+        if( visibleFaces->size() > 0){
+            this->faceConflictMap.erase(currVert);
+            for( auto faceIterator = visibleFaces->begin(); faceIterator != visibleFaces->end(); faceIterator++){
+                auto assSet = this->vertexConflictMap[*faceIterator];
+                if(assSet->size() >0 ){
+                    assSet->erase(currVert);
+                }
+            }
+        }
+    }
+
+
+}
