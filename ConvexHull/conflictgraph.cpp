@@ -19,19 +19,6 @@ ConflictGraph::~ConflictGraph(){}
  * @brief ConflictGraph::initializeConflictGraph() initializes the conflict graph
  */
 void ConflictGraph::initializeConflictGraph(){
-    //Checks which faces can be seen by a vertex
-    checkVisibility();
-}
-
-/**
- * @brief ConflictGraph::checkVisibility loops through all the faces in the dcel, picks
- *        the outer half edge of each face, gets its from vertex, builds a matrix with
- *        the coordinates of each halfedge in a face and current vertex from dcel coordinates,
- *        checks if a vertex sees a face. If it does, both face and vertex are inserted into 2 maps.
- * @param takes the dcel
- */
-void ConflictGraph::checkVisibility(){
-
     //Initialize 4*4 Matrix
     Eigen::Matrix4d matrix;
 
@@ -41,17 +28,17 @@ void ConflictGraph::checkVisibility(){
     //for each face in the dcel
     for(auto faceIterator = dcel->faceBegin(); faceIterator != dcel->faceEnd(); ++faceIterator){
 
-        //used to fill the matrix
-        int externalIterator = 0;
+       //used to fill the matrix
+       int externalIterator = 0;
 
-        //Pick current face
-        Dcel::Face* currFace = *faceIterator;
+       //Pick current face
+       Dcel::Face* currFace = *faceIterator;
 
-        //Get current Outer Half Edge
-        Dcel::HalfEdge* he = currFace->getOuterHalfEdge();
+       //Get current Outer Half Edge
+       Dcel::HalfEdge* he = currFace->getOuterHalfEdge();
 
-        //For each Vertex of the face
-        for(unsigned int i = 0; i<3; i++){
+       //For each Vertex of the face
+       for(unsigned int i = 0; i<3; i++){
 
           //Get Current From Vertex Coordinates
           Pointd currVertexCoordinates = he->getFromVertex()->getCoordinate();
@@ -69,8 +56,8 @@ void ConflictGraph::checkVisibility(){
 
         }
 
-        //For each vertex in the dcel, check if vertex[j] sees current passed face
-        for(unsigned int j=4; j<verticesNumber; j++){
+       //For each vertex in the dcel, check if vertex[j] sees current passed face
+       for(unsigned int j=4; j<verticesNumber; j++){
 
           //Add current vertex coordinates to last row of the matrix
           matrix(3,0) = remainingVertices[j]->getCoordinate().x();
@@ -79,17 +66,13 @@ void ConflictGraph::checkVisibility(){
           matrix(3,3) = 1;
 
           //Compute Cross Product, if returns true -> addVertex and addFace
-          if(crossProduct(matrix)){
-            //if true, add passed vertex and face to the conflict maps
-            addToVertexConflictMap(currFace, remainingVertices[j]);
-            addToFaceConflictMap(currFace, remainingVertices[j]);
+          if( crossProduct(matrix) ){
+             //if true, add passed vertex and face to the conflict maps
+             addToVertexConflictMap(currFace, remainingVertices[j]);
+             addToFaceConflictMap  (currFace, remainingVertices[j]);
           }
-
         }
-
-
-     }
-
+    }
 }
 
 /**
@@ -110,8 +93,10 @@ bool ConflictGraph::crossProduct(Eigen::Matrix4d matrix){
  * @param Dcel::Face* face, Dcel::Vertex* vertex
  */
 void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
+        //Get Vertex Set
+        std::set<Dcel::Vertex*> *currSet = this->vertexConflictMap[face];
         //If the map for the current face does not exist
-        if(this->vertexConflictMap[face] == nullptr){
+        if( currSet == nullptr ){
             //Create a new one for the passed face
             this->vertexConflictMap[face] = new std::set<Dcel::Vertex*>;
         }
@@ -127,8 +112,10 @@ void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* verte
  * @param Dcel::Face* face, Dcel::Vertex* vertex
  */
 void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
+    //Get Face Set
+    std::set<Dcel::Face*> *faceSet = this->faceConflictMap[vertex];
     //If the map for the current vertex does not exist
-    if(this->faceConflictMap[vertex] == nullptr){
+    if( faceSet == nullptr ){
         //create a new one for the passed vertex
         this->faceConflictMap[vertex] = new std::set<Dcel::Face*>;
     }
@@ -150,13 +137,54 @@ std::set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* curr
     visibleFaces = this->faceConflictMap[currentVertex];
 
     //If the Vertex is not in conflict
-    if(visibleFaces->size() == 0){
+    if( visibleFaces == nullptr ){
         //Build and Empty set and associate it to the vertex in the map
         this->faceConflictMap[currentVertex] = new std::set<Dcel::Face*>;
     }
 
     //Return a set of visible faces by a vertex
     return visibleFaces;
+}
+
+/**
+* @brief  joinVertices(std::vector<Dcel::HalfEdge*>* horizon)
+*         Merges the vertices that are in conflict with a given horizon halfedge face and twin's face
+*         in order to speed up the process of understanding which vertices are in conflict with the new faces
+*         to be added
+* @param  std::vector<Dcel::HalfEdge*>* horizon
+* @return std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>> map that for each HalfEdge has the latter merged vertices
+*/
+std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConflictGraph::joinVertices(std::vector<Dcel::HalfEdge*> horizon){
+
+   //Initialize joined vertices map
+   std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> joinedVerticesMap;
+
+       //For each HalfEdge in the horizon
+       for(auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++){
+           //Get current HalfEdge
+           Dcel::HalfEdge *currHorizonHalfEdge = *halfEdgeIterator;
+           //Get current HalfEdge's twin
+           Dcel::HalfEdge *currTwin            =  currHorizonHalfEdge->getTwin();
+
+           //Get its face
+           Dcel::Face *currentFace = (*halfEdgeIterator)->getFace();
+           //Get twin's face
+           Dcel::Face *twinsFace   = currTwin->getFace();
+
+           //Get Vertices visible by the latter faces
+           std::set<Dcel::Vertex*> *verticesInConflictWithCurrFace  = getVerticesVisibleByFace(currentFace);
+           std::set<Dcel::Vertex*> *verticesInConflictWithTwinsFace = getVerticesVisibleByFace(twinsFace);
+
+           //Join the two sets of vertices
+           verticesInConflictWithCurrFace->insert(verticesInConflictWithTwinsFace->begin(), verticesInConflictWithTwinsFace->end());
+
+           //Build the map with new vertices
+           joinedVerticesMap[currHorizonHalfEdge] = verticesInConflictWithCurrFace;
+       }
+
+   //Return populated Map
+   return joinedVerticesMap;
+
 }
 
 /**
@@ -173,54 +201,13 @@ std::set<Dcel::Vertex*>* ConflictGraph::getVerticesVisibleByFace(Dcel::Face* cur
     visibleVertices = this->vertexConflictMap[currentFace];
 
     //If the Vertex is not in conflict
-    if(visibleVertices->size() == 0){
+    if( visibleVertices == nullptr ){
         //Build and Empty set and associate it to the vertex in the map
         this->vertexConflictMap[currentFace] = new std::set<Dcel::Vertex*>;
     }
 
     //Return a set of visible faces by a vertex
     return visibleVertices;
-
-}
-
-/**
- * @brief  joinVertices(std::vector<Dcel::HalfEdge*>* horizon)
- *         Merges the vertices that are in conflict with a given horizon halfedge face and twin's face
- *         in order to speed up the process of understanding which vertices are in conflict with the new faces
- *         to be added
- * @param  std::vector<Dcel::HalfEdge*>* horizon
- * @return std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>> map that for each HalfEdge has the latter merged vertices
- */
-std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConflictGraph::joinVertices(std::vector<Dcel::HalfEdge*> horizon){
-
-    //Initialize joined vertices map
-    std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> joinedVerticesMap;
-
-        //For each HalfEdge in the horizon
-        for(auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++){
-            //Get current HalfEdge
-            Dcel::HalfEdge *currHorizonHalfEdge = *halfEdgeIterator;
-            //Get current HalfEdge's twin
-            Dcel::HalfEdge *currTwin            =  currHorizonHalfEdge->getTwin();
-
-            //Get its face
-            Dcel::Face *currentFace = (*halfEdgeIterator)->getFace();
-            //Get twin's face
-            Dcel::Face *twinsFace   = currTwin->getFace();
-
-            //Get Vertices visible by the latter faces
-            std::set<Dcel::Vertex*> *verticesInConflictWithCurrFace  = getVerticesVisibleByFace(currentFace);
-            std::set<Dcel::Vertex*> *verticesInConflictWithTwinsFace = getVerticesVisibleByFace(twinsFace);
-
-            //Join the two sets of vertices
-            verticesInConflictWithCurrFace->insert(verticesInConflictWithTwinsFace->begin(), verticesInConflictWithTwinsFace->end());
-
-            //Build the map with new vertices
-            joinedVerticesMap[currHorizonHalfEdge] = verticesInConflictWithCurrFace;
-        }
-
-    //Return populated Map
-    return joinedVerticesMap;
 
 }
 
@@ -236,6 +223,7 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
     for( auto faceIterator = visibleFaces->begin(); faceIterator != visibleFaces->end(); faceIterator++ ){
         //Get Current Face
         Dcel::Face* currentFace = *faceIterator;
+
         /** Delete from Conflict Graph Begin **/
         //Get All the Vertices visible by the current face
         std::set<Dcel::Vertex*> *verticesVisibleByFace = this->vertexConflictMap[currentFace];
@@ -261,24 +249,24 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
         /** Delete from Dcel Begin **/
         //For each halfedge in the face
         for( auto halfEdgeIterator = currentFace->incidentHalfEdgeBegin(); halfEdgeIterator != currentFace->incidentHalfEdgeEnd(); halfEdgeIterator++ ){
-            //Get Current HalfEdge
-            Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
-            //Get its From and To Vertex
-            Dcel::Vertex* fromVertex = currHalfEdge->getFromVertex();
-            Dcel::Vertex* toVertex   = currHalfEdge->getToVertex();
-            //Remove The HalfEdge from The Dcel
-            this->dcel->deleteHalfEdge(currHalfEdge);
-            //Decrement its From and To Vertices Cardinalities since we have removed an HalfEdge
-            fromVertex->decrementCardinality();
-            toVertex  ->decrementCardinality();
-            //When Cardinality is 0, it means that the Vertex Has no connections, so, we can remove it
-            if( fromVertex->getCardinality() == 0 ){
-                this->dcel->deleteVertex(fromVertex);
-            }
-            if( toVertex->getCardinality() == 0 ){
-                this->dcel->deleteVertex(toVertex);
-            }
+             //Get Current HalfEdge
+             Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
+             //Get its From and To Vertex
+             Dcel::Vertex* fromVertex = currHalfEdge->getFromVertex();
+             Dcel::Vertex* toVertex   = currHalfEdge->getToVertex();
+             //Remove The HalfEdge from The Dcel
+             this->dcel->deleteHalfEdge(currHalfEdge);
+             //Decrement its From and To Vertices Cardinalities since we have removed an HalfEdge
+             fromVertex->decrementCardinality();
+             toVertex  ->decrementCardinality();
+             //When Cardinality is 0, it means that the Vertex Has no connections, so, we can remove it
+             if( fromVertex->getCardinality() == 0 ){
+                 this->dcel->deleteVertex(fromVertex);
+             }
+             if( toVertex->getCardinality() == 0 ){
+                 this->dcel->deleteVertex(toVertex);
+             }
         }
         /** Delete from Dcel End   **/
-    }
+     }
 }

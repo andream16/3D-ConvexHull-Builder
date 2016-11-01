@@ -19,16 +19,13 @@ public:
     std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> joinVertices(std::vector<Dcel::HalfEdge*>);
     void deleteFaces(std::set<Dcel::Face*>*);
 
-    std::map<Dcel::Face*, std::set<Dcel::Vertex*>*> vertexConflictMap;
-    std::map<Dcel::Vertex*, std::set<Dcel::Face*>*> faceConflictMap;
-
+    std::map<Dcel::Face*,   std::set<Dcel::Vertex*>*> vertexConflictMap;
+    std::map<Dcel::Vertex*, std::set<Dcel::Face*>*>   faceConflictMap;
 
 private:
     DrawableDcel *dcel;
     std::vector<Dcel::Vertex*> remainingVertices;
-    std::vector<Dcel::HalfEdge*> horizon;
 
-    void checkVisibility();
     void fillCrossProductMatrix(Dcel::Vertex*);
     bool crossProduct(Eigen::Matrix4d);
     void addToFaceConflictMap(Dcel::Face*, Dcel::Vertex*);

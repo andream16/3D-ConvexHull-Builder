@@ -1,7 +1,5 @@
 #ifndef CONVEXHULL_H
 #define CONVEXHULL_H
-#define VERTEX_POINTERS_ARRAY(name) \
-    std::vector<Dcel::Vertex*> name(std::vector<Dcel::Vertex*>)
 
 #include <vector>
 #include <string>
@@ -10,6 +8,7 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>
 
+#include "convexhullbuilderhelper.h"
 #include "tetrahedronbuilder.h"
 #include "conflictgraph.h"
 
@@ -22,14 +21,9 @@ public:
 
 private:
     DrawableDcel *dcel;
-    ConflictGraph *conflictGraph;
-    TetrahedronBuilder *tetrahedronBuilder;
-
-    std::vector<Dcel::Vertex*> getAllVertices();
-    std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
-    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>);
-
+    ConvexHullBuilderHelper *convexHullBuilderHelper;
+    TetrahedronBuilder      *tetrahedronBuilder;
+    ConflictGraph           *conflictGraph;
 };
 
-#undef VERTEX_POINTERS_ARRAY
 #endif // CONVEXHULL_H
