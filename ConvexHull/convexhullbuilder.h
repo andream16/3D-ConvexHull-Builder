@@ -8,6 +8,7 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>
 
+#include "convexhullbuilderhelper.h"
 #include "tetrahedronbuilder.h"
 #include "conflictgraph.h"
 
@@ -20,15 +21,9 @@ public:
 
 private:
     DrawableDcel *dcel;
-    ConflictGraph *conflictGraph;
-    TetrahedronBuilder *tetrahedronBuilder;
-
-    std::vector<Dcel::Vertex*> getAllVertices();
-    std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
-    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>);
-    void buildNewFace(std::vector<Dcel::HalfEdge*>, Dcel::Vertex*, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*>);
-    Dcel::Face* craftNewFace(Dcel::HalfEdge*, Dcel::Vertex*);
-    void setTwins(std::vector<Dcel::Face*> &faceArray);
+    ConvexHullBuilderHelper *convexHullBuilderHelper;
+    TetrahedronBuilder      *tetrahedronBuilder;
+    ConflictGraph           *conflictGraph;
 };
 
 #endif // CONVEXHULL_H

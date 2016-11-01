@@ -5,6 +5,8 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>
 
+#include "facebuilderhelper.h"
+
 class TetrahedronBuilder{
 
 public:
@@ -15,13 +17,13 @@ public:
 private:
     DrawableDcel *dcel;
     std::vector<Dcel::Vertex*> allVertices;
+    FaceBuilderHelper *faceBuilderHelper;
 
     std::vector<Dcel::Vertex*> verticesShuffler();
     std::vector <Pointd> getFirstFourVertices(std::vector<Dcel::Vertex*>);
     void buildTetrahedron(std::vector<Dcel::Vertex*>);
-    int coplanarityChecker(std::vector <Pointd>);
-    void tetrahedronMaker(std::vector <Pointd>, int);
-    void addFaceTotetrahedron(Dcel::Vertex*, Dcel::HalfEdge*);
+    int  coplanarityChecker(std::vector <Pointd>);
+    std::vector<Dcel::HalfEdge*> tetrahedronMaker(std::vector <Pointd>, int);
 
 };
 
