@@ -17,7 +17,10 @@ FaceBuilderHelper::~FaceBuilderHelper(){}
  *        Builds a new face per each passed HalfEdge
  * @param Pointd vertex, std::vector<Dcel::HalfEdge*> halfEdges
  **/
-void FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVertex, std::vector<Dcel::HalfEdge*> halfEdges){
+std::vector<Dcel::Face*> FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVertex, std::vector<Dcel::HalfEdge*> halfEdges){
+
+    //Initialize Possible arra Of faces
+    std::vector<Dcel::Face*> faces;
 
     //Add Current vertex to the Dcel
     Dcel::Vertex* vertex = this->dcel->addVertex(passedVertex->getCoordinate());
@@ -64,7 +67,7 @@ void FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVertex, std::vector<Dcel:
         passedEdge->setTwin(he1);
 
         //Empty at the first steps but filled in next steps
-        if(passedEdge->getPrev()->getTwin() != nullptr){
+        /*if(passedEdge->getPrev()->getTwin() != nullptr){
            Dcel::HalfEdge* he2_twin = passedEdge->getPrev()->getTwin()->getPrev();
            he2->setTwin(he2_twin);
            he2_twin->setTwin(he2);
@@ -75,7 +78,7 @@ void FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVertex, std::vector<Dcel:
                 Dcel::HalfEdge* he3_twin = passedEdge->getNext()->getTwin()->getNext();
                 he3->setTwin(he3_twin);
                 he3_twin->setTwin(he3);
-        }
+        }*/
 
         //Cardinality, increments each time a new half edge 'starts' or 'ends' in a certain vertex
         fromVertex->incrementCardinality();
@@ -95,6 +98,22 @@ void FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVertex, std::vector<Dcel:
         he1->setFace(newFace);
         he2->setFace(newFace);
         he3->setFace(newFace);
-    }
-}
 
+        //Add the new face to face Array
+        faces.push_back(newFace);
+
+    }
+
+    //Set Twins for each Face
+    for(unsigned int i=1;i<=faces.size();i++){
+
+        Dcel::HalfEdge* nextOfOuter=faces[i% faces.size()]->getOuterHalfEdge()->getNext();
+        Dcel::HalfEdge* prevOfOuterPrevFace=faces[i-1]->getOuterHalfEdge()->getPrev();
+
+        nextOfOuter->setTwin(prevOfOuterPrevFace);
+        prevOfOuterPrevFace->setTwin(nextOfOuter);
+    }
+
+    //Return Face Array in any case, only ConvexHullBuilder will use the Array of Faces
+    return faces;
+}

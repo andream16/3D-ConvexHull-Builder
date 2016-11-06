@@ -8,7 +8,7 @@ class FaceBuilderHelper{
 public:
     FaceBuilderHelper(DrawableDcel* dcel);
     ~FaceBuilderHelper(); //Destructor Declaration
-    void buildFaces(Dcel::Vertex*, std::vector<Dcel::HalfEdge*>);
+    std::vector<Dcel::Face*> buildFaces(Dcel::Vertex*, std::vector<Dcel::HalfEdge*>);
 
 private:
     DrawableDcel *dcel;

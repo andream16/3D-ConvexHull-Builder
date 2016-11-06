@@ -54,6 +54,9 @@ void ConvexHullBuilder::computeConvexHull(){
     //Initialize Conflict Graph with Dcel And First 4 Vertices
     conflictGraph->initializeConflictGraph();
 
+    //Initialize FaceBuilderHelper for further utilization
+    faceBuilderHelper = new FaceBuilderHelper(dcel);
+
     //Get all vertices size
     int verticesSize = dcelVertices.size();
 
@@ -76,12 +79,22 @@ void ConvexHullBuilder::computeConvexHull(){
          std::vector<Dcel::HalfEdge*> horizon = convexHullBuilderHelper->bringMeTheHorizon(facesVisibleByVertex);
 
          //Get the probable visible vertices for each face of each horizon's halfedge
-         conflictGraph->joinVertices(horizon);
+         std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices = conflictGraph->joinVertices(horizon);
 
          //Delete Visible Faces from the Conflict Graph and Dcel
          conflictGraph->deleteFaces(facesVisibleByVertex);
 
+         //Build a Face for each halfedge in the horizon and save them into an array of faces
+         std::vector<Dcel::Face*> faces = faceBuilderHelper->buildFaces(currVert, horizon);
+
+         /* Update Conflict Graph for each new face and possible vertices in conflict with them
+          * since they were in conflict with the destroyed face */
+         conflictGraph->checkConflict(faces, oldVertices, horizon);
+
        }
+
+      //Erase The Current Vertex From the Conflict Graph
+      conflictGraph->eraseVertex(currVert);
 
     }
 }
