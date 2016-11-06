@@ -19,8 +19,6 @@ ConflictGraph::~ConflictGraph(){}
  * @brief ConflictGraph::initializeConflictGraph() initializes the conflict graph
  */
 void ConflictGraph::initializeConflictGraph(){
-    //Initialize 4*4 Matrix
-    Eigen::Matrix4d matrix;
 
     //Number of Remaining vertices
     int verticesNumber = remainingVertices.size();
@@ -28,61 +26,78 @@ void ConflictGraph::initializeConflictGraph(){
     //for each face in the dcel
     for(auto faceIterator = dcel->faceBegin(); faceIterator != dcel->faceEnd(); ++faceIterator){
 
-       //used to fill the matrix
-       int externalIterator = 0;
-
        //Pick current face
        Dcel::Face* currFace = *faceIterator;
 
-       //Get current Outer Half Edge
-       Dcel::HalfEdge* he = currFace->getOuterHalfEdge();
+       //For Each Remaining Vertex
+       for(int i = 0; i < verticesNumber; i++){
 
-       //For each Vertex of the face
-       for(unsigned int i = 0; i<3; i++){
+           //Get Current Vertex
+           Dcel::Vertex* currVertex = remainingVertices[i];
 
-          //Get Current From Vertex Coordinates
-          Pointd currVertexCoordinates = he->getFromVertex()->getCoordinate();
+           //Check if they lie on the same half-space
+           halfSpaceChecker(currFace, currVertex);
 
-          //Fill first 3 rows of the Matrix with currVertexCoordinates
-          matrix(externalIterator, 0) = currVertexCoordinates.x();
-          matrix(externalIterator, 1) = currVertexCoordinates.y();
-          matrix(externalIterator, 2) = currVertexCoordinates.z();
-          matrix(externalIterator, 3) = 1; //last column made of ones
+       }
 
-          //Take Next Edge
-          he = he->getNext();
-          //Increment externalIterator
-          externalIterator++;
-
-        }
-
-       //For each vertex in the dcel, check if vertex[j] sees current passed face
-       for(unsigned int j=4; j<verticesNumber; j++){
-
-          //Add current vertex coordinates to last row of the matrix
-          matrix(3,0) = remainingVertices[j]->getCoordinate().x();
-          matrix(3,1) = remainingVertices[j]->getCoordinate().y();
-          matrix(3,2) = remainingVertices[j]->getCoordinate().z();
-          matrix(3,3) = 1;
-
-          //Compute Cross Product, if returns true -> addVertex and addFace
-          if( crossProduct(matrix) ){
-             //if true, add passed vertex and face to the conflict maps
-             addToVertexConflictMap(currFace, remainingVertices[j]);
-             addToFaceConflictMap  (currFace, remainingVertices[j]);
-          }
-        }
     }
 }
 
+
 /**
- * @brief crossProduct (Eigen::Matrix4d matrix)
- *        calculates determinant of the passed matrix and if it's <0, then the vertex sees the face, else if >0 it does not
- * @param Eigen::Matrix4d matrix current matrix
+ * @brief ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex)
+ *        Since all the vertices of a face lie on the same plain, we take one of them, for instance, the first
+ *        and calculate the difference between it and the passed vertex to get checked.
+ *        Then, we calculate all the arguments of the normal to the face and set them as coordinates to the normal itselfs.
+ *        Then we calculate the dot product between the latter vertex and the normal.
+ *        - If the dot product is > epsilon (in order to avoid floating point errors) then the vertex and the face
+ *          lie on the very same half-space, implying that the vertex is in front of the face
+ *        - Else we don't care because it means that they are not on the same half-space.
+ * @param Dcel::Face* face, Dcel::Vertex* vertex
  */
-bool ConflictGraph::crossProduct(Eigen::Matrix4d matrix){
-    //if true -> <0, else false
-    return (matrix.determinant() < -std::numeric_limits<double>::epsilon());
+void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
+    //Array to contain all the vertices of the face
+    std::vector<Dcel::Vertex*> faceVertices;
+    //Initialize faceNormal
+    Dcel::Vertex* faceNormal;
+    //For each Vertex in the face
+    for( auto vertexIterator = face->incidentVertexBegin(); vertexIterator != face->incidentVertexEnd(); vertexIterator++ ){
+        //Add it to the array
+        faceVertices.push_back(*vertexIterator);
+    }
+
+    //Getting Temp vector
+    auto tmpVector = vertex->getCoordinate() - faceVertices[0]->getCoordinate();
+
+    //Getting Face Arguments per each coordinate
+    auto a = (
+              ((faceVertices[1]->getCoordinate().y() - faceVertices[0]->getCoordinate().y())*(faceVertices[2]->getCoordinate().z()-faceVertices[0]->getCoordinate().z()))-
+              ((faceVertices[2]->getCoordinate().y() - faceVertices[0]->getCoordinate().y())*(faceVertices[1]->getCoordinate().z()-faceVertices[0]->getCoordinate().z()))
+            );
+
+    auto b = (
+              ((faceVertices[1]->getCoordinate().z() - faceVertices[0]->getCoordinate().z())*(faceVertices[2]->getCoordinate().x()-faceVertices[0]->getCoordinate().x()))-
+              ((faceVertices[2]->getCoordinate().z() - faceVertices[0]->getCoordinate().z())*(faceVertices[1]->getCoordinate().x()-faceVertices[0]->getCoordinate().x()))
+             );
+
+    auto c = (
+              ((faceVertices[1]->getCoordinate().x() - faceVertices[0]->getCoordinate().x())*(faceVertices[2]->getCoordinate().y()-faceVertices[0]->getCoordinate().y()))-
+              ((faceVertices[2]->getCoordinate().x() - faceVertices[0]->getCoordinate().x())*(faceVertices[1]->getCoordinate().y()-faceVertices[0]->getCoordinate().y()))
+             );
+
+    //Setting faceNormal coordinates
+    faceNormal->setCoordinate(Pointd(a, b, c));
+
+    //Calculate Dot Product
+    auto dotProduct = tmpVector.dot(faceNormal->getCoordinate());
+
+    //If dotProduct > epsilon
+    if( dotProduct > std::numeric_limits<double>::epsilon() ){
+        /* Current vertex and current face lie on the same half-space, implying
+         * that the vertex is in front of the face, so they are in conflict */
+        addToVertexConflictMap(face, vertex);
+        addToFaceConflictMap  (face, vertex);
+    }
 }
 
 /**
@@ -269,4 +284,54 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
         }
         /** Delete from Dcel End   **/
      }
+}
+
+/**
+ * @brief  ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon)
+ *         For each new Face, check if they are in conflict with the old vertices from the latter destroyed face
+ * @param  std::vector<Dcel::Face*> faces, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon
+ */
+void ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon){
+    //For each face in faces
+    for( auto faceIterator = faces.begin(); faceIterator != faces.end(); faceIterator++){
+        //Get Current Face
+        Dcel::Face* currFace = *faceIterator;
+        //For each halfedge in the horizon
+        for( auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++){
+            //Get Set Of vertices associated to the current horizon halfEdge
+            std::set<Dcel::Vertex*> *currVertexSet = oldVertices[*halfEdgeIterator];
+            //For each vertex in the possible conflict ones
+            for( auto vertexIterator = currVertexSet->begin(); vertexIterator != currVertexSet->end(); vertexIterator++ ){
+                //Get current vertex
+                Dcel::Vertex* currVertex = *vertexIterator;
+                //Check if they lie on the same half-space
+                halfSpaceChecker(currFace, currVertex);
+            }
+        }
+    }
+}
+
+/**
+ * @brief  ConflictGraph::eraseVertex(Dcel::Vertex* vertex)
+ *         Delete Current Vertex from the conflict Graph
+ * @param  Dcel::Vertex* vertex
+ */
+void ConflictGraph::eraseVertex(Dcel::Vertex* vertex){
+    //Initialize a set of faces
+    std::set<Dcel::Face*> *faceSet;
+    //Get the set of faces associated with the vertex from the faceConflictMap
+    faceSet = this->faceConflictMap[vertex];
+
+    //If it is not empty
+    if( faceSet != nullptr ){
+        //Delete the current vertex from the faceConflictMap
+        this->faceConflictMap.erase(vertex);
+        //For each visible face
+        for( auto faceIterator = faceSet->begin(); faceIterator != faceSet->end(); faceIterator++ ){
+            //Get Current Face
+            Dcel::Face* currFace = *faceIterator;
+            //Delete the vertex from vertexConflictMap for each face which was in conflict with it
+            this->vertexConflictMap.erase(currFace);
+        }
+    }
 }
