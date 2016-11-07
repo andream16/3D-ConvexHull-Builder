@@ -58,7 +58,7 @@ void ConvexHullManager::on_convexHullPushButton_clicked() {
             /********************************
              * Begin Convex Hull Algorithm  *
              ********************************/
-            ConvexHullBuilder chb(dcel);
+            ConvexHullBuilder chb(dcel, mainWindow);
             chb.computeConvexHull();
 
             /********************************
@@ -81,7 +81,7 @@ void ConvexHullManager::on_convexHullPushButton_clicked() {
              * These fields are necessary for the mesh rendering, therefore if this method crashes,
              * you cannot view the result until all next and prev are setted properly.
              *****/
-            //dcel->updateFaceNormals();
+            dcel->updateFaceNormals();
             /***
              * Warning: updateVertexNormals() crashes if there is at least one half edge which doesn't have
              * twin fields setted properly.
@@ -90,7 +90,7 @@ void ConvexHullManager::on_convexHullPushButton_clicked() {
              * However, when you are submitting the project, this line must be decommented.
              * In other words: your convex hull must have all the twin fields setted properly.
              *****/
-           // dcel->updateVertexNormals();
+             dcel->updateVertexNormals();
 
             //Final operations to render the final dcel
 

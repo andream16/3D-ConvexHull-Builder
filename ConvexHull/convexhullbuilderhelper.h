@@ -11,7 +11,7 @@ public:
 
     std::vector<Dcel::Vertex*>   getAllVertices();
     std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
-    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>);
+    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>&);
 
 private:
     DrawableDcel *dcel;

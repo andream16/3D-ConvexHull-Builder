@@ -6,8 +6,9 @@
  * @brief ConvexHullBuilder::ConvexHullBuilder() Constructor
  * @params takes passed dcel
  */
-ConvexHullBuilder::ConvexHullBuilder(DrawableDcel *dcel){
+ConvexHullBuilder::ConvexHullBuilder(DrawableDcel *dcel, MainWindow* mainWindow){
    this->dcel = dcel;
+   this->mainWindow = mainWindow;
 }
 
 /**
@@ -61,7 +62,7 @@ void ConvexHullBuilder::computeConvexHull(){
     int verticesSize = dcelVertices.size();
 
     //Loop through remaining vertices
-    for(unsigned int i=4; i<verticesSize; i++){
+    for(int i=4; i<verticesSize; i++){
 
       //Get Current Vertex
       Dcel::Vertex* currVert = dcelVertices[i];
@@ -70,10 +71,7 @@ void ConvexHullBuilder::computeConvexHull(){
       std::set<Dcel::Face*>* facesVisibleByVertex = conflictGraph->getFacesVisibleByVertex(currVert);
 
       //If the vertex is in conflict with dcel's faces
-      if( !facesVisibleByVertex->empty() ){
-
-         //Add it to the Dcel
-         dcel->addVertex(currVert->getCoordinate());
+      if( facesVisibleByVertex->size() > 0 ){
 
          //Get the Horizon for the current Visible Faces
          std::vector<Dcel::HalfEdge*> horizon = convexHullBuilderHelper->bringMeTheHorizon(facesVisibleByVertex);
@@ -93,9 +91,12 @@ void ConvexHullBuilder::computeConvexHull(){
 
        }
 
+      //dcel->update();
+      //this->mainWindow->updateGlCanvas();
       //Erase The Current Vertex From the Conflict Graph
       conflictGraph->eraseVertex(currVert);
 
     }
+
 }
 

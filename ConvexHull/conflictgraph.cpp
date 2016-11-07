@@ -39,7 +39,6 @@ void ConflictGraph::initializeConflictGraph(){
            halfSpaceChecker(currFace, currVertex);
 
        }
-
     }
 }
 
@@ -59,7 +58,7 @@ void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
     //Array to contain all the vertices of the face
     std::vector<Dcel::Vertex*> faceVertices;
     //Initialize faceNormal
-    Dcel::Vertex* faceNormal;
+    Dcel::Vertex* faceNormal = new Dcel::Vertex;
     //For each Vertex in the face
     for( auto vertexIterator = face->incidentVertexBegin(); vertexIterator != face->incidentVertexEnd(); vertexIterator++ ){
         //Add it to the array
@@ -109,14 +108,14 @@ void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
  */
 void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
         //Get Vertex Set
-        std::set<Dcel::Vertex*> *currSet = this->vertexConflictMap[face];
+        std::set<Dcel::Vertex*> *vertSet = this->vertexConflictMap[face];
         //If the map for the current face does not exist
-        if( currSet == nullptr ){
+        if( vertSet == nullptr ){
             //Create a new one for the passed face
             this->vertexConflictMap[face] = new std::set<Dcel::Vertex*>;
         }
-          //Insert the current vertex in it
-          this->vertexConflictMap[face]->insert(vertex);
+        //Insert the current vertex in it
+        this->vertexConflictMap[face]->insert(vertex);
 }
 
 /**
@@ -153,12 +152,13 @@ std::set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* curr
 
     //If the Vertex is not in conflict
     if( visibleFaces == nullptr ){
-        //Build and Empty set and associate it to the vertex in the map
-        this->faceConflictMap[currentVertex] = new std::set<Dcel::Face*>;
+        //Build and Empty set and associate it to the vertex in the map 
+        visibleFaces = new std::set<Dcel::Face*>;
+        this->faceConflictMap[currentVertex] = visibleFaces;
     }
 
     //Return a set of visible faces by a vertex
-    return visibleFaces;
+    return new std::set<Dcel::Face*> (*visibleFaces);
 }
 
 /**
@@ -218,11 +218,12 @@ std::set<Dcel::Vertex*>* ConflictGraph::getVerticesVisibleByFace(Dcel::Face* cur
     //If the Vertex is not in conflict
     if( visibleVertices == nullptr ){
         //Build and Empty set and associate it to the vertex in the map
-        this->vertexConflictMap[currentFace] = new std::set<Dcel::Vertex*>;
+        visibleVertices = new std::set<Dcel::Vertex*>;
+        this->vertexConflictMap[currentFace] = visibleVertices;
     }
 
     //Return a set of visible faces by a vertex
-    return visibleVertices;
+    return new std::set<Dcel::Vertex*> (*visibleVertices);
 
 }
 
@@ -243,7 +244,7 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
         //Get All the Vertices visible by the current face
         std::set<Dcel::Vertex*> *verticesVisibleByFace = this->vertexConflictMap[currentFace];
         //If there are visible vertices indeed
-        if( verticesVisibleByFace->size() > 0 ){
+        if( verticesVisibleByFace != nullptr ){
             //Delete current Face From the Conflict Graph
             this->vertexConflictMap.erase(currentFace);
             //For each visible vertex
@@ -253,7 +254,7 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
                 //Delete Current Face from all the Maps of the current Vertex
                 auto currentSet = this->faceConflictMap[cVisibleVertex];
                 //If it is not empty
-                if( currentSet->size() > 0 ){
+                if( currentSet != nullptr ){
                     //Delete it
                     currentSet->erase(currentFace);
                 }
@@ -281,7 +282,12 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
              if( toVertex->getCardinality() == 0 ){
                  this->dcel->deleteVertex(toVertex);
              }
+
         }
+
+        //Delete the current face to close the loop
+        this->dcel->deleteFace(currentFace);
+
         /** Delete from Dcel End   **/
      }
 }
