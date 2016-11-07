@@ -48,30 +48,32 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::set
     //Initialize a map which maps each important from vertex to its to vertex (only on horizon edges)
     std::map<Dcel::Vertex*, Dcel::Vertex*> mapOfVertices;
 
-     //For Each Face in Visible Faces
-     for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
-       //Initialize current face
-       Dcel::Face* currentFace = *faceIterator;
+    //For Each Face in Visible Faces
+    for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
+        //Initialize current face
+        Dcel::Face* currentFace = *faceIterator;
+        Dcel::HalfEdge* outerHalfEdge     = (*faceIterator)->getOuterHalfEdge();
+        Dcel::HalfEdge* outerHalfEdgeTwin = outerHalfEdge->getTwin();
 
-       for(auto halfEdgeIterator = currentFace->incidentHalfEdgeBegin(); halfEdgeIterator != currentFace->incidentHalfEdgeEnd(); halfEdgeIterator++){
-
-           //Get Current HalfEdge
-           Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
-           Dcel::HalfEdge* currHalfEdgeTwin = currHalfEdge->getTwin();
-
-           if( currHalfEdgeTwin != nullptr ){
-                 //Get its face
-                 Dcel::Face* twinsFace = currHalfEdgeTwin->getFace();
-                 //If the face is not visible by the Vertex
-                 if(facesVisibleByVertex->count(twinsFace) == 0){
-                   //Add current halfedge from and to vertex to a map
-                   mapOfVertices[currHalfEdgeTwin->getFromVertex()] = currHalfEdgeTwin->getToVertex();
-                   //Add current twin to unordered horizon
-                   horizon.push_back(currHalfEdgeTwin);
-                }
-           }
-       }
-     }
+        //If outerHalfEdgeTwin
+        if( outerHalfEdgeTwin != nullptr ){
+           //Loop through face's halfedges
+           for( int i = 0; i<3; i++ ){
+              //Get its face
+              Dcel::Face* twinsFace = outerHalfEdgeTwin->getFace();
+              //If the face is not visible by the Vertex
+              if(facesVisibleByVertex->count(twinsFace) == 0){
+                 //Add current halfedge from and to vertex to a map
+                 mapOfVertices[outerHalfEdgeTwin->getFromVertex()] = outerHalfEdgeTwin->getToVertex();
+                 //Add current twin to unordered horizon
+                 horizon.push_back(outerHalfEdgeTwin);
+               }
+                 //Get Next HalfEdge
+                 outerHalfEdge     = (*outerHalfEdge).getNext();
+                 outerHalfEdgeTwin = (*outerHalfEdge).getTwin();
+            }
+        }
+    }
 
     //Get the ordered Horizon
     horizon = orderHorizon(horizon, mapOfVertices);
@@ -79,7 +81,6 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::set
     //Return populated Horizon
     return horizon;
 }
-
 
 /**
  * @brief std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon

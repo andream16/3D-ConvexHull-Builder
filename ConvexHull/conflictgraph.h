@@ -28,8 +28,6 @@ private:
     DrawableDcel *dcel;
     std::vector<Dcel::Vertex*> remainingVertices;
     void halfSpaceChecker(Dcel::Face*, Dcel::Vertex*);
-    void fillCrossProductMatrix(Dcel::Vertex*);
-    bool crossProduct(Eigen::Matrix4d);
     void addToFaceConflictMap(Dcel::Face*, Dcel::Vertex*);
     void addToVertexConflictMap(Dcel::Face*, Dcel::Vertex*);
     std::set<Dcel::Vertex*>* getVerticesVisibleByFace(Dcel::Face*);

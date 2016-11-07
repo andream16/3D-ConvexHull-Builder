@@ -39,7 +39,6 @@ void ConflictGraph::initializeConflictGraph(){
            halfSpaceChecker(currFace, currVertex);
 
        }
-
     }
 }
 
@@ -109,14 +108,14 @@ void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
  */
 void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
         //Get Vertex Set
-        std::set<Dcel::Vertex*> *currSet = this->vertexConflictMap[face];
+        std::set<Dcel::Vertex*> *vertSet = this->vertexConflictMap[face];
         //If the map for the current face does not exist
-        if( currSet == nullptr ){
+        if( vertSet == nullptr ){
             //Create a new one for the passed face
             this->vertexConflictMap[face] = new std::set<Dcel::Vertex*>;
         }
-          //Insert the current vertex in it
-          this->vertexConflictMap[face]->insert(vertex);
+        //Insert the current vertex in it
+        this->vertexConflictMap[face]->insert(vertex);
 }
 
 /**
@@ -286,6 +285,7 @@ void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
 
         }
 
+        //Delete the current face to close the loop
         this->dcel->deleteFace(currentFace);
 
         /** Delete from Dcel End   **/

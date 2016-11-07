@@ -90,14 +90,40 @@ std::vector<Dcel::Face*> FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVerte
 
     }
 
-    //Set Twins for each Face
-    for(unsigned int i=1;i<=faces.size();i++){
+    /**
+      * In order to set the twins, we take advantage of the fact that, since we have
+      * an array of ordered faces with their Outer Halfedges set on Horizon's HalfEdges
+      * The ordered faces are next to each other, and the edges of those faces who are
+      * one next the other can be set as twins.
+      *  - i-face's twin is always i+1-face's outer halfedge's next
+      *  - i+1 face's twin is always i-face's outerhalfedge's prev
+      * Exception made for the last face. Since we have to close the loop, we need to use
+      * the very first face of the array to set their respective twins
+     **/
 
-        Dcel::HalfEdge* nextOfOuter=faces[i% faces.size()]->getOuterHalfEdge()->getNext();
-        Dcel::HalfEdge* prevOfOuterPrevFace=faces[i-1]->getOuterHalfEdge()->getPrev();
+    //Get Faces Number
+    int facesSize = faces.size();
 
-        nextOfOuter->setTwin(prevOfOuterPrevFace);
-        prevOfOuterPrevFace->setTwin(nextOfOuter);
+    //Set Twins for each except Last One
+    for( int i = 0; i < facesSize; i++ ){
+        //Get current OuterHalfEdge from current Face [i]
+        Dcel::HalfEdge* currOuterHalfEdge = faces[i]->getOuterHalfEdge();
+        //Get Next Face OuterHalfEdge [i+1]
+        Dcel::HalfEdge* nextOuterHalfEdge;
+        //If last Face
+        if( i == facesSize-1 ){
+            //Get first face's outer halfedge
+            nextOuterHalfEdge = faces.front()->getOuterHalfEdge();
+        } else {
+            //Get Next Face OuterHalfEdge [i+1]
+            nextOuterHalfEdge = faces[i+1]->getOuterHalfEdge();
+        }
+            //Get currOuterHalfEdge prev and nextOuterHalfEdge next
+            Dcel::HalfEdge* currOHEPrev = (*currOuterHalfEdge).getPrev();
+            Dcel::HalfEdge* nextOHENext = (*nextOuterHalfEdge).getNext();
+            //currOHEPrev twin's is exactly nextOHENext and viceversa
+            currOHEPrev->setTwin(nextOHENext);
+            nextOHENext->setTwin(currOHEPrev);
     }
 
     //Return Face Array in any case, only ConvexHullBuilder will use the Array of Faces

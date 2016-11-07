@@ -91,13 +91,12 @@ void ConvexHullBuilder::computeConvexHull(){
 
        }
 
-      dcel->update();
-      this->mainWindow->updateGlCanvas();
+      //dcel->update();
+      //this->mainWindow->updateGlCanvas();
       //Erase The Current Vertex From the Conflict Graph
       conflictGraph->eraseVertex(currVert);
 
     }
 
-    return;
 }
 
