@@ -66,20 +66,6 @@ std::vector<Dcel::Face*> FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVerte
         he1->setTwin(passedEdge);
         passedEdge->setTwin(he1);
 
-        //Empty at the first steps but filled in next steps
-        /*if(passedEdge->getPrev()->getTwin() != nullptr){
-           Dcel::HalfEdge* he2_twin = passedEdge->getPrev()->getTwin()->getPrev();
-           he2->setTwin(he2_twin);
-           he2_twin->setTwin(he2);
-        }
-
-        //Empty at the first steps but filled in next steps
-        if(passedEdge->getNext()->getTwin() != nullptr){
-                Dcel::HalfEdge* he3_twin = passedEdge->getNext()->getTwin()->getNext();
-                he3->setTwin(he3_twin);
-                he3_twin->setTwin(he3);
-        }*/
-
         //Cardinality, increments each time a new half edge 'starts' or 'ends' in a certain vertex
         fromVertex->incrementCardinality();
         fromVertex->incrementCardinality();

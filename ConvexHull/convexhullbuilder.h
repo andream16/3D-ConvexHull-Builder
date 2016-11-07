@@ -16,12 +16,13 @@
 class ConvexHullBuilder{
 
 public:
-    ConvexHullBuilder(DrawableDcel* dcel); //Constructor Declaration
+    ConvexHullBuilder(DrawableDcel* dcel, MainWindow* mainWindow); //Constructor Declaration
     ~ConvexHullBuilder(); //Destructor Declaration
     void computeConvexHull();
 
 private:
     DrawableDcel            *dcel;
+    MainWindow*             mainWindow;
     ConvexHullBuilderHelper *convexHullBuilderHelper;
     TetrahedronBuilder      *tetrahedronBuilder;
     ConflictGraph           *conflictGraph;
