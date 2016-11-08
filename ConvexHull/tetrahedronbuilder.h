@@ -1,6 +1,7 @@
 #ifndef TETRAHEDRONBUILDER_H
 #define TETRAHEDRONBUILDER_H
 
+#include <algorithm>
 #include "lib/dcel/drawable_dcel.h"
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>

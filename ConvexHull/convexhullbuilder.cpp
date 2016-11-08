@@ -14,7 +14,10 @@ ConvexHullBuilder::ConvexHullBuilder(DrawableDcel *dcel, MainWindow* mainWindow)
 /**
  * @brief ConvexHullBuilder Class Destructor
  **/
-ConvexHullBuilder::~ConvexHullBuilder(){}
+ConvexHullBuilder::~ConvexHullBuilder(){
+    delete convexHullBuilderHelper;
+    delete conflictGraph;
+}
 
 /**
  * @brief ConvexHullBuilder::computeConvexHull() takes dcel as input.
@@ -50,40 +53,46 @@ void ConvexHullBuilder::computeConvexHull(){
     //Build Tetrahedron with the dcel and all vertices
     tetrahedronBuilder->buildTetrahedron();
 
+    //Delete TetrahedronBuilder instance since it is no longer needed
+    delete tetrahedronBuilder;
+
     //Instantiate ConflictGraph
     conflictGraph = new ConflictGraph(dcel, dcelVertices);
     //Initialize Conflict Graph with Dcel And First 4 Vertices
     conflictGraph->initializeConflictGraph();
 
-    //Initialize FaceBuilderHelper for further utilization
-    faceBuilderHelper = new FaceBuilderHelper(dcel);
-
     //Get all vertices size
     int verticesSize = dcelVertices.size();
 
     //Loop through remaining vertices
-    for(int i=4; i<verticesSize; i++){
+    for(int i=verticesSize; i>4; i--){
 
       //Get Current Vertex
       Dcel::Vertex* currVert = dcelVertices[i];
 
       //Check if current vertex is in conflict with dcel's faces
-      std::set<Dcel::Face*>* facesVisibleByVertex = conflictGraph->getFacesVisibleByVertex(currVert);
+      std::tr1::unordered_set<Dcel::Face*>* facesVisibleByVertex = conflictGraph->getFacesVisibleByVertex(currVert);
 
-      //If the vertex is in conflict with dcel's faces
-      if( facesVisibleByVertex->size() > 0 ){
+      //If the vertex is in front of some faces, so, facesVisibleByVertex is not empty
+      if( !facesVisibleByVertex->empty() ){
 
          //Get the Horizon for the current Visible Faces
          std::vector<Dcel::HalfEdge*> horizon = convexHullBuilderHelper->bringMeTheHorizon(facesVisibleByVertex);
 
          //Get the probable visible vertices for each face of each horizon's halfedge
-         std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices = conflictGraph->joinVertices(horizon);
+         std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> oldVertices = conflictGraph->joinVertices(horizon);
 
          //Delete Visible Faces from the Conflict Graph and Dcel
          conflictGraph->deleteFaces(facesVisibleByVertex);
 
+         //Initialize FaceBuilderHelper
+         faceBuilderHelper = new FaceBuilderHelper(dcel);
+
          //Build a Face for each halfedge in the horizon and save them into an array of faces
          std::vector<Dcel::Face*> faces = faceBuilderHelper->buildFaces(currVert, horizon);
+
+         //Delete current instance to not lead to memory issues
+         delete faceBuilderHelper;
 
          /* Update Conflict Graph for each new face and possible vertices in conflict with them
           * since they were in conflict with the destroyed face */
@@ -91,12 +100,19 @@ void ConvexHullBuilder::computeConvexHull(){
 
        }
 
-      //dcel->update();
-      //this->mainWindow->updateGlCanvas();
+      dcel->update();
+      this->mainWindow->updateGlCanvas();
       //Erase The Current Vertex From the Conflict Graph
       conflictGraph->eraseVertex(currVert);
 
     }
+
+    //Delete each vertex from the dcelVertices array
+    for (auto vertexIterator = dcelVertices.begin(); vertexIterator != dcelVertices.end(); vertexIterator++){
+         delete (*vertexIterator);
+    }
+    //Clear dcelVertices array
+    dcelVertices.clear();
 
 }
 
