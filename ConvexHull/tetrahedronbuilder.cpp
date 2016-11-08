@@ -51,6 +51,9 @@ void TetrahedronBuilder::buildTetrahedron(){
     faceBuilderHelper = new FaceBuilderHelper(dcel);
     //Build 3 new faces using the passed halfEdges and Vector
     faceBuilderHelper->buildFaces(shuffledVertices[3], newHalfEdges);
+
+    //delete faceBuilderHelper instance since no longer needed
+    delete faceBuilderHelper;
 }
 
 /**
