@@ -12,8 +12,8 @@ public:
     ~ConvexHullBuilderHelper(); //Class Destructor
 
     std::vector<Dcel::Vertex*>   getAllVertices();
-    std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::tr1::unordered_set<Dcel::Face*>*);
-    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>&);
+    std::vector<Dcel::HalfEdge*> bringMeTheHorizon(std::set<Dcel::Face*>*);
+    std::vector<Dcel::HalfEdge*> orderHorizon(std::vector<Dcel::HalfEdge*>, std::map<Dcel::Vertex*, Dcel::Vertex*>*);
 
 private:
     DrawableDcel *dcel;

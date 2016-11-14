@@ -104,15 +104,16 @@ std::vector<Dcel::Face*> FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVerte
     //Get Faces Number
     int facesSize = faces.size();
 
-    //Set Twins for each except Last One
+    //Set Twins for each face except Last One
     for( int i = 0; i < facesSize; i++ ){
         //Get current OuterHalfEdge from current Face [i]
         Dcel::HalfEdge* currOuterHalfEdge = faces[i]->getOuterHalfEdge();
+        //Get Next Face OuterHalfEdge [i+1]
+        Dcel::HalfEdge* nextOuterHalfEdge;
 
         //If currOuterHalfEdge exists
         if( currOuterHalfEdge != nullptr ){
-            //Get Next Face OuterHalfEdge [i+1]
-            Dcel::HalfEdge* nextOuterHalfEdge;
+
             //If last Face
             if( i == facesSize-1 ){
                 //Get first face's outer halfedge
