@@ -28,17 +28,11 @@ void ConflictGraph::initializeConflictGraph(){
     //for each face in the dcel
     for(auto faceIterator = dcel->faceBegin(); faceIterator != dcel->faceEnd(); ++faceIterator){
 
-       //Pick current face
-       Dcel::Face* currFace = *faceIterator;
-
        //For Each Remaining Vertex
        for(int i = 0; i < verticesNumber; i++){
 
-           //Get Current Vertex
-           Dcel::Vertex* currVertex = remainingVertices[i];
-
            //Check if they lie on the same half-space
-           halfSpaceChecker(currFace, currVertex);
+           halfSpaceChecker(*faceIterator, remainingVertices[i]);
 
        }
     }
@@ -110,11 +104,11 @@ void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
  */
 void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
         //Get Vertex Set
-        std::tr1::unordered_set<Dcel::Vertex*> *vertSet = this->vertexConflictMap[face];
+        std::set<Dcel::Vertex*> *vertSet = this->vertexConflictMap[face];
         //If the map for the current face does not exist
         if( vertSet == nullptr ){
             //Create a new one for the passed face
-            this->vertexConflictMap[face] = new std::tr1::unordered_set<Dcel::Vertex*>;
+            this->vertexConflictMap[face] = new std::set<Dcel::Vertex*>;
         }
         //Insert the current vertex in it
         this->vertexConflictMap[face]->insert(vertex);
@@ -129,11 +123,11 @@ void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* verte
  */
 void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
     //Get Face Set
-    std::tr1::unordered_set<Dcel::Face*> *faceSet = this->faceConflictMap[vertex];
+    std::set<Dcel::Face*> *faceSet = this->faceConflictMap[vertex];
     //If the map for the current vertex does not exist
     if( faceSet == nullptr ){
         //create a new one for the passed vertex
-        this->faceConflictMap[vertex] = new std::tr1::unordered_set<Dcel::Face*>;
+        this->faceConflictMap[vertex] = new std::set<Dcel::Face*>;
     }
       //insert the current face in it
       this->faceConflictMap[vertex]->insert(face);
@@ -144,23 +138,23 @@ void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
  *         Check if passed vertex is in conflict with dcel's faces and if it is
  *         return set of faces visible by it
  * @param  Dcel::Vertex* currentVertex
- * @return std::tr1::unordered_set<Dcel::Face*> set of faces visible by the vertex
+ * @return std::set<Dcel::Face*> set of faces visible by the vertex
  */
-std::tr1::unordered_set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* currentVertex){
+std::set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* currentVertex){
     //Initialize set of Faces
-    std::tr1::unordered_set<Dcel::Face*>* visibleFaces;
+    std::set<Dcel::Face*>* visibleFaces;
     //Check if the vertex is in conflict. If it is indeed, visible faces will not be empty
     visibleFaces = this->faceConflictMap[currentVertex];
 
     //If the Vertex is not in conflict
     if( visibleFaces == nullptr ){
         //Build and Empty set and associate it to the vertex in the map 
-        visibleFaces = new std::tr1::unordered_set<Dcel::Face*>;
+        visibleFaces = new std::set<Dcel::Face*>;
         this->faceConflictMap[currentVertex] = visibleFaces;
     }
 
     //Return a set of visible faces by a vertex
-    return new std::tr1::unordered_set<Dcel::Face*> (*visibleFaces);
+    return new std::set<Dcel::Face*> (*visibleFaces);
 }
 
 /**
@@ -169,34 +163,31 @@ std::tr1::unordered_set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dce
 *         in order to speed up the process of understanding which vertices are in conflict with the new faces
 *         to be added
 * @param  std::vector<Dcel::HalfEdge*>* horizon
-* @return std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>> map that for each HalfEdge has the latter merged vertices
+* @return std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>> map that for each HalfEdge has the latter merged vertices
 */
-std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> ConflictGraph::joinVertices(std::vector<Dcel::HalfEdge*> horizon){
+std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> ConflictGraph::joinVertices(std::vector<Dcel::HalfEdge*> horizon){
 
    //Initialize joined vertices map
-   std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> joinedVerticesMap;
+   std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> joinedVerticesMap;
 
        //For each HalfEdge in the horizon
        for(auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++){
-           //Get current HalfEdge
-           Dcel::HalfEdge *currHorizonHalfEdge = *halfEdgeIterator;
            //Get current HalfEdge's twin
-           Dcel::HalfEdge *currTwin            =  currHorizonHalfEdge->getTwin();
-
+           Dcel::HalfEdge *currTwin=  (*halfEdgeIterator)->getTwin();
            //Get its face
            Dcel::Face *currentFace = (*halfEdgeIterator)->getFace();
            //Get twin's face
            Dcel::Face *twinsFace   = currTwin->getFace();
 
            //Get Vertices visible by the latter faces
-           std::tr1::unordered_set<Dcel::Vertex*> *verticesInConflictWithCurrFace  = getVerticesVisibleByFace(currentFace);
-           std::tr1::unordered_set<Dcel::Vertex*> *verticesInConflictWithTwinsFace = getVerticesVisibleByFace(twinsFace);
+           std::set<Dcel::Vertex*> *verticesInConflictWithCurrFace  = getVerticesVisibleByFace(currentFace);
+           std::set<Dcel::Vertex*> *verticesInConflictWithTwinsFace = getVerticesVisibleByFace(twinsFace);
 
            //Join the two sets of vertices
            verticesInConflictWithCurrFace->insert(verticesInConflictWithTwinsFace->begin(), verticesInConflictWithTwinsFace->end());
 
            //Build the map with new vertices
-           joinedVerticesMap[currHorizonHalfEdge] = verticesInConflictWithCurrFace;
+           joinedVerticesMap[*halfEdgeIterator] = verticesInConflictWithCurrFace;
        }
 
    //Return populated Map
@@ -209,56 +200,50 @@ std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*
  *         Check if passed face is in conflict with dcel's vertices and if it is, then,
  *         return set of vertices visible by it
  * @param  Dcel::Face* currentFace
- * @return std::tr1::unordered_set<Dcel::Vertex*>* set of vertices visible by the face
+ * @return std::set<Dcel::Vertex*>* set of vertices visible by the face
  */
-std::tr1::unordered_set<Dcel::Vertex*>* ConflictGraph::getVerticesVisibleByFace(Dcel::Face* currentFace){
-    //Initialize set of Faces
-    std::tr1::unordered_set<Dcel::Vertex*>* visibleVertices;
+std::set<Dcel::Vertex*>* ConflictGraph::getVerticesVisibleByFace(Dcel::Face* currentFace){
     //Check if the vertex is in conflict. If it is indeed, visible faces will not be empty
-    visibleVertices = this->vertexConflictMap[currentFace];
+    std::set<Dcel::Vertex*>* visibleVertices = this->vertexConflictMap[currentFace];
 
     //If the Vertex is not in conflict
     if( visibleVertices == nullptr ){
         //Build and Empty set and associate it to the vertex in the map
-        visibleVertices = new std::tr1::unordered_set<Dcel::Vertex*>;
+        visibleVertices = new std::set<Dcel::Vertex*>;
         this->vertexConflictMap[currentFace] = visibleVertices;
     }
 
     //Return a set of visible faces by a vertex
-    return new std::tr1::unordered_set<Dcel::Vertex*> (*visibleVertices);
+    return new std::set<Dcel::Vertex*> (*visibleVertices);
 
 }
 
 /**
- * @brief  deleteFaces(std::tr1::unordered_set<Dcel::Face*>* visibleFaces)
+ * @brief  deleteFaces(std::set<Dcel::Face*>* visibleFaces)
  *         Deletes all the visible faces by the current vertex from the Conflict Graph,
  *         Removes their Halfedges from the dcel and their vertices if there are no more
  *         Connecting Halfedges between a From and a To Vertex
- * @param  std::tr1::unordered_set<Dcel::Face*>* visibleFaces set of visible faces by current vertex
+ * @param  std::set<Dcel::Face*>* visibleFaces set of visible faces by current vertex
  */
-void ConflictGraph::deleteFaces(std::tr1::unordered_set<Dcel::Face*>* visibleFaces){
+void ConflictGraph::deleteFaces(std::set<Dcel::Face*>* visibleFaces){
     //Loop through all the faces
     for( auto faceIterator = visibleFaces->begin(); faceIterator != visibleFaces->end(); faceIterator++ ){
-        //Get Current Face
-        Dcel::Face* currentFace = *faceIterator;
 
         /** Delete from Conflict Graph Begin **/
         //Get All the Vertices visible by the current face
-        std::tr1::unordered_set<Dcel::Vertex*> *verticesVisibleByFace = this->vertexConflictMap[currentFace];
+        std::set<Dcel::Vertex*> *verticesVisibleByFace = this->vertexConflictMap[*faceIterator];
         //If there are visible vertices indeed
         if( verticesVisibleByFace != nullptr ){
             //Delete current Face From the Conflict Graph
-            this->vertexConflictMap.erase(currentFace);
+            this->vertexConflictMap.erase(*faceIterator);
             //For each visible vertex
             for( auto currVisibleVertex = verticesVisibleByFace->begin(); currVisibleVertex != verticesVisibleByFace->end(); currVisibleVertex++ ){
-                //Get current Visible Vertex
-                Dcel::Vertex* cVisibleVertex = *currVisibleVertex;
                 //Delete Current Face from all the Maps of the current Vertex
-                auto currentSet = this->faceConflictMap[cVisibleVertex];
+                auto currentSet = this->faceConflictMap[*currVisibleVertex];
                 //If it is not empty
                 if( currentSet != nullptr ){
                     //Delete it
-                    currentSet->erase(currentFace);
+                    currentSet->erase(*faceIterator);
                 }
             }
         }
@@ -266,14 +251,12 @@ void ConflictGraph::deleteFaces(std::tr1::unordered_set<Dcel::Face*>* visibleFac
 
         /** Delete from Dcel Begin **/
         //For each halfedge in the face
-        for( auto halfEdgeIterator = currentFace->incidentHalfEdgeBegin(); halfEdgeIterator != currentFace->incidentHalfEdgeEnd(); halfEdgeIterator++ ){
-             //Get Current HalfEdge
-             Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
+        for( auto halfEdgeIterator = (*faceIterator)->incidentHalfEdgeBegin(); halfEdgeIterator != (*faceIterator)->incidentHalfEdgeEnd(); halfEdgeIterator++ ){
              //Get its From and To Vertex
-             Dcel::Vertex* fromVertex = currHalfEdge->getFromVertex();
-             Dcel::Vertex* toVertex   = currHalfEdge->getToVertex();
+             Dcel::Vertex* fromVertex = (*halfEdgeIterator)->getFromVertex();
+             Dcel::Vertex* toVertex   = (*halfEdgeIterator)->getToVertex();
              //Remove The HalfEdge from The Dcel
-             this->dcel->deleteHalfEdge(currHalfEdge);
+             this->dcel->deleteHalfEdge(*halfEdgeIterator);
              //Decrement its From and To Vertices Cardinalities since we have removed an HalfEdge
              fromVertex->decrementCardinality();
              toVertex  ->decrementCardinality();
@@ -288,32 +271,28 @@ void ConflictGraph::deleteFaces(std::tr1::unordered_set<Dcel::Face*>* visibleFac
         }
 
         //Delete the current face to close the loop
-        this->dcel->deleteFace(currentFace);
+        this->dcel->deleteFace(*faceIterator);
 
         /** Delete from Dcel End   **/
      }
 }
 
 /**
- * @brief  ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon)
+ * @brief  ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon)
  *         For each new Face, check if they are in conflict with the old vertices from the latter destroyed face
- * @param  std::vector<Dcel::Face*> faces, std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon
+ * @param  std::vector<Dcel::Face*> faces, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon
  */
-void ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon){
+void ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices, std::vector<Dcel::HalfEdge*> horizon){
     //For each face in faces
     for( auto faceIterator = faces.begin(); faceIterator != faces.end(); faceIterator++){
-        //Get Current Face
-        Dcel::Face* currFace = *faceIterator;
         //For each halfedge in the horizon
         for( auto halfEdgeIterator = horizon.begin(); halfEdgeIterator != horizon.end(); halfEdgeIterator++){
             //Get Set Of vertices associated to the current horizon halfEdge
-            std::tr1::unordered_set<Dcel::Vertex*> *currVertexSet = oldVertices[*halfEdgeIterator];
+            std::set<Dcel::Vertex*> *currVertexSet = oldVertices[*halfEdgeIterator];
             //For each vertex in the possible conflict ones
             for( auto vertexIterator = currVertexSet->begin(); vertexIterator != currVertexSet->end(); vertexIterator++ ){
-                //Get current vertex
-                Dcel::Vertex* currVertex = *vertexIterator;
                 //Check if they lie on the same half-space
-                halfSpaceChecker(currFace, currVertex);
+                halfSpaceChecker(*faceIterator, *vertexIterator);
             }
         }
     }
@@ -326,7 +305,7 @@ void ConflictGraph::checkConflict(std::vector<Dcel::Face*> faces, std::tr1::unor
  */
 void ConflictGraph::eraseVertex(Dcel::Vertex* vertex){
     //Initialize a set of faces
-    std::tr1::unordered_set<Dcel::Face*> *faceSet;
+    std::set<Dcel::Face*> *faceSet;
     //Get the set of faces associated with the vertex from the faceConflictMap
     faceSet = this->faceConflictMap[vertex];
 
@@ -336,10 +315,8 @@ void ConflictGraph::eraseVertex(Dcel::Vertex* vertex){
         this->faceConflictMap.erase(vertex);
         //For each visible face
         for( auto faceIterator = faceSet->begin(); faceIterator != faceSet->end(); faceIterator++ ){
-            //Get Current Face
-            Dcel::Face* currFace = *faceIterator;
             //Delete the vertex from vertexConflictMap for each face which was in conflict with it
-            this->vertexConflictMap.erase(currFace);
+            this->vertexConflictMap.erase(*faceIterator);
         }
     }
 }

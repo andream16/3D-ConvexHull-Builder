@@ -37,24 +37,26 @@ std::vector<Dcel::Vertex*> ConvexHullBuilderHelper::getAllVertices(){
  *               - Add it to the horizon and set its to and from vertex in a map
  *         - Order the horizon using the map and the horizon itself
  *
- * @param  std::tr1::unordered_set<Dcel::Face*>facesVisibleByVertex
+ * @param  std::set<Dcel::Face*>facesVisibleByVertex
  * @return returns array of pointers to halfedges belonging to the horizon
  */
-std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1::unordered_set<Dcel::Face*>* facesVisibleByVertex){
+std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::set<Dcel::Face*>* facesVisibleByVertex){
 
     //Initialize Horizon
     std::vector<Dcel::HalfEdge*> horizon;
 
     //Initialize a map which maps each important from vertex to its to vertex (only on horizon edges)
-    std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*> mapOfVertices;
+    std::map<Dcel::Vertex*, Dcel::Vertex*> *mapOfVertices = new std::map<Dcel::Vertex*, Dcel::Vertex*>;
 
     //For Each Face in Visible Faces
     for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
-        Dcel::HalfEdge* outerHalfEdge     = (*faceIterator)->getOuterHalfEdge();
-        Dcel::HalfEdge* outerHalfEdgeTwin = outerHalfEdge->getTwin();
+        Dcel::HalfEdge* outerHalfEdge     = new Dcel::HalfEdge;
+        outerHalfEdge = (*faceIterator)->getOuterHalfEdge();
+        Dcel::HalfEdge* outerHalfEdgeTwin     = new Dcel::HalfEdge;
+        outerHalfEdgeTwin = outerHalfEdge->getTwin();
 
         //If outerHalfEdgeTwin
-        if( outerHalfEdgeTwin != nullptr ){
+        if( outerHalfEdgeTwin != nullptr && outerHalfEdge != nullptr ){
            //Loop through face's halfedges
            for( int i = 0; i<3; i++ ){
               //Get its face
@@ -62,10 +64,10 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1
               //If the face is not visible by the Vertex
               if(facesVisibleByVertex->count(twinsFace) == 0){
                  //Add current halfedge from and to vertex to a map
-                 mapOfVertices[outerHalfEdgeTwin->getFromVertex()] = outerHalfEdgeTwin->getToVertex();
+                 (*mapOfVertices)[outerHalfEdgeTwin->getFromVertex()] = outerHalfEdgeTwin->getToVertex();
                  //Add current twin to unordered horizon
                  horizon.push_back(outerHalfEdgeTwin);
-               }
+              }
                  //Get Next HalfEdge
                  outerHalfEdge     = (*outerHalfEdge).getNext();
                  outerHalfEdgeTwin = (*outerHalfEdge).getTwin();
@@ -83,10 +85,10 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1
 /**
  * @brief std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon
  *        Reorders the Horizon for future utilizations (setting twins) using from and to vertex from the map
- * @param std::vector<Dcel::HalfEdge*> unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>
+ * @param std::vector<Dcel::HalfEdge*> unHorizon, std::map<Dcel::Vertex*, Dcel::Vertex*>
  * @return ordered Horizon
  */
-std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<Dcel::HalfEdge*> unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*> &map){
+std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<Dcel::HalfEdge*> unHorizon, std::map<Dcel::Vertex*, Dcel::Vertex*> *map){
   //Initialize Ordered Horizon
   std::vector<Dcel::HalfEdge*> orderedHorizon;
   //Initialize unordered horizon size
@@ -96,7 +98,7 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<D
   Dcel::Vertex* toVertex   = new Dcel::Vertex;
 
     //While all the halfedges haven't been ordered
-  while(unHorizonSize > orderedHorizon.size()){
+  while(unHorizonSize != orderedHorizon.size()){
     //The very first time
     if( orderedHorizon.empty() ){
       //Take from vertex of first's halfedge in the horizon
@@ -105,19 +107,21 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<D
       //The next fromVertex is the old toVertex
       fromVertex = toVertex;
     }
+    if(fromVertex == nullptr){
+
+        bool fas = true;
+    }
     //if fromVertex exists
     if( fromVertex != nullptr){
       //Get to vertex using the map. For [fromVertex] will contain only the next toVertex
-      toVertex = map[fromVertex];
+      toVertex = (*map)[fromVertex];
 
       //For All the Halfedges
       for(auto unHorizonIterator = unHorizon.begin(); unHorizonIterator != unHorizon.end(); unHorizonIterator ++ ){
-         //Get Current HalfEdge
-         Dcel::HalfEdge* currHalfEdge = *unHorizonIterator;
          //If that halfedge has exact same from and to vertex of the ordered ones
-         if( currHalfEdge->getFromVertex() == fromVertex && currHalfEdge->getToVertex() == toVertex ){
+         if( (*unHorizonIterator)->getFromVertex() == fromVertex && (*unHorizonIterator)->getToVertex() == toVertex ){
              //Add it to the ordered horizon
-             orderedHorizon.push_back(currHalfEdge);
+             orderedHorizon.push_back(*unHorizonIterator);
          }
        }
     }

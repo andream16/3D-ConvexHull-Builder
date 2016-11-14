@@ -56,6 +56,9 @@ void ConvexHullBuilder::computeConvexHull(){
     //Delete TetrahedronBuilder instance since it is no longer needed
     delete tetrahedronBuilder;
 
+    dcel->update();
+    this->mainWindow->updateGlCanvas();
+
     //Instantiate ConflictGraph
     conflictGraph = new ConflictGraph(dcel, dcelVertices);
     //Initialize Conflict Graph with Dcel And First 4 Vertices
@@ -67,11 +70,8 @@ void ConvexHullBuilder::computeConvexHull(){
     //Loop through remaining vertices
     for(int i=verticesSize; i>4; i--){
 
-      //Get Current Vertex
-      Dcel::Vertex* currVert = dcelVertices[i];
-
       //Check if current vertex is in conflict with dcel's faces
-      std::tr1::unordered_set<Dcel::Face*>* facesVisibleByVertex = conflictGraph->getFacesVisibleByVertex(currVert);
+      std::set<Dcel::Face*>* facesVisibleByVertex = conflictGraph->getFacesVisibleByVertex(dcelVertices[i]);
 
       //If the vertex is in front of some faces, so, facesVisibleByVertex is not empty
       if( !facesVisibleByVertex->empty() ){
@@ -80,7 +80,7 @@ void ConvexHullBuilder::computeConvexHull(){
          std::vector<Dcel::HalfEdge*> horizon = convexHullBuilderHelper->bringMeTheHorizon(facesVisibleByVertex);
 
          //Get the probable visible vertices for each face of each horizon's halfedge
-         std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> oldVertices = conflictGraph->joinVertices(horizon);
+         std::map<Dcel::HalfEdge*, std::set<Dcel::Vertex*>*> oldVertices = conflictGraph->joinVertices(horizon);
 
          //Delete Visible Faces from the Conflict Graph and Dcel
          conflictGraph->deleteFaces(facesVisibleByVertex);
@@ -89,7 +89,7 @@ void ConvexHullBuilder::computeConvexHull(){
          faceBuilderHelper = new FaceBuilderHelper(dcel);
 
          //Build a Face for each halfedge in the horizon and save them into an array of faces
-         std::vector<Dcel::Face*> faces = faceBuilderHelper->buildFaces(currVert, horizon);
+         std::vector<Dcel::Face*> faces = faceBuilderHelper->buildFaces(dcelVertices[i], horizon);
 
          //Delete current instance to not lead to memory issues
          delete faceBuilderHelper;
@@ -103,7 +103,7 @@ void ConvexHullBuilder::computeConvexHull(){
       dcel->update();
       this->mainWindow->updateGlCanvas();
       //Erase The Current Vertex From the Conflict Graph
-      conflictGraph->eraseVertex(currVert);
+      conflictGraph->eraseVertex(dcelVertices[i]);
 
     }
 
