@@ -37,42 +37,52 @@ std::vector<Dcel::Vertex*> ConvexHullBuilderHelper::getAllVertices(){
  *               - Add it to the horizon and set its to and from vertex in a map
  *         - Order the horizon using the map and the horizon itself
  *
- * @param  std::set<Dcel::Face*>facesVisibleByVertex
+ * @param  std::tr1::unordered_set<Dcel::Face*>facesVisibleByVertex
  * @return returns array of pointers to halfedges belonging to the horizon
  */
-std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::set<Dcel::Face*>* facesVisibleByVertex){
+std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1::unordered_set<Dcel::Face*>* facesVisibleByVertex){
 
     //Initialize Horizon
     std::vector<Dcel::HalfEdge*> horizon;
 
     //Initialize a map which maps each important from vertex to its to vertex (only on horizon edges)
-    std::map<Dcel::Vertex*, Dcel::Vertex*> *mapOfVertices = new std::map<Dcel::Vertex*, Dcel::Vertex*>;
+    std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*> *mapOfVertices = new std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>;
 
     //For Each Face in Visible Faces
     for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
-        Dcel::HalfEdge* outerHalfEdge     = new Dcel::HalfEdge;
-        outerHalfEdge = (*faceIterator)->getOuterHalfEdge();
-        Dcel::HalfEdge* outerHalfEdgeTwin     = new Dcel::HalfEdge;
-        outerHalfEdgeTwin = outerHalfEdge->getTwin();
 
-        //If outerHalfEdgeTwin
-        if( outerHalfEdgeTwin != nullptr && outerHalfEdge != nullptr ){
-           //Loop through face's halfedges
-           for( int i = 0; i<3; i++ ){
-              //Get its face
-              Dcel::Face* twinsFace = outerHalfEdgeTwin->getFace();
-              //If the face is not visible by the Vertex
-              if(facesVisibleByVertex->count(twinsFace) == 0){
-                 //Add current halfedge from and to vertex to a map
-                 (*mapOfVertices)[outerHalfEdgeTwin->getFromVertex()] = outerHalfEdgeTwin->getToVertex();
-                 //Add current twin to unordered horizon
-                 horizon.push_back(outerHalfEdgeTwin);
-              }
-                 //Get Next HalfEdge
-                 outerHalfEdge     = (*outerHalfEdge).getNext();
-                 outerHalfEdgeTwin = (*outerHalfEdge).getTwin();
+        Dcel::Face* currFace = *faceIterator;
+
+        Dcel::HalfEdge* outerHalfEdge = new Dcel::HalfEdge;
+        outerHalfEdge = currFace->getOuterHalfEdge();
+        Dcel::HalfEdge* outerHalfEdgeTwin = new Dcel::HalfEdge;
+
+        //Loop through face's halfedges
+        for( auto halfEdgeIterator = currFace->incidentHalfEdgeBegin(); halfEdgeIterator != currFace->incidentHalfEdgeEnd(); halfEdgeIterator++ ){
+
+            Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
+
+            if( currHalfEdge->getTwin() != nullptr ){
+                outerHalfEdgeTwin = currHalfEdge->getTwin();
+
+                Dcel::Face* twinsFace = new Dcel::Face;
+
+                //Get its face
+                twinsFace = outerHalfEdgeTwin->getFace();
+                //If the face is not visible by the Vertex
+                if( facesVisibleByVertex->count(twinsFace) == 0 ){
+                    Dcel::Vertex* outerHalfEdgeFrom     = outerHalfEdgeTwin->getFromVertex();
+                    Dcel::Vertex* outerHalfEdgeTwinFrom = outerHalfEdgeTwin->getToVertex();
+                    //Add current halfedge from and to vertex to a map
+                    (*mapOfVertices)[outerHalfEdgeFrom] = outerHalfEdgeTwinFrom;
+                    //Add current twin to unordered horizon
+                    horizon.push_back(outerHalfEdgeTwin);
+                }
+
             }
+
         }
+
     }
 
     //Get the ordered Horizon
@@ -85,49 +95,45 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::set
 /**
  * @brief std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon
  *        Reorders the Horizon for future utilizations (setting twins) using from and to vertex from the map
- * @param std::vector<Dcel::HalfEdge*> unHorizon, std::map<Dcel::Vertex*, Dcel::Vertex*>
+ * @param std::vector<Dcel::HalfEdge*> unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>
  * @return ordered Horizon
  */
-std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<Dcel::HalfEdge*> unHorizon, std::map<Dcel::Vertex*, Dcel::Vertex*> *map){
-  //Initialize Ordered Horizon
-  std::vector<Dcel::HalfEdge*> orderedHorizon;
-  //Initialize unordered horizon size
-  unsigned int unHorizonSize = unHorizon.size();
-  //Initialize from and to Vertex
-  Dcel::Vertex* fromVertex = new Dcel::Vertex;
-  Dcel::Vertex* toVertex   = new Dcel::Vertex;
+std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<Dcel::HalfEdge*> unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*> *map){
+    //Initialize Ordered Horizon
+    std::vector<Dcel::HalfEdge*> orderedHorizon;
+
+    //Initialize from and to Vertex
+    Dcel::Vertex* fromVertex = new Dcel::Vertex;
+    Dcel::Vertex* toVertex   = new Dcel::Vertex;
 
     //While all the halfedges haven't been ordered
-  while(unHorizonSize != orderedHorizon.size()){
-    //The very first time
-    if( orderedHorizon.empty() ){
-      //Take from vertex of first's halfedge in the horizon
-      fromVertex = unHorizon.front()->getFromVertex();
-    } else {
-      //The next fromVertex is the old toVertex
-      fromVertex = toVertex;
+    while(unHorizon.size() != orderedHorizon.size()){
+        //The very first time
+        if( orderedHorizon.size() == 0 ){
+            //Take from vertex of first's halfedge in the horizon
+            fromVertex = unHorizon[0]->getFromVertex();
+        } else {
+            //The next fromVertex is the old toVertex
+            fromVertex = toVertex;
+        }
+
+        //if fromVertex exists
+        if( fromVertex != nullptr){
+            //Get to vertex using the map. For [fromVertex] will contain only the next toVertex
+            toVertex = (*map)[fromVertex];
+
+            //For All the Halfedges
+            for(auto unHorizonIterator = unHorizon.begin(); unHorizonIterator != unHorizon.end(); unHorizonIterator ++ ){
+                //If that halfedge has exact same from and to vertex of the ordered ones
+                if( (*unHorizonIterator)->getFromVertex() == fromVertex && (*unHorizonIterator)->getToVertex() == toVertex ){
+                    //Add it to the ordered horizon
+                    orderedHorizon.push_back(*unHorizonIterator);
+                }
+            }
+        }
+
     }
-    if(fromVertex == nullptr){
 
-        bool fas = true;
-    }
-    //if fromVertex exists
-    if( fromVertex != nullptr){
-      //Get to vertex using the map. For [fromVertex] will contain only the next toVertex
-      toVertex = (*map)[fromVertex];
-
-      //For All the Halfedges
-      for(auto unHorizonIterator = unHorizon.begin(); unHorizonIterator != unHorizon.end(); unHorizonIterator ++ ){
-         //If that halfedge has exact same from and to vertex of the ordered ones
-         if( (*unHorizonIterator)->getFromVertex() == fromVertex && (*unHorizonIterator)->getToVertex() == toVertex ){
-             //Add it to the ordered horizon
-             orderedHorizon.push_back(*unHorizonIterator);
-         }
-       }
-    }
-
-  }
-
-  //Return ordered horizon
-  return orderedHorizon;
+    //Return ordered horizon
+    return orderedHorizon;
 }

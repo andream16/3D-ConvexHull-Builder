@@ -6,10 +6,10 @@ CONFIG(debug, debug|release){
 }
 
 unix:!macx{
-    LIBS += /usr/lib/x86_64-linux-gnu/libGLU.so
-    LIBS += -lboost_system -frounding-math -lgmp -lQGLViewer -lCGAL
-    LIBS += \
-       -lboost_system\
+    LIBS += /usr/lib/libGLU.so
+    LIBS += -frounding-math -lgmp -lCGAL
+    LIBS+=/usr/lib/libboost_system.so.1.62.0
+    LIBS+=/usr/lib/libQGLViewer-qt5.so
 
 
     DEFINES += CGAL_DEFINED

@@ -22,7 +22,11 @@ TetrahedronBuilder::~TetrahedronBuilder(){}
  *        - Builds Tetrahedron using the latter 4 non-coplanar vertices
  *
  */
-void TetrahedronBuilder::buildTetrahedron(){
+std::vector<Dcel::Vertex*> TetrahedronBuilder::buildTetrahedron(){
+
+    //Instantiate FaceBuilderHelper
+    faceBuilderHelper = new FaceBuilderHelper(dcel);
+
     //Initialize Array of Shuffled Vertices
     std::vector<Dcel::Vertex*> shuffledVertices;
     //Initialize vector that will contain picked 4 points to get checked
@@ -47,13 +51,10 @@ void TetrahedronBuilder::buildTetrahedron(){
      * *Returns new halfedges*/
     std::vector<Dcel::HalfEdge*> newHalfEdges = tetrahedronMaker(fourPoints, coplanarity);
 
-    //Instantiate FaceBuilderHelper
-    faceBuilderHelper = new FaceBuilderHelper(dcel);
     //Build 3 new faces using the passed halfEdges and Vector
     faceBuilderHelper->buildFaces(shuffledVertices[3], newHalfEdges);
 
-    //delete faceBuilderHelper instance since no longer needed
-    delete faceBuilderHelper;
+    return shuffledVertices;
 }
 
 /**
@@ -122,9 +123,8 @@ int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
     //Check if the determinant is 0 +- epsilon
     coplanarity = det > -std::numeric_limits<double>::epsilon() && det < std::numeric_limits<double>::epsilon();
 
-    /** If it is not coplanar (==0) then, if det < 0 we return -1 else 1
-    * if it is coplanar we return 0 **/
-    if(coplanarity == 0){
+    //If Coplanar
+    if(!coplanarity){
        if(det < -std::numeric_limits<double>::epsilon()){
           determinantRes = -1;
        } else {
@@ -180,6 +180,11 @@ std::vector<Dcel::HalfEdge*> TetrahedronBuilder::tetrahedronMaker(std::vector<Po
        h3->setNext(h1);
        h3->setPrev(h2);
 
+       v1->setIncidentHalfEdge(h1);
+       v2->setIncidentHalfEdge(h2);
+       v3->setIncidentHalfEdge(h3);
+
+
     //if determinant is < 0
     } else {
 
@@ -197,6 +202,11 @@ std::vector<Dcel::HalfEdge*> TetrahedronBuilder::tetrahedronMaker(std::vector<Po
        h3->setToVertex(v3);
        h3->setNext(h2);
        h3->setPrev(h1);
+
+       v1->setIncidentHalfEdge(h3);
+       v2->setIncidentHalfEdge(h1);
+       v3->setIncidentHalfEdge(h2);
+
      }
 
      //Setting the cardinality of vertices

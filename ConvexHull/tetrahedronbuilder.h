@@ -5,6 +5,7 @@
 #include "lib/dcel/drawable_dcel.h"
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/LU>
+#include <random>
 
 #include "facebuilderhelper.h"
 
@@ -13,7 +14,7 @@ class TetrahedronBuilder{
 public:
     TetrahedronBuilder(DrawableDcel* dcel, std::vector<Dcel::Vertex*> allVertices);
     ~TetrahedronBuilder(); //Destructor Declaration
-    void buildTetrahedron();
+    std::vector<Dcel::Vertex*> buildTetrahedron();
 
 private:
     DrawableDcel *dcel;
