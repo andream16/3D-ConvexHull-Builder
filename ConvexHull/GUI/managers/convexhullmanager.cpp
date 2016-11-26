@@ -58,8 +58,13 @@ void ConvexHullManager::on_convexHullPushButton_clicked() {
             /********************************
              * Begin Convex Hull Algorithm  *
              ********************************/
-            ConvexHullBuilder chb(dcel, mainWindow);
-            chb.computeConvexHull();
+
+            bool showPhases = false;
+            if(ui->showPhasesCheckBox->isChecked()){
+              showPhases = true;
+            }
+            ConvexHullBuilder convexHullBuilder(dcel, mainWindow, showPhases);
+            convexHullBuilder.computeConvexHull();
 
             /********************************
              * End Convex Hull Algorithm    *

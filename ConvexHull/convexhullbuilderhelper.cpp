@@ -51,26 +51,31 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1
     //For Each Face in Visible Faces
     for(auto faceIterator = facesVisibleByVertex->begin(); faceIterator != facesVisibleByVertex->end(); faceIterator++){
 
+        //Get Current Face
         Dcel::Face* currFace = *faceIterator;
 
-        Dcel::HalfEdge* outerHalfEdge = new Dcel::HalfEdge;
-        outerHalfEdge = currFace->getOuterHalfEdge();
+        //Initialization needed for Memory problems
         Dcel::HalfEdge* outerHalfEdgeTwin = new Dcel::HalfEdge;
 
         //Loop through face's halfedges
         for( auto halfEdgeIterator = currFace->incidentHalfEdgeBegin(); halfEdgeIterator != currFace->incidentHalfEdgeEnd(); halfEdgeIterator++ ){
-
+\
+            //Get Current HalfEdge
             Dcel::HalfEdge* currHalfEdge = *halfEdgeIterator;
 
+            //If its twin is not Null
             if( currHalfEdge->getTwin() != nullptr ){
+                //Get it
                 outerHalfEdgeTwin = currHalfEdge->getTwin();
 
+                //Initialize a new face
                 Dcel::Face* twinsFace = new Dcel::Face;
-
                 //Get its face
                 twinsFace = outerHalfEdgeTwin->getFace();
+
                 //If the face is not visible by the Vertex
                 if( facesVisibleByVertex->count(twinsFace) == 0 ){
+                    //Get Both outerHalfEdgeFrom and outerHalfEdgeTwinFrom
                     Dcel::Vertex* outerHalfEdgeFrom     = outerHalfEdgeTwin->getFromVertex();
                     Dcel::Vertex* outerHalfEdgeTwinFrom = outerHalfEdgeTwin->getToVertex();
                     //Add current halfedge from and to vertex to a map
@@ -109,9 +114,9 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<D
     //While all the halfedges haven't been ordered
     while(unHorizon.size() != orderedHorizon.size()){
         //The very first time
-        if( orderedHorizon.size() == 0 ){
+        if( orderedHorizon.empty() ){
             //Take from vertex of first's halfedge in the horizon
-            fromVertex = unHorizon[0]->getFromVertex();
+            fromVertex = unHorizon.front()->getFromVertex();
         } else {
             //The next fromVertex is the old toVertex
             fromVertex = toVertex;

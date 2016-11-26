@@ -11,7 +11,9 @@ TetrahedronBuilder::TetrahedronBuilder(DrawableDcel* dcel, std::vector<Dcel::Ver
 /**
  * @brief TetrahedronBuilder Class Destructor
  **/
-TetrahedronBuilder::~TetrahedronBuilder(){}
+TetrahedronBuilder::~TetrahedronBuilder(){
+    delete faceBuilderHelper;
+}
 
 /**
  * @brief TetrahedronBuilder::buildTetrahedron builds a tetrahedron with different steps
@@ -20,7 +22,7 @@ TetrahedronBuilder::~TetrahedronBuilder(){}
  *          - Gets first four vertices
  *          - Checks Coplanarity
  *        - Builds Tetrahedron using the latter 4 non-coplanar vertices
- *
+ *        - Return shuffled Vertices
  */
 std::vector<Dcel::Vertex*> TetrahedronBuilder::buildTetrahedron(){
 
@@ -38,12 +40,12 @@ std::vector<Dcel::Vertex*> TetrahedronBuilder::buildTetrahedron(){
 
     //while we get 4 not coplanar vertices
     while(coplanarity == 0){
-     //shuffles all vertices
-     shuffledVertices = verticesShuffler();
-     //gets first 4 points (0-3) from all vertices remaining
-     fourPoints = getFirstFourVertices(shuffledVertices);
-     //check if the first 4 vertices are coplanar (0 not coplanar, 1 coplanar)
-     coplanarity = coplanarityChecker(fourPoints);
+        //shuffles all vertices
+        shuffledVertices = verticesShuffler();
+        //gets first 4 points (0-3) from all vertices remaining
+        fourPoints = getFirstFourVertices(shuffledVertices);
+        //check if the first 4 vertices are coplanar (0 not coplanar, 1 coplanar)
+        coplanarity = coplanarityChecker(fourPoints);
     }
 
     /** Takes the four non complanar points and inserts them into the dcel to
@@ -111,31 +113,31 @@ int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
 
     //Add all the points to the Matrix by their x, y and z coordinates
     for(int i=0; i<4; i++){
-      m(i, 0) = fourPoints[i].x();
-      m(i, 1) = fourPoints[i].y();
-      m(i, 2) = fourPoints[i].z();
-      m(i, 3) = 1; //last column made of ones
+        m(i, 0) = fourPoints[i].x();
+        m(i, 1) = fourPoints[i].y();
+        m(i, 2) = fourPoints[i].z();
+        m(i, 3) = 1; //last column made of ones
     }
 
     //Check Matrix determinant
     double det = m.determinant();
 
-    //Check if the determinant is 0 +- epsilon
+    //Check if the determinant is +- epsilon
     coplanarity = det > -std::numeric_limits<double>::epsilon() && det < std::numeric_limits<double>::epsilon();
 
     //If Coplanar
     if(!coplanarity){
-       if(det < -std::numeric_limits<double>::epsilon()){
-          determinantRes = -1;
-       } else {
-          determinantRes = 1;
-       }
-     } else {
-          determinantRes = 0;
-     }
+        if(det < -std::numeric_limits<double>::epsilon()){
+            determinantRes = -1;
+        } else {
+            determinantRes = 1;
+        }
+    } else {
+        determinantRes = 0;
+    }
 
-     //0 coplanar, 1 or -1 if not coplanar
-     return determinantRes;
+    //0 coplanar, 1 or -1 if not coplanar
+    return determinantRes;
 }
 
 /**
@@ -163,70 +165,70 @@ std::vector<Dcel::HalfEdge*> TetrahedronBuilder::tetrahedronMaker(std::vector<Po
 
     /** In order to ensure that we are always working in counter-clockwise way
       *  we need to change settings based on the determinant calculated before **/
-    //If determinant is > 0
+    //If determinant is > epsilon
     if(determinant == 1){
-       h1->setFromVertex(v1);
-       h1->setToVertex(v2);
-       h1->setNext(h2);
-       h1->setPrev(h3);
+        h1->setFromVertex(v1);
+        h1->setToVertex(v2);
+        h1->setNext(h2);
+        h1->setPrev(h3);
 
-       h2->setFromVertex(v2);
-       h2->setToVertex(v3);
-       h2->setNext(h3);
-       h2->setPrev(h1);
+        h2->setFromVertex(v2);
+        h2->setToVertex(v3);
+        h2->setNext(h3);
+        h2->setPrev(h1);
 
-       h3->setFromVertex(v3);
-       h3->setToVertex(v1);
-       h3->setNext(h1);
-       h3->setPrev(h2);
+        h3->setFromVertex(v3);
+        h3->setToVertex(v1);
+        h3->setNext(h1);
+        h3->setPrev(h2);
 
-       v1->setIncidentHalfEdge(h1);
-       v2->setIncidentHalfEdge(h2);
-       v3->setIncidentHalfEdge(h3);
+        v1->setIncidentHalfEdge(h1);
+        v2->setIncidentHalfEdge(h2);
+        v3->setIncidentHalfEdge(h3);
 
 
-    //if determinant is < 0
-    } else {
+        //if determinant is < epsilon
+    } else if(determinant == -1) {
 
-       h1->setFromVertex(v2);
-       h1->setToVertex(v1);
-       h1->setNext(h3);
-       h1->setPrev(h2);
+        h1->setFromVertex(v2);
+        h1->setToVertex(v1);
+        h1->setNext(h3);
+        h1->setPrev(h2);
 
-       h2->setFromVertex(v3);
-       h2->setToVertex(v2);
-       h2->setNext(h1);
-       h2->setPrev(h3);
+        h2->setFromVertex(v3);
+        h2->setToVertex(v2);
+        h2->setNext(h1);
+        h2->setPrev(h3);
 
-       h3->setFromVertex(v1);
-       h3->setToVertex(v3);
-       h3->setNext(h2);
-       h3->setPrev(h1);
+        h3->setFromVertex(v1);
+        h3->setToVertex(v3);
+        h3->setNext(h2);
+        h3->setPrev(h1);
 
-       v1->setIncidentHalfEdge(h3);
-       v2->setIncidentHalfEdge(h1);
-       v3->setIncidentHalfEdge(h2);
+        v1->setIncidentHalfEdge(h3);
+        v2->setIncidentHalfEdge(h1);
+        v3->setIncidentHalfEdge(h2);
 
-     }
+    }
 
-     //Setting the cardinality of vertices
-     v1->setCardinality(2);
-     v2->setCardinality(2);
-     v3->setCardinality(2);
+    //Setting the cardinality of vertices
+    v1->setCardinality(2);
+    v2->setCardinality(2);
+    v3->setCardinality(2);
 
-     //Create and adding a new face based on previous edges
-     Dcel::Face* initialFace = this->dcel->addFace();
-     //Setting Outher Edge to access external face
-     initialFace->setOuterHalfEdge(h1);
-     h1->setFace(initialFace);
-     h2->setFace(initialFace);
-     h3->setFace(initialFace);
+    //Create and adding a new face based on previous edges
+    Dcel::Face* initialFace = this->dcel->addFace();
+    //Setting Outher Edge to access external face
+    initialFace->setOuterHalfEdge(h1);
+    h1->setFace(initialFace);
+    h2->setFace(initialFace);
+    h3->setFace(initialFace);
 
-     //Add new halfedges to the vector
-     halfEdges.push_back(h1);
-     halfEdges.push_back(h2);
-     halfEdges.push_back(h3);
+    //Add new halfedges to the vector
+    halfEdges.push_back(h1);
+    halfEdges.push_back(h2);
+    halfEdges.push_back(h3);
 
-     return halfEdges;
+    return halfEdges;
 
 }

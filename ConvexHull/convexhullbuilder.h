@@ -2,7 +2,6 @@
 #define CONVEXHULL_H
 
 #include <vector>
-#include <string>
 #include <GUI/managers/dcelmanager.h>
 #include <lib/dcel/dcel_vertex_iterators.h>
 #include <eigen3/Eigen/Dense>
@@ -16,13 +15,14 @@
 class ConvexHullBuilder{
 
 public:
-    ConvexHullBuilder(DrawableDcel* dcel, MainWindow* mainWindow); //Constructor Declaration
+    ConvexHullBuilder(DrawableDcel* dcel, MainWindow* mainWindow, bool showPhases); //Constructor Declaration
     ~ConvexHullBuilder(); //Destructor Declaration
     void computeConvexHull();
 
 private:
     DrawableDcel            *dcel;
     MainWindow*             mainWindow;
+    bool                    showPhases;
     ConvexHullBuilderHelper *convexHullBuilderHelper;
     TetrahedronBuilder      *tetrahedronBuilder;
     ConflictGraph           *conflictGraph;

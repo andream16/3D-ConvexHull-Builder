@@ -4,11 +4,6 @@
 #include <tr1/unordered_set>
 #include <tr1/unordered_map>
 #include "lib/dcel/drawable_dcel.h"
-#include <string>
-
-#include <eigen3/Eigen/Dense>
-#include <eigen3/Eigen/LU>
-
 
 class ConflictGraph{
 
