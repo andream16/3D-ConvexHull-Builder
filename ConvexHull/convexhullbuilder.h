@@ -15,7 +15,7 @@
 class ConvexHullBuilder{
 
 public:
-    ConvexHullBuilder(DrawableDcel* dcel, MainWindow* mainWindow, bool showPhases); //Constructor Declaration
+    ConvexHullBuilder(DrawableDcel* dcel, MainWindow* mainWindow, bool const &showPhases); //Constructor Declaration
     ~ConvexHullBuilder(); //Destructor Declaration
     void computeConvexHull();
 

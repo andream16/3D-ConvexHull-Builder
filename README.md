@@ -9,7 +9,7 @@ It was made using:
  - QT5
  - Eigen3
  - LibBoost
- 
+
 #What you need to run the project:
 
  - `gcc` ~6.2.1
@@ -28,11 +28,11 @@ If you want to take a look at the documentation:
  - Install `doxygen`
  - Then, on `lib` folder: `doxygen dcel_doxygen_config_it`
  - Check `dcel_doc` folder to see the documentation
- 
+
  There may be errors while running the project. If so, take care of correctly editing the `.pro`.
- 
+
 #How to launch the program
- 
+
   - Click on `Load Dcel` and select a model from the model directory
   - Click on `Convex Hull Solver`
   - Then, you can choose if you want to see each process phase by clicking on `Show Phases` or just run it normally by clicking on `Convex Hull!`

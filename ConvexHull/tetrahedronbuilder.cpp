@@ -3,7 +3,7 @@
 
 /** @brief Class used to build the starting Tetrahedron, inserts first items in the dcel
  *  @param Dcel dcel**/
-TetrahedronBuilder::TetrahedronBuilder(DrawableDcel* dcel, std::vector<Dcel::Vertex*> allVertices){
+TetrahedronBuilder::TetrahedronBuilder(DrawableDcel* dcel, const std::vector<Dcel::Vertex*> &allVertices){
     this->dcel = dcel;
     this->allVertices = allVertices;
 }
@@ -16,7 +16,7 @@ TetrahedronBuilder::~TetrahedronBuilder(){
 }
 
 /**
- * @brief TetrahedronBuilder::buildTetrahedron builds a tetrahedron with different steps
+ * @brief TetrahedronBuilder::buildTetrahedron const builds a tetrahedron with different steps
  *        - Until getting 4 non-coplanar vertices
  *          - Shuffles all vertices
  *          - Gets first four vertices
@@ -78,12 +78,12 @@ std::vector<Dcel::Vertex*> TetrahedronBuilder::verticesShuffler(){
 }
 
 /**
- * @brief  std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::Vertex*> allVertices)
+ * @brief  std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::Vertex*> const &allVertices) const
  *         gets first four vertices from all vertices passed
- * @param  std::vector<Dcel::Vertex*> allVertices contains all shuffled vertices
+ * @param  std::vector<Dcel::Vertex*> const &allVertices allVertices contains all shuffled vertices
  * @return array of first 4 pointers to vertices
  */
-std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::Vertex*> allVertices){
+std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::Vertex*> const &allVertices) const{
     //Initializing firstFourVertices Array
     std::vector<Pointd> firstFourVertices;
 
@@ -97,11 +97,11 @@ std::vector <Pointd> TetrahedronBuilder::getFirstFourVertices(std::vector<Dcel::
 
 
 /**
- * @brief  int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints)
- * @param  std::vector<Pointd> fourPoints
+ * @brief  int TetrahedronBuilder::coplanarityChecker(const std::vector<Pointd> &fourPoints) const
+ * @param  std::vector<Pointd> const std::vector<Pointd> &fourPoints
  * @return 0 if coplanar, 1 or -1 else
  */
-int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
+int TetrahedronBuilder::coplanarityChecker(const std::vector<Pointd> &fourPoints) const{
 
     //Initialize Coplanarity
     bool coplanarity = true;
@@ -141,14 +141,14 @@ int TetrahedronBuilder::coplanarityChecker(std::vector<Pointd> fourPoints){
 }
 
 /**
- * @brief  void TetrahedronBuilder::tetrahedronMaker(std::vector<Pointd> vertices, int determinant)
+ * @brief  void TetrahedronBuilder::tetrahedronMaker(std::vector<Pointd> const &vertices, int const &determinant) const
  *         takes the four non-coplanar vertices and inserts their data in the dcel
  *         to build the tetrahedron itself basing orientation on determinant result.
  *         It builds the very first face of the tetrahedron, then, calls an helper function to build
  *         the other 3 faces
- * @param  std::vector<Pointd> vertices 4 non-coplanar vertices
+ * @param  std::vector<Pointd> const &vertices, int const &determinant vertices 4 non-coplanar vertices
  */
-std::vector<Dcel::HalfEdge*> TetrahedronBuilder::tetrahedronMaker(std::vector<Pointd> vertices, int determinant){
+std::vector<Dcel::HalfEdge*> TetrahedronBuilder::tetrahedronMaker(std::vector<Pointd> const &vertices, int const &determinant) const{
 
     //Initialize Vector of Halfedges to contain new HalfEdges and build new faces on them
     std::vector<Dcel::HalfEdge*> halfEdges;

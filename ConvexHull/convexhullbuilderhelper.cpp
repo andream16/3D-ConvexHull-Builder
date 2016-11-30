@@ -26,7 +26,7 @@ std::vector<Dcel::Vertex*> ConvexHullBuilderHelper::getAllVertices(){
 }
 
 /**
- * @brief  std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon
+ * @brief  std::vector<Dcel::HalfEdge*> ConvexHullBuilder::bringMeTheHorizon(const std::tr1::unordered_set<Dcel::Face*>* &facesVisibleByVertex) const
  *         Takes current set of visible faces and returns a vector of ordered halfedges which form the
  *         horizon.
  *         - Loop through faces
@@ -37,10 +37,10 @@ std::vector<Dcel::Vertex*> ConvexHullBuilderHelper::getAllVertices(){
  *               - Add it to the horizon and set its to and from vertex in a map
  *         - Order the horizon using the map and the horizon itself
  *
- * @param  std::tr1::unordered_set<Dcel::Face*>facesVisibleByVertex
+ * @param  const std::tr1::unordered_set<Dcel::Face*>* &facesVisibleByVertex) const
  * @return returns array of pointers to halfedges belonging to the horizon
  */
-std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1::unordered_set<Dcel::Face*>* facesVisibleByVertex){
+std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1::unordered_set<Dcel::Face*>* const &facesVisibleByVertex) const{
 
     //Initialize Horizon
     std::vector<Dcel::HalfEdge*> horizon;
@@ -100,10 +100,10 @@ std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::bringMeTheHorizon(std::tr1
 /**
  * @brief std::vector<Dcel::HalfEdge*> ConvexHullBuilder::orderHorizon
  *        Reorders the Horizon for future utilizations (setting twins) using from and to vertex from the map
- * @param std::vector<Dcel::HalfEdge*> unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>
+ * @param std::vector<Dcel::HalfEdge*> const &unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>* const &map
  * @return ordered Horizon
  */
-std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<Dcel::HalfEdge*> unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*> *map){
+std::vector<Dcel::HalfEdge*> ConvexHullBuilderHelper::orderHorizon(std::vector<Dcel::HalfEdge*> const &unHorizon, std::tr1::unordered_map<Dcel::Vertex*, Dcel::Vertex*>* const &map) const{
     //Initialize Ordered Horizon
     std::vector<Dcel::HalfEdge*> orderedHorizon;
 

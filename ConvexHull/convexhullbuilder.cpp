@@ -4,9 +4,9 @@
 
 /**
  * @brief ConvexHullBuilder::ConvexHullBuilder()
- * @params DrawableDcel *dcel, MainWindow* mainWindow, bool showPhases
+ * @params DrawableDcel *dcel, MainWindow* mainWindow, bool const &showPhases
  */
-ConvexHullBuilder::ConvexHullBuilder(DrawableDcel *dcel, MainWindow* mainWindow, bool showPhases){
+ConvexHullBuilder::ConvexHullBuilder(DrawableDcel *dcel, MainWindow* mainWindow, bool const &showPhases){
     this->dcel       = dcel;
     this->mainWindow = mainWindow;
     this->showPhases = showPhases;

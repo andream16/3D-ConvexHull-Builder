@@ -11,7 +11,7 @@
 class TetrahedronBuilder{
 
 public:
-    TetrahedronBuilder(DrawableDcel* dcel, std::vector<Dcel::Vertex*> allVertices);
+    TetrahedronBuilder(DrawableDcel* dcel, const std::vector<Dcel::Vertex*> &allVertices);
     ~TetrahedronBuilder(); //Destructor Declaration
     std::vector<Dcel::Vertex*> buildTetrahedron();
 
@@ -21,10 +21,10 @@ private:
     FaceBuilderHelper *faceBuilderHelper;
 
     std::vector<Dcel::Vertex*> verticesShuffler();
-    std::vector <Pointd> getFirstFourVertices(std::vector<Dcel::Vertex*>);
+    std::vector <Pointd> getFirstFourVertices(std::vector<Dcel::Vertex*> const &allVertices) const;
     void buildTetrahedron(std::vector<Dcel::Vertex*>);
-    int  coplanarityChecker(std::vector <Pointd>);
-    std::vector<Dcel::HalfEdge*> tetrahedronMaker(std::vector <Pointd>, int);
+    int  coplanarityChecker(const std::vector<Pointd> &fourPoints) const;
+    std::vector<Dcel::HalfEdge*> tetrahedronMaker(std::vector<Pointd> const &vertices, int const &determinant) const;
 
 };
 

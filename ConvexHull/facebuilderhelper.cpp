@@ -13,11 +13,11 @@ FaceBuilderHelper::FaceBuilderHelper(DrawableDcel* dcel){
 FaceBuilderHelper::~FaceBuilderHelper(){}
 
 /**
- * @brief FaceBuilderHelper::buildFaces
+ * @brief FaceBuilderHelper::buildFaces(Dcel::Vertex* const &passedVertex, std::vector<Dcel::HalfEdge*> const &halfEdges) const
  *        Builds a new face per each passed HalfEdge
- * @param Pointd vertex, std::vector<Dcel::HalfEdge*> halfEdges
+ * @param Dcel::Vertex* const &passedVertex, std::vector<Dcel::HalfEdge*> const &halfEdges
  **/
-std::vector<Dcel::Face*> FaceBuilderHelper::buildFaces(Dcel::Vertex* passedVertex, std::vector<Dcel::HalfEdge*> halfEdges){
+std::vector<Dcel::Face*> FaceBuilderHelper::buildFaces(Dcel::Vertex* const &passedVertex, std::vector<Dcel::HalfEdge*> const &halfEdges) const{
 
     //Initialize Possible arra Of faces
     std::vector<Dcel::Face*> faces;

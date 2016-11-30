@@ -12,8 +12,8 @@ public:
     ~ConflictGraph(); //Destructor Declaration
     void initializeConflictGraph();
 
-    std::tr1::unordered_set<Dcel::Face*>* getFacesVisibleByVertex (Dcel::Vertex* currentVertex);
-    std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> joinVertices(std::vector<Dcel::HalfEdge*>);
+    std::tr1::unordered_set<Dcel::Face*>* getFacesVisibleByVertex (Dcel::Vertex* &currentVertex);
+    std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> joinVertices(std::vector<Dcel::HalfEdge*> horizon);
     void deleteFaces(std::tr1::unordered_set<Dcel::Face*>*);
     void checkConflict(std::vector<Dcel::Face*>, std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*>, std::vector<Dcel::HalfEdge*>);
     void eraseVertex(Dcel::Vertex*);
@@ -24,10 +24,10 @@ public:
 private:
     DrawableDcel *dcel;
     std::vector<Dcel::Vertex*> remainingVertices;
-    void halfSpaceChecker(Dcel::Face*, Dcel::Vertex*);
-    void addToFaceConflictMap(Dcel::Face*, Dcel::Vertex*);
-    void addToVertexConflictMap(Dcel::Face*, Dcel::Vertex*);
-    std::tr1::unordered_set<Dcel::Vertex*>* getVerticesVisibleByFace(Dcel::Face*);
+    void halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex);
+    void addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex);
+    void addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex);
+    std::tr1::unordered_set<Dcel::Vertex*>* getVerticesVisibleByFace(Dcel::Face* currentFace);
 
 };
 

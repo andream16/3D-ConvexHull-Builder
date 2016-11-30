@@ -51,7 +51,7 @@ void ConflictGraph::initializeConflictGraph(){
  *        - If the dot product is > epsilon (in order to avoid floating point errors) then the vertex and the face
  *          lie on the very same half-space, implying that the vertex is in front of the face
  *        - Else we don't care because it means that they are not on the same half-space.
- * @param Dcel::Face* face, Dcel::Vertex* vertex
+ * @param Dcel::Face* const &face, Dcel::Vertex* const &vertex
  */
 void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
     //Array to contain all the vertices of the face
@@ -99,13 +99,13 @@ void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
 }
 
 /**
- * @brief addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
+ * @brief addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex) *
  *        checks if, for that face, the map exists for that key entry,
  *        if not, a new set is created then, in any case, passed vertex is inserted into it
  *        at face's position
- * @param Dcel::Face* face, Dcel::Vertex* vertex
+ * @param Dcel::Face* const &face, Dcel::Vertex* const &vertex
  */
-void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
+void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex) {
     //If at current face's position there's nothing
     if( this->vertexConflictMap[face] == nullptr ){
         //Initialize a new unordered_set of vertices and assign it to face's position
@@ -120,9 +120,9 @@ void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* verte
  *        checks if, for that vertex, the map exists for that key entry,
  *        if not, a new set is created then, in any case, passed face is inserted into it
  *        at vertex's position
- * @param Dcel::Face* face, Dcel::Vertex* vertex
+ * @param Dcel::Face* const &face, Dcel::Vertex* const &vertex
  */
-void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex){
+void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex) {
     //If at current vertex's position there's nothing
     if( this->faceConflictMap[vertex] == nullptr ){
         //Initialize a new unordered_set of faces and assign it to vertex's position
@@ -133,13 +133,13 @@ void ConflictGraph::addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
 }
 
 /**
- * @brief  getFacesVisibleByVertex(Dcel::Vertex* currentVertex)
+ * @brief  getFacesVisibleByVertex(Dcel::Vertex* &currentVertex)
  *         Checks if passed vertex is in conflict with dcel's faces and if it indeed is in conflict,
  *         return set of faces visible by it
- * @param  Dcel::Vertex* currentVertex
+ * @param  Dcel::Vertex* const &currentVertex
  * @return std::tr1::unordered_set<Dcel::Face*> set of faces visible by the vertex
  */
-std::tr1::unordered_set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* currentVertex){
+std::tr1::unordered_set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dcel::Vertex* &currentVertex){
 
     //Check if the vertex is in conflict. If it is indeed, visible faces will not be nullptr
     std::tr1::unordered_set<Dcel::Face*>* visibleFaces = this->faceConflictMap[currentVertex];
@@ -156,14 +156,14 @@ std::tr1::unordered_set<Dcel::Face*>* ConflictGraph::getFacesVisibleByVertex(Dce
 }
 
 /**
-* @brief  joinVertices(std::vector<Dcel::HalfEdge*>* horizon)
+* @brief  joinVertices(std::vector<Dcel::HalfEdge*>* std::vector<Dcel::HalfEdge*> horizon)
 *         Merges the vertices that are in conflict with a given horizon halfedge face and twin's face
 *         in order to speed up the process of understanding which vertices are in conflict with the new faces
 *         to be added
-* @param  std::vector<Dcel::HalfEdge*>* horizon
+* @param  const std::vector<Dcel::HalfEdge*> &horizon) const
 * @return std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>> map that for each HalfEdge has the latter merged vertices
 */
-std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> ConflictGraph::joinVertices(std::vector<Dcel::HalfEdge*> horizon){
+std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> ConflictGraph::joinVertices( std::vector<Dcel::HalfEdge*> horizon){
 
     //Initialize joined vertices map
     std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*> joinedVerticesMap;
@@ -197,7 +197,7 @@ std::tr1::unordered_map<Dcel::HalfEdge*, std::tr1::unordered_set<Dcel::Vertex*>*
  * @brief  getVerticesVisibleByFace(Dcel::Face* currentFace)
  *         Check if passed face is in conflict with dcel's vertices and if it is, then,
  *         return set of vertices visible by it
- * @param  Dcel::Face* currentFace
+ * @param  const Dcel::Face* &currentFace
  * @return std::tr1::unordered_set<Dcel::Vertex*>* set of vertices visible by the face
  */
 std::tr1::unordered_set<Dcel::Vertex*>* ConflictGraph::getVerticesVisibleByFace(Dcel::Face* currentFace){
