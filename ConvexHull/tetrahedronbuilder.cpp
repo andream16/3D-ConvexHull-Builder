@@ -192,22 +192,23 @@ std::vector<Dcel::HalfEdge*> TetrahedronBuilder::tetrahedronMaker(std::vector<Po
 
         h1->setFromVertex(v2);
         h1->setToVertex(v1);
-        h1->setNext(h3);
-        h1->setPrev(h2);
+        h1->setNext(h2);
+        h1->setPrev(h1);
 
-        h2->setFromVertex(v3);
-        h2->setToVertex(v2);
-        h2->setNext(h1);
-        h2->setPrev(h3);
+        h2->setFromVertex(v1);
+        h2->setToVertex(v3);
+        h2->setNext(h3);
+        h2->setPrev(h1);
 
-        h3->setFromVertex(v1);
-        h3->setToVertex(v3);
-        h3->setNext(h2);
-        h3->setPrev(h1);
+        h3->setFromVertex(v3);
+        h3->setToVertex(v2);
+        h3->setNext(h1);
+        h3->setPrev(h2);
 
-        v1->setIncidentHalfEdge(h3);
+
+        v1->setIncidentHalfEdge(h2);
         v2->setIncidentHalfEdge(h1);
-        v3->setIncidentHalfEdge(h2);
+        v3->setIncidentHalfEdge(h3);
 
     }
 
