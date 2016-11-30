@@ -59,7 +59,7 @@ void ConvexHullBuilder::computeConvexHull(){
     //Initialize FaceBuilderHelper
     faceBuilderHelper = new FaceBuilderHelper(dcel);
 
-//    //If showPhases is checked, show the Tetrahedron
+    //If showPhases is checked, show the Tetrahedron
     if(showPhases){
         dcel->update();
         this->mainWindow->updateGlCanvas();

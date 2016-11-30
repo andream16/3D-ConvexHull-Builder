@@ -100,7 +100,7 @@ void ConflictGraph::halfSpaceChecker(Dcel::Face* face, Dcel::Vertex* vertex){
 
 /**
  * @brief addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
- *        checks if, for that face, the vertex is already inserted in the set,
+ *        checks if, for that face, the map exists for that key entry,
  *        if not, a new set is created then, in any case, passed vertex is inserted into it
  *        at face's position
  * @param Dcel::Face* face, Dcel::Vertex* vertex
@@ -117,7 +117,7 @@ void ConflictGraph::addToVertexConflictMap(Dcel::Face* face, Dcel::Vertex* verte
 
 /**
  * @brief addToFaceConflictMap(Dcel::Face* face, Dcel::Vertex* vertex)
- *        checks if, for that vertex, the face is already inserted in the set,
+ *        checks if, for that vertex, the map exists for that key entry,
  *        if not, a new set is created then, in any case, passed face is inserted into it
  *        at vertex's position
  * @param Dcel::Face* face, Dcel::Vertex* vertex
