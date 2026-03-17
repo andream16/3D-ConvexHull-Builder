@@ -3,6 +3,7 @@
 
 This project takes a 3D model as input and build the minimun convex polygon that contains it (Convex Hull).
 
+
 It was made using:
 
  - C++
